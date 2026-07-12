@@ -850,6 +850,7 @@
     const PROFILE_STORAGE_KEY = "plonkit-profiles-v1";
     const FADED_FEATURE_STORAGE_KEY = "plonkit-faded-features-v1";
     const CARPLATE_PROFILE_CLEANUP_KEY = "plonkit-carplate-profile-images-cleared-v1";
+    const INDIA_CHINA_RENDER_MASK_ID = "india-china-render-mask";
     const PROFILE_IDS = ["profile1", "profile2", "profile3", "profile4"];
     const LAYOUT_CACHE_VERSION = 2;
     const RENDER_CACHE_VERSION = 2;
@@ -2595,6 +2596,31 @@ const LANGUAGE_GROUPS = [
       const defs = svg.append("defs");
       createLanguagePatterns(defs);
 
+      const chinaBoundaryFeature = mapFeatures.find(feature => featureCode(feature) === "CHN");
+      if (chinaBoundaryFeature) {
+        const indiaChinaRenderMask = defs.append("mask")
+          .attr("id", INDIA_CHINA_RENDER_MASK_ID)
+          .attr("maskUnits", "userSpaceOnUse")
+          .attr("maskContentUnits", "userSpaceOnUse")
+          .attr("x", 0)
+          .attr("y", 0)
+          .attr("width", width)
+          .attr("height", height)
+          .style("mask-type", "luminance");
+
+        indiaChinaRenderMask.append("rect")
+          .attr("x", 0)
+          .attr("y", 0)
+          .attr("width", width)
+          .attr("height", height)
+          .attr("fill", "white");
+
+        indiaChinaRenderMask.append("path")
+          .datum(chinaBoundaryFeature)
+          .attr("fill", "black")
+          .attr("d", path);
+      }
+
       defs
         .selectAll("clipPath")
         .data(mapFeatures.filter(feature => !isRelaxedImageFeature(feature)))
@@ -2617,6 +2643,9 @@ const LANGUAGE_GROUPS = [
         .attr("data-code", d => featureCodeCandidates(d).join(" "))
         .attr("data-slugs", d => slugsForFeature(d).join(" "))
         .attr("fill", countryRenderFill)
+        .attr("mask", d => chinaBoundaryFeature && featureCode(d) === "IND"
+          ? `url(#${INDIA_CHINA_RENDER_MASK_ID})`
+          : null)
         .attr("d", path);
 
       state.renderTextureSelection = renderLayer.append("g")
@@ -2628,6 +2657,9 @@ const LANGUAGE_GROUPS = [
         .attr("data-code", d => featureCodeCandidates(d).join(" "))
         .attr("data-slugs", d => slugsForFeature(d).join(" "))
         .attr("fill", countryRenderTexture)
+        .attr("mask", d => chinaBoundaryFeature && featureCode(d) === "IND"
+          ? `url(#${INDIA_CHINA_RENDER_MASK_ID})`
+          : null)
         .attr("d", path);
 
       state.overlayLayer = zoomLayer.append("g")
