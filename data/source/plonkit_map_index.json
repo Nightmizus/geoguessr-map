@@ -1,0 +1,2498 @@
+{
+  "generatedAt": "2026-07-03T06:07:02.576Z",
+  "menuRoot": "世界教程 / Plonk It",
+  "crawledPages": 132,
+  "failures": [],
+  "skipped": [
+    {
+      "slug": "china",
+      "title": "中华人民共和国",
+      "reason": "用户要求跳过：中国页面已不存在"
+    }
+  ],
+  "redCodes": [
+    "ALB",
+    "AND",
+    "ARE",
+    "ARG",
+    "ASM",
+    "ATA",
+    "AUS",
+    "AUT",
+    "BEL",
+    "BGD",
+    "BGR",
+    "BLR",
+    "BMU",
+    "BOL",
+    "BRA",
+    "BTN",
+    "BWA",
+    "CAN",
+    "CHE",
+    "CHL",
+    "CHN",
+    "COL",
+    "CRI",
+    "CUW",
+    "CYP",
+    "CZE",
+    "DEU",
+    "DNK",
+    "DOM",
+    "ECU",
+    "EGY",
+    "ESP",
+    "EST",
+    "FIN",
+    "FLK",
+    "FRA",
+    "FRO",
+    "GBR",
+    "GHA",
+    "GRC",
+    "GRL",
+    "GTM",
+    "GUM",
+    "HRV",
+    "HUN",
+    "IDN",
+    "IMN",
+    "IND",
+    "IOA",
+    "IOT",
+    "IRL",
+    "IRQ",
+    "ISL",
+    "ISR",
+    "ITA",
+    "JEY",
+    "JOR",
+    "JPN",
+    "KAZ",
+    "KEN",
+    "KGZ",
+    "KHM",
+    "KOR",
+    "LAO",
+    "LBN",
+    "LIE",
+    "LKA",
+    "LSO",
+    "LTU",
+    "LUX",
+    "LVA",
+    "MCO",
+    "MDG",
+    "MEX",
+    "MKD",
+    "MLI",
+    "MLT",
+    "MNE",
+    "MNG",
+    "MNP",
+    "MYS",
+    "NAM",
+    "NGA",
+    "NLD",
+    "NOR",
+    "NPL",
+    "NZL",
+    "OMN",
+    "PAK",
+    "PAN",
+    "PCN",
+    "PER",
+    "PHL",
+    "POL",
+    "PRI",
+    "PRT",
+    "QAT",
+    "ROU",
+    "RUS",
+    "RWA",
+    "SEN",
+    "SGP",
+    "SGS",
+    "SMR",
+    "SPM",
+    "SRB",
+    "STP",
+    "SVK",
+    "SVN",
+    "SWE",
+    "SWZ",
+    "THA",
+    "TUN",
+    "TUR",
+    "TZA",
+    "UGA",
+    "UKR",
+    "URY",
+    "USA",
+    "VIR",
+    "VNM",
+    "VUT",
+    "ZAF"
+  ],
+  "featurePages": {
+    "1159320325": [
+      "albania"
+    ],
+    "1159320327": [
+      "andorra"
+    ],
+    "1159320329": [
+      "united-arab-emirates"
+    ],
+    "1159320331": [
+      "argentina"
+    ],
+    "1159320335": [
+      "antarctica"
+    ],
+    "1159320355": [
+      "australia"
+    ],
+    "1159320367": [
+      "cocos-islands"
+    ],
+    "1159320369": [
+      "christmas-island"
+    ],
+    "1159320379": [
+      "austria"
+    ],
+    "1159320391": [
+      "belgium"
+    ],
+    "1159320407": [
+      "bangladesh"
+    ],
+    "1159320409": [
+      "bulgaria"
+    ],
+    "1159320427": [
+      "belarus"
+    ],
+    "1159320439": [
+      "bolivia"
+    ],
+    "1159320441": [
+      "brazil"
+    ],
+    "1159320453": [
+      "bhutan"
+    ],
+    "1159320461": [
+      "botswana"
+    ],
+    "1159320467": [
+      "canada"
+    ],
+    "1159320491": [
+      "switzerland"
+    ],
+    "1159320493": [
+      "chile"
+    ],
+    "1159320517": [
+      "colombia"
+    ],
+    "1159320525": [
+      "costa_rica"
+    ],
+    "1159320533": [
+      "cyprus"
+    ],
+    "1159320535": [
+      "czechia"
+    ],
+    "1159320539": [
+      "germany"
+    ],
+    "1159320547": [
+      "denmark"
+    ],
+    "1159320549": [
+      "faroe-islands"
+    ],
+    "1159320551": [
+      "greenland"
+    ],
+    "1159320563": [
+      "dominican"
+    ],
+    "1159320567": [
+      "ecuador"
+    ],
+    "1159320575": [
+      "egypt"
+    ],
+    "1159320587": [
+      "spain"
+    ],
+    "1159320615": [
+      "estonia"
+    ],
+    "1159320623": [
+      "finland"
+    ],
+    "1159320647": [
+      "saint-pierre-and-miquelon"
+    ],
+    "1159320651": [
+      "france"
+    ],
+    "1159320657": [
+      "martinique"
+    ],
+    "1159320661": [
+      "reunion"
+    ],
+    "1159320705": [
+      "bermuda"
+    ],
+    "1159320711": [
+      "falkland-islands"
+    ],
+    "1159320721": [
+      "isle-of-man"
+    ],
+    "1159320723": [
+      "british-indian-ocean-territory"
+    ],
+    "1159320725": [
+      "jersey"
+    ],
+    "1159320729": [
+      "pitcairn-islands"
+    ],
+    "1159320731": [
+      "south-georgia-sandwich-islands"
+    ],
+    "1159320743": [
+      "united-kingdom"
+    ],
+    "1159320793": [
+      "ghana"
+    ],
+    "1159320811": [
+      "greece"
+    ],
+    "1159320815": [
+      "guatemala"
+    ],
+    "1159320833": [
+      "croatia"
+    ],
+    "1159320841": [
+      "hungary"
+    ],
+    "1159320845": [
+      "indonesia"
+    ],
+    "1159320847": [
+      "india"
+    ],
+    "1159320877": [
+      "ireland"
+    ],
+    "1159320887": [
+      "iraq"
+    ],
+    "1159320895": [
+      "israel-west-bank"
+    ],
+    "1159320917": [
+      "iceland"
+    ],
+    "1159320919": [
+      "italy"
+    ],
+    "1159320935": [
+      "jordan"
+    ],
+    "1159320937": [
+      "japan"
+    ],
+    "1159320967": [
+      "kazakhstan"
+    ],
+    "1159320971": [
+      "kenya"
+    ],
+    "1159320977": [
+      "krygyzstan"
+    ],
+    "1159320979": [
+      "cambodia"
+    ],
+    "1159320985": [
+      "south-korea"
+    ],
+    "1159321011": [
+      "laos"
+    ],
+    "1159321013": [
+      "lebanon"
+    ],
+    "1159321021": [
+      "liechtenstein"
+    ],
+    "1159321025": [
+      "sri-lanka"
+    ],
+    "1159321027": [
+      "lesotho"
+    ],
+    "1159321029": [
+      "lithuania"
+    ],
+    "1159321031": [
+      "luxembourg"
+    ],
+    "1159321033": [
+      "latvia"
+    ],
+    "1159321043": [
+      "monaco"
+    ],
+    "1159321051": [
+      "madagascar"
+    ],
+    "1159321055": [
+      "mexico"
+    ],
+    "1159321061": [
+      "north-macedonia"
+    ],
+    "1159321063": [
+      "mali"
+    ],
+    "1159321065": [
+      "malta"
+    ],
+    "1159321069": [
+      "montenegro"
+    ],
+    "1159321071": [
+      "mongolia"
+    ],
+    "1159321083": [
+      "malaysia"
+    ],
+    "1159321085": [
+      "namibia"
+    ],
+    "1159321089": [
+      "nigeria"
+    ],
+    "1159321099": [
+      "curacao"
+    ],
+    "1159321101": [
+      "netherlands"
+    ],
+    "1159321109": [
+      "norway"
+    ],
+    "1159321119": [
+      "svalbard"
+    ],
+    "1159321121": [
+      "nepal"
+    ],
+    "1159321135": [
+      "new-zealand"
+    ],
+    "1159321151": [
+      "oman"
+    ],
+    "1159321153": [
+      "pakistan"
+    ],
+    "1159321161": [
+      "panama"
+    ],
+    "1159321163": [
+      "peru"
+    ],
+    "1159321169": [
+      "philippines"
+    ],
+    "1159321179": [
+      "poland"
+    ],
+    "1159321189": [
+      "azores"
+    ],
+    "1159321191": [
+      "madeira"
+    ],
+    "1159321193": [
+      "portugal"
+    ],
+    "1159321197": [
+      "qatar"
+    ],
+    "1159321199": [
+      "romania"
+    ],
+    "1159321201": [
+      "russia"
+    ],
+    "1159321219": [
+      "rwanda"
+    ],
+    "1159321243": [
+      "senegal"
+    ],
+    "1159321247": [
+      "singapore"
+    ],
+    "1159321255": [
+      "san-marino"
+    ],
+    "1159321269": [
+      "serbia"
+    ],
+    "1159321273": [
+      "sao-tome-and-principe"
+    ],
+    "1159321283": [
+      "slovakia"
+    ],
+    "1159321285": [
+      "slovenia"
+    ],
+    "1159321287": [
+      "sweden"
+    ],
+    "1159321289": [
+      "eswatini"
+    ],
+    "1159321305": [
+      "thailand"
+    ],
+    "1159321327": [
+      "tunisia"
+    ],
+    "1159321331": [
+      "turkey"
+    ],
+    "1159321337": [
+      "tanzania"
+    ],
+    "1159321343": [
+      "uganda"
+    ],
+    "1159321345": [
+      "ukraine"
+    ],
+    "1159321353": [
+      "uruguay"
+    ],
+    "1159321357": [
+      "american-samoa"
+    ],
+    "1159321359": [
+      "guam"
+    ],
+    "1159321361": [
+      "northern-mariana-islands"
+    ],
+    "1159321363": [
+      "puerto-rico"
+    ],
+    "1159321369": [
+      "united-states",
+      "alaska",
+      "hawaii",
+      "us-minor-outlying-islands"
+    ],
+    "1159321371": [
+      "us-virgin-islands"
+    ],
+    "1159321417": [
+      "vietnam"
+    ],
+    "1159321421": [
+      "vanuatu"
+    ],
+    "1159321431": [
+      "south-africa"
+    ]
+  },
+  "codePages": {
+    "BWA": [
+      "botswana"
+    ],
+    "EGY": [
+      "egypt"
+    ],
+    "SWZ": [
+      "eswatini"
+    ],
+    "GHA": [
+      "ghana"
+    ],
+    "KEN": [
+      "kenya"
+    ],
+    "LSO": [
+      "lesotho"
+    ],
+    "MDG": [
+      "madagascar"
+    ],
+    "MLI": [
+      "mali"
+    ],
+    "NAM": [
+      "namibia"
+    ],
+    "NGA": [
+      "nigeria"
+    ],
+    "FRA": [
+      "reunion",
+      "france",
+      "martinique"
+    ],
+    "RWA": [
+      "rwanda"
+    ],
+    "SEN": [
+      "senegal"
+    ],
+    "ZAF": [
+      "south-africa"
+    ],
+    "STP": [
+      "sao-tome-and-principe"
+    ],
+    "TZA": [
+      "tanzania"
+    ],
+    "TUN": [
+      "tunisia"
+    ],
+    "UGA": [
+      "uganda"
+    ],
+    "CYP": [
+      "cyprus"
+    ],
+    "BGD": [
+      "bangladesh"
+    ],
+    "BTN": [
+      "bhutan"
+    ],
+    "IOT": [
+      "british-indian-ocean-territory"
+    ],
+    "KHM": [
+      "cambodia"
+    ],
+    "IND": [
+      "india"
+    ],
+    "IDN": [
+      "indonesia"
+    ],
+    "IRQ": [
+      "iraq"
+    ],
+    "ISR": [
+      "israel-west-bank"
+    ],
+    "JPN": [
+      "japan"
+    ],
+    "JOR": [
+      "jordan"
+    ],
+    "KAZ": [
+      "kazakhstan"
+    ],
+    "KGZ": [
+      "krygyzstan"
+    ],
+    "LAO": [
+      "laos"
+    ],
+    "LBN": [
+      "lebanon"
+    ],
+    "MYS": [
+      "malaysia"
+    ],
+    "MNG": [
+      "mongolia"
+    ],
+    "NPL": [
+      "nepal"
+    ],
+    "OMN": [
+      "oman"
+    ],
+    "PAK": [
+      "pakistan"
+    ],
+    "PHL": [
+      "philippines"
+    ],
+    "QAT": [
+      "qatar"
+    ],
+    "SGP": [
+      "singapore"
+    ],
+    "KOR": [
+      "south-korea"
+    ],
+    "LKA": [
+      "sri-lanka"
+    ],
+    "THA": [
+      "thailand"
+    ],
+    "TUR": [
+      "turkey"
+    ],
+    "ARE": [
+      "united-arab-emirates"
+    ],
+    "VNM": [
+      "vietnam"
+    ],
+    "ALB": [
+      "albania"
+    ],
+    "AND": [
+      "andorra"
+    ],
+    "AUT": [
+      "austria"
+    ],
+    "PRT": [
+      "azores",
+      "madeira",
+      "portugal"
+    ],
+    "BLR": [
+      "belarus"
+    ],
+    "BEL": [
+      "belgium"
+    ],
+    "BGR": [
+      "bulgaria"
+    ],
+    "HRV": [
+      "croatia"
+    ],
+    "CZE": [
+      "czechia"
+    ],
+    "DNK": [
+      "denmark"
+    ],
+    "EST": [
+      "estonia"
+    ],
+    "FRO": [
+      "faroe-islands"
+    ],
+    "FIN": [
+      "finland"
+    ],
+    "DEU": [
+      "germany"
+    ],
+    "GRC": [
+      "greece"
+    ],
+    "HUN": [
+      "hungary"
+    ],
+    "ISL": [
+      "iceland"
+    ],
+    "IRL": [
+      "ireland"
+    ],
+    "IMN": [
+      "isle-of-man"
+    ],
+    "ITA": [
+      "italy"
+    ],
+    "JEY": [
+      "jersey"
+    ],
+    "LVA": [
+      "latvia"
+    ],
+    "LIE": [
+      "liechtenstein"
+    ],
+    "LTU": [
+      "lithuania"
+    ],
+    "LUX": [
+      "luxembourg"
+    ],
+    "MLT": [
+      "malta"
+    ],
+    "MCO": [
+      "monaco"
+    ],
+    "MNE": [
+      "montenegro"
+    ],
+    "NLD": [
+      "netherlands"
+    ],
+    "MKD": [
+      "north-macedonia"
+    ],
+    "NOR": [
+      "norway",
+      "svalbard"
+    ],
+    "POL": [
+      "poland"
+    ],
+    "ROU": [
+      "romania"
+    ],
+    "RUS": [
+      "russia"
+    ],
+    "SMR": [
+      "san-marino"
+    ],
+    "SRB": [
+      "serbia"
+    ],
+    "SVK": [
+      "slovakia"
+    ],
+    "SVN": [
+      "slovenia"
+    ],
+    "ESP": [
+      "spain"
+    ],
+    "SWE": [
+      "sweden"
+    ],
+    "CHE": [
+      "switzerland"
+    ],
+    "UKR": [
+      "ukraine"
+    ],
+    "GBR": [
+      "united-kingdom"
+    ],
+    "BMU": [
+      "bermuda"
+    ],
+    "CAN": [
+      "canada"
+    ],
+    "CRI": [
+      "costa_rica"
+    ],
+    "DOM": [
+      "dominican"
+    ],
+    "GRL": [
+      "greenland"
+    ],
+    "GTM": [
+      "guatemala"
+    ],
+    "MEX": [
+      "mexico"
+    ],
+    "PAN": [
+      "panama"
+    ],
+    "PRI": [
+      "puerto-rico"
+    ],
+    "SPM": [
+      "saint-pierre-and-miquelon"
+    ],
+    "VIR": [
+      "us-virgin-islands"
+    ],
+    "USA": [
+      "united-states",
+      "alaska",
+      "hawaii",
+      "us-minor-outlying-islands"
+    ],
+    "ASM": [
+      "american-samoa"
+    ],
+    "AUS": [
+      "australia"
+    ],
+    "IOA": [
+      "christmas-island",
+      "cocos-islands"
+    ],
+    "GUM": [
+      "guam"
+    ],
+    "NZL": [
+      "new-zealand"
+    ],
+    "MNP": [
+      "northern-mariana-islands"
+    ],
+    "PCN": [
+      "pitcairn-islands"
+    ],
+    "VUT": [
+      "vanuatu"
+    ],
+    "ARG": [
+      "argentina"
+    ],
+    "BOL": [
+      "bolivia"
+    ],
+    "BRA": [
+      "brazil"
+    ],
+    "CHL": [
+      "chile"
+    ],
+    "COL": [
+      "colombia"
+    ],
+    "CUW": [
+      "curacao"
+    ],
+    "ECU": [
+      "ecuador"
+    ],
+    "FLK": [
+      "falkland-islands"
+    ],
+    "PER": [
+      "peru"
+    ],
+    "SGS": [
+      "south-georgia-sandwich-islands"
+    ],
+    "URY": [
+      "uruguay"
+    ],
+    "ATA": [
+      "antarctica"
+    ]
+  },
+  "pages": {
+    "botswana": {
+      "slug": "botswana",
+      "title": "博茨瓦纳",
+      "section": "非洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/botswana",
+      "wordCount": 2605,
+      "images": 37,
+      "contentUpdatedAt": "2025-04-05T06:59:44.000Z",
+      "code": "BWA",
+      "mapName": "Botswana",
+      "neId": "1159320461"
+    },
+    "egypt": {
+      "slug": "egypt",
+      "title": "埃及",
+      "section": "非洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/egypt",
+      "wordCount": 970,
+      "images": 15,
+      "contentUpdatedAt": "2025-06-16T07:44:54.000Z",
+      "code": "EGY",
+      "mapName": "Egypt",
+      "neId": "1159320575"
+    },
+    "eswatini": {
+      "slug": "eswatini",
+      "title": "斯威士兰",
+      "section": "非洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/eswatini",
+      "wordCount": 783,
+      "images": 18,
+      "contentUpdatedAt": "2025-01-12T08:14:57.000Z",
+      "code": "SWZ",
+      "mapName": "Eswatini",
+      "neId": "1159321289"
+    },
+    "ghana": {
+      "slug": "ghana",
+      "title": "加纳",
+      "section": "非洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/ghana",
+      "wordCount": 2253,
+      "images": 29,
+      "contentUpdatedAt": "2025-06-16T07:37:33.000Z",
+      "code": "GHA",
+      "mapName": "Ghana",
+      "neId": "1159320793"
+    },
+    "kenya": {
+      "slug": "kenya",
+      "title": "肯尼亚",
+      "section": "非洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/kenya",
+      "wordCount": 2746,
+      "images": 50,
+      "contentUpdatedAt": "2026-03-09T14:46:55.000Z",
+      "code": "KEN",
+      "mapName": "Kenya",
+      "neId": "1159320971"
+    },
+    "lesotho": {
+      "slug": "lesotho",
+      "title": "莱索托",
+      "section": "非洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/lesotho",
+      "wordCount": 1403,
+      "images": 23,
+      "contentUpdatedAt": "2025-05-12T13:07:59.000Z",
+      "code": "LSO",
+      "mapName": "Lesotho",
+      "neId": "1159321027"
+    },
+    "madagascar": {
+      "slug": "madagascar",
+      "title": "马达加斯加",
+      "section": "非洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/madagascar",
+      "wordCount": 2193,
+      "images": 49,
+      "contentUpdatedAt": "2024-01-26T06:09:27.000Z",
+      "code": "MDG",
+      "mapName": "Madagascar",
+      "neId": "1159321051"
+    },
+    "mali": {
+      "slug": "mali",
+      "title": "马里",
+      "section": "非洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/mali",
+      "wordCount": 1713,
+      "images": 24,
+      "contentUpdatedAt": "2025-06-16T07:54:49.000Z",
+      "code": "MLI",
+      "mapName": "Mali",
+      "neId": "1159321063"
+    },
+    "namibia": {
+      "slug": "namibia",
+      "title": "纳米比亚",
+      "section": "非洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/namibia",
+      "wordCount": 6846,
+      "images": 122,
+      "contentUpdatedAt": "2025-06-19T23:40:13.000Z",
+      "code": "NAM",
+      "mapName": "Namibia",
+      "neId": "1159321085"
+    },
+    "nigeria": {
+      "slug": "nigeria",
+      "title": "尼日利亚",
+      "section": "非洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/nigeria",
+      "wordCount": 2017,
+      "images": 33,
+      "contentUpdatedAt": "2026-01-20T15:44:44.000Z",
+      "code": "NGA",
+      "mapName": "Nigeria",
+      "neId": "1159321089"
+    },
+    "reunion": {
+      "slug": "reunion",
+      "title": "留尼汪",
+      "section": "非洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/reunion",
+      "wordCount": 992,
+      "images": 15,
+      "contentUpdatedAt": "2026-05-03T12:38:46.000Z",
+      "code": "FRA",
+      "mapName": "Réunion",
+      "neId": "1159320661"
+    },
+    "rwanda": {
+      "slug": "rwanda",
+      "title": "卢旺达",
+      "section": "非洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/rwanda",
+      "wordCount": 1393,
+      "images": 38,
+      "contentUpdatedAt": "2026-04-01T14:30:27.000Z",
+      "code": "RWA",
+      "mapName": "Rwanda",
+      "neId": "1159321219"
+    },
+    "senegal": {
+      "slug": "senegal",
+      "title": "塞内加尔",
+      "section": "非洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/senegal",
+      "wordCount": 2322,
+      "images": 40,
+      "contentUpdatedAt": "2025-08-27T14:44:03.000Z",
+      "code": "SEN",
+      "mapName": "Senegal",
+      "neId": "1159321243"
+    },
+    "south-africa": {
+      "slug": "south-africa",
+      "title": "南非",
+      "section": "非洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/south-africa",
+      "wordCount": 3170,
+      "images": 54,
+      "contentUpdatedAt": "2025-12-09T13:01:04.000Z",
+      "code": "ZAF",
+      "mapName": "South Africa",
+      "neId": "1159321431"
+    },
+    "sao-tome-and-principe": {
+      "slug": "sao-tome-and-principe",
+      "title": "圣多美和普林西比",
+      "section": "非洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/sao-tome-and-principe",
+      "wordCount": 541,
+      "images": 13,
+      "contentUpdatedAt": "2026-01-20T15:51:56.000Z",
+      "code": "STP",
+      "mapName": "São Tomé and Príncipe",
+      "neId": "1159321273"
+    },
+    "tanzania": {
+      "slug": "tanzania",
+      "title": "坦桑尼亚",
+      "section": "非洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/tanzania",
+      "wordCount": 1188,
+      "images": 9,
+      "contentUpdatedAt": "2025-06-16T08:12:49.000Z",
+      "code": "TZA",
+      "mapName": "Tanzania",
+      "neId": "1159321337"
+    },
+    "tunisia": {
+      "slug": "tunisia",
+      "title": "突尼斯",
+      "section": "非洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/tunisia",
+      "wordCount": 1863,
+      "images": 32,
+      "contentUpdatedAt": "2025-01-13T18:10:20.000Z",
+      "code": "TUN",
+      "mapName": "Tunisia",
+      "neId": "1159321327"
+    },
+    "uganda": {
+      "slug": "uganda",
+      "title": "乌干达",
+      "section": "非洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/uganda",
+      "wordCount": 1789,
+      "images": 30,
+      "contentUpdatedAt": "2025-04-12T15:30:34.000Z",
+      "code": "UGA",
+      "mapName": "Uganda",
+      "neId": "1159321343"
+    },
+    "cyprus": {
+      "slug": "cyprus",
+      "title": "塞浦路斯",
+      "section": "亚洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/cyprus",
+      "wordCount": 1835,
+      "images": 42,
+      "contentUpdatedAt": "2025-11-08T14:40:34.000Z",
+      "code": "CYP",
+      "mapName": "Cyprus",
+      "neId": "1159320533"
+    },
+    "bangladesh": {
+      "slug": "bangladesh",
+      "title": "孟加拉国",
+      "section": "亚洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/bangladesh",
+      "wordCount": 2146,
+      "images": 57,
+      "contentUpdatedAt": "2025-01-12T08:18:44.000Z",
+      "code": "BGD",
+      "mapName": "Bangladesh",
+      "neId": "1159320407"
+    },
+    "bhutan": {
+      "slug": "bhutan",
+      "title": "不丹",
+      "section": "亚洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/bhutan",
+      "wordCount": 833,
+      "images": 19,
+      "contentUpdatedAt": "2025-02-10T13:17:57.000Z",
+      "code": "BTN",
+      "mapName": "Bhutan",
+      "neId": "1159320453"
+    },
+    "british-indian-ocean-territory": {
+      "slug": "british-indian-ocean-territory",
+      "title": "英属印度洋领地",
+      "section": "亚洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/british-indian-ocean-territory",
+      "wordCount": 332,
+      "images": 11,
+      "contentUpdatedAt": "2025-01-13T06:21:38.000Z",
+      "code": "IOT",
+      "mapName": "British Indian Ocean Territory",
+      "neId": "1159320723"
+    },
+    "cambodia": {
+      "slug": "cambodia",
+      "title": "柬埔寨",
+      "section": "亚洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/cambodia",
+      "wordCount": 3450,
+      "images": 45,
+      "contentUpdatedAt": "2025-02-10T13:17:25.000Z",
+      "code": "KHM",
+      "mapName": "Cambodia",
+      "neId": "1159320979"
+    },
+    "india": {
+      "slug": "india",
+      "title": "印度",
+      "section": "亚洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/india",
+      "wordCount": 5051,
+      "images": 136,
+      "contentUpdatedAt": "2026-02-11T11:35:39.000Z",
+      "code": "IND",
+      "mapName": "India",
+      "neId": "1159320847"
+    },
+    "indonesia": {
+      "slug": "indonesia",
+      "title": "印度尼西亚",
+      "section": "亚洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/indonesia",
+      "wordCount": 2816,
+      "images": 66,
+      "contentUpdatedAt": "2026-05-03T12:27:58.000Z",
+      "code": "IDN",
+      "mapName": "Indonesia",
+      "neId": "1159320845"
+    },
+    "iraq": {
+      "slug": "iraq",
+      "title": "伊拉克",
+      "section": "亚洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/iraq",
+      "wordCount": 220,
+      "images": 6,
+      "contentUpdatedAt": "2024-02-10T11:57:41.000Z",
+      "code": "IRQ",
+      "mapName": "Iraq",
+      "neId": "1159320887"
+    },
+    "israel-west-bank": {
+      "slug": "israel-west-bank",
+      "title": "巴以地区",
+      "section": "亚洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/israel-west-bank",
+      "wordCount": 3067,
+      "images": 71,
+      "contentUpdatedAt": "2025-08-28T02:39:19.000Z",
+      "code": "ISR",
+      "mapName": "Israel",
+      "neId": "1159320895"
+    },
+    "japan": {
+      "slug": "japan",
+      "title": "日本",
+      "section": "亚洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/japan",
+      "wordCount": 8078,
+      "images": 123,
+      "contentUpdatedAt": "2025-03-05T06:46:50.000Z",
+      "code": "JPN",
+      "mapName": "Japan",
+      "neId": "1159320937"
+    },
+    "jordan": {
+      "slug": "jordan",
+      "title": "约旦",
+      "section": "亚洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/jordan",
+      "wordCount": 1704,
+      "images": 27,
+      "contentUpdatedAt": "2025-05-28T16:10:19.000Z",
+      "code": "JOR",
+      "mapName": "Jordan",
+      "neId": "1159320935"
+    },
+    "kazakhstan": {
+      "slug": "kazakhstan",
+      "title": "哈萨克斯坦",
+      "section": "亚洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/kazakhstan",
+      "wordCount": 4346,
+      "images": 65,
+      "contentUpdatedAt": "2024-06-17T10:40:49.000Z",
+      "code": "KAZ",
+      "mapName": "Kazakhstan",
+      "neId": "1159320967"
+    },
+    "krygyzstan": {
+      "slug": "krygyzstan",
+      "title": "吉尔吉斯斯坦",
+      "section": "亚洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/krygyzstan",
+      "wordCount": 5519,
+      "images": 136,
+      "contentUpdatedAt": "2026-03-10T06:48:06.000Z",
+      "code": "KGZ",
+      "mapName": "Kyrgyzstan",
+      "neId": "1159320977"
+    },
+    "laos": {
+      "slug": "laos",
+      "title": "老挝",
+      "section": "亚洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/laos",
+      "wordCount": 1615,
+      "images": 32,
+      "contentUpdatedAt": "2025-01-23T13:24:43.000Z",
+      "code": "LAO",
+      "mapName": "Laos",
+      "neId": "1159321011"
+    },
+    "lebanon": {
+      "slug": "lebanon",
+      "title": "黎巴嫩",
+      "section": "亚洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/lebanon",
+      "wordCount": 1037,
+      "images": 25,
+      "contentUpdatedAt": "2024-08-02T12:42:15.000Z",
+      "code": "LBN",
+      "mapName": "Lebanon",
+      "neId": "1159321013"
+    },
+    "malaysia": {
+      "slug": "malaysia",
+      "title": "马来西亚",
+      "section": "亚洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/malaysia",
+      "wordCount": 1474,
+      "images": 35,
+      "contentUpdatedAt": "2026-03-10T06:21:36.000Z",
+      "code": "MYS",
+      "mapName": "Malaysia",
+      "neId": "1159321083"
+    },
+    "mongolia": {
+      "slug": "mongolia",
+      "title": "蒙古",
+      "section": "亚洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/mongolia",
+      "wordCount": 6074,
+      "images": 104,
+      "contentUpdatedAt": "2026-03-10T06:53:55.000Z",
+      "code": "MNG",
+      "mapName": "Mongolia",
+      "neId": "1159321071"
+    },
+    "nepal": {
+      "slug": "nepal",
+      "title": "尼泊尔",
+      "section": "亚洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/nepal",
+      "wordCount": 2893,
+      "images": 62,
+      "contentUpdatedAt": "2025-08-20T07:03:04.000Z",
+      "code": "NPL",
+      "mapName": "Nepal",
+      "neId": "1159321121"
+    },
+    "oman": {
+      "slug": "oman",
+      "title": "阿曼",
+      "section": "亚洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/oman",
+      "wordCount": 4532,
+      "images": 77,
+      "contentUpdatedAt": "2024-11-07T04:56:35.000Z",
+      "code": "OMN",
+      "mapName": "Oman",
+      "neId": "1159321151"
+    },
+    "pakistan": {
+      "slug": "pakistan",
+      "title": "巴基斯坦",
+      "section": "亚洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/pakistan",
+      "wordCount": 1469,
+      "images": 26,
+      "contentUpdatedAt": "2024-02-12T12:18:50.000Z",
+      "code": "PAK",
+      "mapName": "Pakistan",
+      "neId": "1159321153"
+    },
+    "philippines": {
+      "slug": "philippines",
+      "title": "菲律宾",
+      "section": "亚洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/philippines",
+      "wordCount": 2164,
+      "images": 59,
+      "contentUpdatedAt": "2025-08-22T08:53:43.000Z",
+      "code": "PHL",
+      "mapName": "Philippines",
+      "neId": "1159321169"
+    },
+    "qatar": {
+      "slug": "qatar",
+      "title": "卡塔尔",
+      "section": "亚洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/qatar",
+      "wordCount": 1173,
+      "images": 34,
+      "contentUpdatedAt": "2025-05-20T12:17:49.000Z",
+      "code": "QAT",
+      "mapName": "Qatar",
+      "neId": "1159321197"
+    },
+    "singapore": {
+      "slug": "singapore",
+      "title": "新加坡",
+      "section": "亚洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/singapore",
+      "wordCount": 924,
+      "images": 19,
+      "contentUpdatedAt": "2024-01-26T06:09:43.000Z",
+      "code": "SGP",
+      "mapName": "Singapore",
+      "neId": "1159321247"
+    },
+    "south-korea": {
+      "slug": "south-korea",
+      "title": "韩国",
+      "section": "亚洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/south-korea",
+      "wordCount": 1270,
+      "images": 28,
+      "contentUpdatedAt": "2025-03-30T06:39:51.000Z",
+      "code": "KOR",
+      "mapName": "South Korea",
+      "neId": "1159320985"
+    },
+    "sri-lanka": {
+      "slug": "sri-lanka",
+      "title": "斯里兰卡",
+      "section": "亚洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/sri-lanka",
+      "wordCount": 2081,
+      "images": 24,
+      "contentUpdatedAt": "2025-05-24T09:41:20.000Z",
+      "code": "LKA",
+      "mapName": "Sri Lanka",
+      "neId": "1159321025"
+    },
+    "thailand": {
+      "slug": "thailand",
+      "title": "泰国",
+      "section": "亚洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/thailand",
+      "wordCount": 3958,
+      "images": 99,
+      "contentUpdatedAt": "2026-04-19T03:46:32.000Z",
+      "code": "THA",
+      "mapName": "Thailand",
+      "neId": "1159321305"
+    },
+    "turkey": {
+      "slug": "turkey",
+      "title": "土耳其",
+      "section": "亚洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/turkey",
+      "wordCount": 3645,
+      "images": 67,
+      "contentUpdatedAt": "2026-05-03T11:59:24.000Z",
+      "code": "TUR",
+      "mapName": "Turkey",
+      "neId": "1159321331"
+    },
+    "united-arab-emirates": {
+      "slug": "united-arab-emirates",
+      "title": "阿拉伯联合酋长国",
+      "section": "亚洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/united-arab-emirates",
+      "wordCount": 1061,
+      "images": 27,
+      "contentUpdatedAt": "2025-02-10T13:18:27.000Z",
+      "code": "ARE",
+      "mapName": "United Arab Emirates",
+      "neId": "1159320329"
+    },
+    "vietnam": {
+      "slug": "vietnam",
+      "title": "越南",
+      "section": "亚洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/vietnam",
+      "wordCount": 3846,
+      "images": 63,
+      "contentUpdatedAt": "2026-01-27T11:55:01.000Z",
+      "code": "VNM",
+      "mapName": "Vietnam",
+      "neId": "1159321417"
+    },
+    "albania": {
+      "slug": "albania",
+      "title": "阿尔巴尼亚",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/albania",
+      "wordCount": 2214,
+      "images": 39,
+      "contentUpdatedAt": "2025-06-22T15:32:47.000Z",
+      "code": "ALB",
+      "mapName": "Albania",
+      "neId": "1159320325"
+    },
+    "andorra": {
+      "slug": "andorra",
+      "title": "安道尔",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/andorra",
+      "wordCount": 777,
+      "images": 17,
+      "contentUpdatedAt": "2025-02-12T07:36:14.000Z",
+      "code": "AND",
+      "mapName": "Andorra",
+      "neId": "1159320327"
+    },
+    "austria": {
+      "slug": "austria",
+      "title": "奥地利",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/austria",
+      "wordCount": 1999,
+      "images": 45,
+      "contentUpdatedAt": "2026-01-16T15:14:39.000Z",
+      "code": "AUT",
+      "mapName": "Austria",
+      "neId": "1159320379"
+    },
+    "azores": {
+      "slug": "azores",
+      "title": "亚速尔群岛",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/azores",
+      "wordCount": 700,
+      "images": 15,
+      "contentUpdatedAt": "2025-01-12T09:38:33.000Z",
+      "code": "PRT",
+      "mapName": "Azores",
+      "neId": "1159321189"
+    },
+    "belarus": {
+      "slug": "belarus",
+      "title": "白俄罗斯",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/belarus",
+      "wordCount": 430,
+      "images": 8,
+      "contentUpdatedAt": "2025-06-22T14:04:51.000Z",
+      "code": "BLR",
+      "mapName": "Belarus",
+      "neId": "1159320427"
+    },
+    "belgium": {
+      "slug": "belgium",
+      "title": "比利时",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/belgium",
+      "wordCount": 1969,
+      "images": 38,
+      "contentUpdatedAt": "2025-02-12T08:34:56.000Z",
+      "code": "BEL",
+      "mapName": "Brussels Capital Region",
+      "neId": "1159320391"
+    },
+    "bulgaria": {
+      "slug": "bulgaria",
+      "title": "保加利亚",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/bulgaria",
+      "wordCount": 2170,
+      "images": 36,
+      "contentUpdatedAt": "2025-03-07T13:49:06.000Z",
+      "code": "BGR",
+      "mapName": "Bulgaria",
+      "neId": "1159320409"
+    },
+    "croatia": {
+      "slug": "croatia",
+      "title": "克罗地亚",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/croatia",
+      "wordCount": 2157,
+      "images": 35,
+      "contentUpdatedAt": "2026-03-09T15:30:33.000Z",
+      "code": "HRV",
+      "mapName": "Croatia",
+      "neId": "1159320833"
+    },
+    "czechia": {
+      "slug": "czechia",
+      "title": "捷克",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/czechia",
+      "wordCount": 3512,
+      "images": 73,
+      "contentUpdatedAt": "2025-06-30T06:22:51.000Z",
+      "code": "CZE",
+      "mapName": "Czech Republic",
+      "neId": "1159320535"
+    },
+    "denmark": {
+      "slug": "denmark",
+      "title": "丹麦",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/denmark",
+      "wordCount": 1856,
+      "images": 33,
+      "contentUpdatedAt": "2025-05-24T16:48:16.000Z",
+      "code": "DNK",
+      "mapName": "Denmark",
+      "neId": "1159320547"
+    },
+    "estonia": {
+      "slug": "estonia",
+      "title": "爱沙尼亚",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/estonia",
+      "wordCount": 2169,
+      "images": 31,
+      "contentUpdatedAt": "2025-12-09T12:33:08.000Z",
+      "code": "EST",
+      "mapName": "Estonia",
+      "neId": "1159320615"
+    },
+    "faroe-islands": {
+      "slug": "faroe-islands",
+      "title": "法罗群岛",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/faroe-islands",
+      "wordCount": 1049,
+      "images": 21,
+      "contentUpdatedAt": "2025-05-12T12:58:47.000Z",
+      "code": "FRO",
+      "mapName": "Faroe Islands",
+      "neId": "1159320549"
+    },
+    "finland": {
+      "slug": "finland",
+      "title": "芬兰",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/finland",
+      "wordCount": 3496,
+      "images": 60,
+      "contentUpdatedAt": "2025-06-14T16:33:21.000Z",
+      "code": "FIN",
+      "mapName": "Finland",
+      "neId": "1159320623"
+    },
+    "france": {
+      "slug": "france",
+      "title": "法国",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/france",
+      "wordCount": 7375,
+      "images": 102,
+      "contentUpdatedAt": "2026-02-11T11:20:52.000Z",
+      "code": "FRA",
+      "mapName": "France",
+      "neId": "1159320651"
+    },
+    "germany": {
+      "slug": "germany",
+      "title": "德国",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/germany",
+      "wordCount": 4136,
+      "images": 72,
+      "contentUpdatedAt": "2026-03-09T15:46:01.000Z",
+      "code": "DEU",
+      "mapName": "Germany",
+      "neId": "1159320539"
+    },
+    "gibraltar": {
+      "slug": "gibraltar",
+      "title": "直布罗陀",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/gibraltar",
+      "wordCount": 600,
+      "images": 10,
+      "contentUpdatedAt": "2025-01-13T06:29:53.000Z"
+    },
+    "greece": {
+      "slug": "greece",
+      "title": "希腊",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/greece",
+      "wordCount": 1903,
+      "images": 36,
+      "contentUpdatedAt": "2025-11-25T00:30:51.000Z",
+      "code": "GRC",
+      "mapName": "Greece",
+      "neId": "1159320811"
+    },
+    "hungary": {
+      "slug": "hungary",
+      "title": "匈牙利",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/hungary",
+      "wordCount": 1851,
+      "images": 34,
+      "contentUpdatedAt": "2024-01-26T06:10:04.000Z",
+      "code": "HUN",
+      "mapName": "Hungary",
+      "neId": "1159320841"
+    },
+    "iceland": {
+      "slug": "iceland",
+      "title": "冰岛",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/iceland",
+      "wordCount": 1870,
+      "images": 38,
+      "contentUpdatedAt": "2025-01-12T08:20:34.000Z",
+      "code": "ISL",
+      "mapName": "Iceland",
+      "neId": "1159320917"
+    },
+    "ireland": {
+      "slug": "ireland",
+      "title": "爱尔兰",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/ireland",
+      "wordCount": 1871,
+      "images": 25,
+      "contentUpdatedAt": "2024-01-26T06:10:12.000Z",
+      "code": "IRL",
+      "mapName": "Ireland",
+      "neId": "1159320877"
+    },
+    "isle-of-man": {
+      "slug": "isle-of-man",
+      "title": "马恩岛",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/isle-of-man",
+      "wordCount": 831,
+      "images": 24,
+      "contentUpdatedAt": "2025-01-13T05:58:34.000Z",
+      "code": "IMN",
+      "mapName": "Isle of Man",
+      "neId": "1159320721"
+    },
+    "italy": {
+      "slug": "italy",
+      "title": "意大利",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/italy",
+      "wordCount": 2664,
+      "images": 55,
+      "contentUpdatedAt": "2025-01-13T07:13:05.000Z",
+      "code": "ITA",
+      "mapName": "Italy",
+      "neId": "1159320919"
+    },
+    "jersey": {
+      "slug": "jersey",
+      "title": "泽西",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/jersey",
+      "wordCount": 1162,
+      "images": 23,
+      "contentUpdatedAt": "2025-01-13T06:19:07.000Z",
+      "code": "JEY",
+      "mapName": "Jersey",
+      "neId": "1159320725"
+    },
+    "latvia": {
+      "slug": "latvia",
+      "title": "拉脱维亚",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/latvia",
+      "wordCount": 1273,
+      "images": 21,
+      "contentUpdatedAt": "2025-07-19T16:05:15.000Z",
+      "code": "LVA",
+      "mapName": "Latvia",
+      "neId": "1159321033"
+    },
+    "liechtenstein": {
+      "slug": "liechtenstein",
+      "title": "列支敦士登",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/liechtenstein",
+      "wordCount": 1518,
+      "images": 29,
+      "contentUpdatedAt": "2024-10-02T15:56:06.000Z",
+      "code": "LIE",
+      "mapName": "Liechtenstein",
+      "neId": "1159321021"
+    },
+    "lithuania": {
+      "slug": "lithuania",
+      "title": "立陶宛",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/lithuania",
+      "wordCount": 1871,
+      "images": 30,
+      "contentUpdatedAt": "2026-02-11T09:35:26.000Z",
+      "code": "LTU",
+      "mapName": "Lithuania",
+      "neId": "1159321029"
+    },
+    "luxembourg": {
+      "slug": "luxembourg",
+      "title": "卢森堡",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/luxembourg",
+      "wordCount": 1435,
+      "images": 22,
+      "contentUpdatedAt": "2025-02-12T08:17:08.000Z",
+      "code": "LUX",
+      "mapName": "Luxembourg",
+      "neId": "1159321031"
+    },
+    "madeira": {
+      "slug": "madeira",
+      "title": "马德拉群岛",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/madeira",
+      "wordCount": 1274,
+      "images": 33,
+      "contentUpdatedAt": "2026-01-16T15:49:15.000Z",
+      "code": "PRT",
+      "mapName": "Madeira",
+      "neId": "1159321191"
+    },
+    "malta": {
+      "slug": "malta",
+      "title": "马耳他",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/malta",
+      "wordCount": 610,
+      "images": 19,
+      "contentUpdatedAt": "2025-12-09T13:11:51.000Z",
+      "code": "MLT",
+      "mapName": "Malta",
+      "neId": "1159321065"
+    },
+    "monaco": {
+      "slug": "monaco",
+      "title": "摩纳哥",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/monaco",
+      "wordCount": 426,
+      "images": 9,
+      "contentUpdatedAt": "2025-11-25T01:19:23.000Z",
+      "code": "MCO",
+      "mapName": "Monaco",
+      "neId": "1159321043"
+    },
+    "montenegro": {
+      "slug": "montenegro",
+      "title": "黑山",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/montenegro",
+      "wordCount": 1145,
+      "images": 23,
+      "contentUpdatedAt": "2025-12-05T16:12:42.000Z",
+      "code": "MNE",
+      "mapName": "Montenegro",
+      "neId": "1159321069"
+    },
+    "netherlands": {
+      "slug": "netherlands",
+      "title": "荷兰",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/netherlands",
+      "wordCount": 3272,
+      "images": 55,
+      "contentUpdatedAt": "2025-05-20T11:52:02.000Z",
+      "code": "NLD",
+      "mapName": "Netherlands",
+      "neId": "1159321101"
+    },
+    "north-macedonia": {
+      "slug": "north-macedonia",
+      "title": "北马其顿",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/north-macedonia",
+      "wordCount": 2170,
+      "images": 39,
+      "contentUpdatedAt": "2025-04-12T15:45:42.000Z",
+      "code": "MKD",
+      "mapName": "North Macedonia",
+      "neId": "1159321061"
+    },
+    "norway": {
+      "slug": "norway",
+      "title": "挪威",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/norway",
+      "wordCount": 2188,
+      "images": 61,
+      "contentUpdatedAt": "2025-05-25T06:29:38.000Z",
+      "code": "NOR",
+      "mapName": "Norway",
+      "neId": "1159321109"
+    },
+    "poland": {
+      "slug": "poland",
+      "title": "波兰",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/poland",
+      "wordCount": 2620,
+      "images": 41,
+      "contentUpdatedAt": "2026-05-03T11:54:06.000Z",
+      "code": "POL",
+      "mapName": "Poland",
+      "neId": "1159321179"
+    },
+    "portugal": {
+      "slug": "portugal",
+      "title": "葡萄牙",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/portugal",
+      "wordCount": 1958,
+      "images": 37,
+      "contentUpdatedAt": "2025-11-25T00:48:26.000Z",
+      "code": "PRT",
+      "mapName": "Portugal",
+      "neId": "1159321193"
+    },
+    "romania": {
+      "slug": "romania",
+      "title": "罗马尼亚",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/romania",
+      "wordCount": 2522,
+      "images": 39,
+      "contentUpdatedAt": "2025-08-12T06:59:49.000Z",
+      "code": "ROU",
+      "mapName": "Romania",
+      "neId": "1159321199"
+    },
+    "russia": {
+      "slug": "russia",
+      "title": "俄罗斯",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/russia",
+      "wordCount": 6981,
+      "images": 120,
+      "contentUpdatedAt": "2025-11-10T02:35:12.000Z",
+      "code": "RUS",
+      "mapName": "Russia",
+      "neId": "1159321201"
+    },
+    "san-marino": {
+      "slug": "san-marino",
+      "title": "圣马力诺",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/san-marino",
+      "wordCount": 451,
+      "images": 11,
+      "contentUpdatedAt": "2025-01-12T08:13:14.000Z",
+      "code": "SMR",
+      "mapName": "San Marino",
+      "neId": "1159321255"
+    },
+    "serbia": {
+      "slug": "serbia",
+      "title": "塞尔维亚",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/serbia",
+      "wordCount": 1646,
+      "images": 23,
+      "contentUpdatedAt": "2025-08-27T15:06:17.000Z",
+      "code": "SRB",
+      "mapName": "Serbia",
+      "neId": "1159321269"
+    },
+    "slovakia": {
+      "slug": "slovakia",
+      "title": "斯洛伐克",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/slovakia",
+      "wordCount": 2795,
+      "images": 54,
+      "contentUpdatedAt": "2025-10-19T23:24:25.000Z",
+      "code": "SVK",
+      "mapName": "Slovakia",
+      "neId": "1159321283"
+    },
+    "slovenia": {
+      "slug": "slovenia",
+      "title": "斯洛文尼亚",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/slovenia",
+      "wordCount": 1111,
+      "images": 22,
+      "contentUpdatedAt": "2025-06-16T08:20:34.000Z",
+      "code": "SVN",
+      "mapName": "Slovenia",
+      "neId": "1159321285"
+    },
+    "spain": {
+      "slug": "spain",
+      "title": "西班牙",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/spain",
+      "wordCount": 7711,
+      "images": 127,
+      "contentUpdatedAt": "2026-06-30T12:38:17.000Z",
+      "code": "ESP",
+      "mapName": "Spain",
+      "neId": "1159320587"
+    },
+    "svalbard": {
+      "slug": "svalbard",
+      "title": "斯瓦尔巴",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/svalbard",
+      "wordCount": 650,
+      "images": 16,
+      "contentUpdatedAt": "2025-05-30T14:43:55.000Z",
+      "code": "NOR",
+      "mapName": "Svalbard",
+      "neId": "1159321119"
+    },
+    "sweden": {
+      "slug": "sweden",
+      "title": "瑞典",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/sweden",
+      "wordCount": 7438,
+      "images": 130,
+      "contentUpdatedAt": "2026-03-09T15:05:54.000Z",
+      "code": "SWE",
+      "mapName": "Sweden",
+      "neId": "1159321287"
+    },
+    "switzerland": {
+      "slug": "switzerland",
+      "title": "瑞士",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/switzerland",
+      "wordCount": 2019,
+      "images": 51,
+      "contentUpdatedAt": "2025-01-12T09:36:32.000Z",
+      "code": "CHE",
+      "mapName": "Switzerland",
+      "neId": "1159320491"
+    },
+    "ukraine": {
+      "slug": "ukraine",
+      "title": "乌克兰",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/ukraine",
+      "wordCount": 4457,
+      "images": 48,
+      "contentUpdatedAt": "2026-05-03T12:21:21.000Z",
+      "code": "UKR",
+      "mapName": "Ukraine",
+      "neId": "1159321345"
+    },
+    "united-kingdom": {
+      "slug": "united-kingdom",
+      "title": "英国",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/united-kingdom",
+      "wordCount": 3041,
+      "images": 64,
+      "contentUpdatedAt": "2026-03-07T10:55:23.000Z",
+      "code": "GBR",
+      "mapName": "England",
+      "neId": "1159320743"
+    },
+    "alaska": {
+      "slug": "alaska",
+      "title": "阿拉斯加",
+      "section": "北美洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/alaska",
+      "wordCount": 1415,
+      "images": 25,
+      "contentUpdatedAt": "2025-03-17T06:00:32.000Z",
+      "code": "USA",
+      "mapName": "United States of America",
+      "neId": "1159321369"
+    },
+    "bermuda": {
+      "slug": "bermuda",
+      "title": "百慕大",
+      "section": "北美洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/bermuda",
+      "wordCount": 491,
+      "images": 16,
+      "contentUpdatedAt": "2025-01-12T08:22:54.000Z",
+      "code": "BMU",
+      "mapName": "Bermuda",
+      "neId": "1159320705"
+    },
+    "canada": {
+      "slug": "canada",
+      "title": "加拿大",
+      "section": "北美洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/canada",
+      "wordCount": 6529,
+      "images": 119,
+      "contentUpdatedAt": "2026-05-03T12:49:33.000Z",
+      "code": "CAN",
+      "mapName": "Canada",
+      "neId": "1159320467"
+    },
+    "costa_rica": {
+      "slug": "costa_rica",
+      "title": "哥斯达黎加",
+      "section": "北美洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/costa_rica",
+      "wordCount": 4891,
+      "images": 100,
+      "contentUpdatedAt": "2026-04-14T15:46:09.000Z",
+      "code": "CRI",
+      "mapName": "Costa Rica",
+      "neId": "1159320525"
+    },
+    "dominican": {
+      "slug": "dominican",
+      "title": "多米尼加",
+      "section": "北美洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/dominican",
+      "wordCount": 731,
+      "images": 14,
+      "contentUpdatedAt": "2024-01-26T06:08:45.000Z",
+      "code": "DOM",
+      "mapName": "Dominican Republic",
+      "neId": "1159320563"
+    },
+    "greenland": {
+      "slug": "greenland",
+      "title": "格陵兰",
+      "section": "北美洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/greenland",
+      "wordCount": 2373,
+      "images": 50,
+      "contentUpdatedAt": "2024-01-26T06:08:49.000Z",
+      "code": "GRL",
+      "mapName": "Greenland",
+      "neId": "1159320551"
+    },
+    "guatemala": {
+      "slug": "guatemala",
+      "title": "危地马拉",
+      "section": "北美洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/guatemala",
+      "wordCount": 1168,
+      "images": 37,
+      "contentUpdatedAt": "2024-01-26T06:09:03.000Z",
+      "code": "GTM",
+      "mapName": "Guatemala",
+      "neId": "1159320815"
+    },
+    "hawaii": {
+      "slug": "hawaii",
+      "title": "夏威夷",
+      "section": "北美洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/hawaii",
+      "wordCount": 2273,
+      "images": 34,
+      "contentUpdatedAt": "2026-01-16T15:34:55.000Z",
+      "code": "USA",
+      "mapName": "United States of America",
+      "neId": "1159321369"
+    },
+    "martinique": {
+      "slug": "martinique",
+      "title": "马提尼克",
+      "section": "北美洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/martinique",
+      "wordCount": 445,
+      "images": 5,
+      "contentUpdatedAt": "2026-04-14T15:42:45.000Z",
+      "code": "FRA",
+      "mapName": "Martinique",
+      "neId": "1159320657"
+    },
+    "mexico": {
+      "slug": "mexico",
+      "title": "墨西哥",
+      "section": "北美洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/mexico",
+      "wordCount": 4230,
+      "images": 107,
+      "contentUpdatedAt": "2024-03-15T17:11:30.000Z",
+      "code": "MEX",
+      "mapName": "Mexico",
+      "neId": "1159321055"
+    },
+    "panama": {
+      "slug": "panama",
+      "title": "巴拿马",
+      "section": "北美洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/panama",
+      "wordCount": 1657,
+      "images": 52,
+      "contentUpdatedAt": "2024-01-29T08:10:07.000Z",
+      "code": "PAN",
+      "mapName": "Panama",
+      "neId": "1159321161"
+    },
+    "puerto-rico": {
+      "slug": "puerto-rico",
+      "title": "波多黎各",
+      "section": "北美洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/puerto-rico",
+      "wordCount": 1169,
+      "images": 19,
+      "contentUpdatedAt": "2026-01-20T15:14:37.000Z",
+      "code": "PRI",
+      "mapName": "Puerto Rico",
+      "neId": "1159321363"
+    },
+    "saint-pierre-and-miquelon": {
+      "slug": "saint-pierre-and-miquelon",
+      "title": "圣皮埃尔和密克隆",
+      "section": "北美洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/saint-pierre-and-miquelon",
+      "wordCount": 549,
+      "images": 12,
+      "contentUpdatedAt": "2024-04-11T10:52:19.000Z",
+      "code": "SPM",
+      "mapName": "Saint Pierre and Miquelon",
+      "neId": "1159320647"
+    },
+    "us-minor-outlying-islands": {
+      "slug": "us-minor-outlying-islands",
+      "title": "美国本土外小岛屿",
+      "section": "北美洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/us-minor-outlying-islands",
+      "wordCount": 970,
+      "images": 17,
+      "contentUpdatedAt": "2024-01-26T06:31:28.000Z",
+      "code": "USA",
+      "mapName": "United States of America",
+      "neId": "1159321369"
+    },
+    "us-virgin-islands": {
+      "slug": "us-virgin-islands",
+      "title": "美属维尔京群岛",
+      "section": "北美洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/us-virgin-islands",
+      "wordCount": 668,
+      "images": 10,
+      "contentUpdatedAt": "2025-03-17T05:57:41.000Z",
+      "code": "VIR",
+      "mapName": "United States Virgin Islands",
+      "neId": "1159321371"
+    },
+    "united-states": {
+      "slug": "united-states",
+      "title": "美国",
+      "section": "北美洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/united-states",
+      "wordCount": 12230,
+      "images": 211,
+      "contentUpdatedAt": "2026-03-09T15:39:09.000Z",
+      "code": "USA",
+      "mapName": "United States of America",
+      "neId": "1159321369"
+    },
+    "american-samoa": {
+      "slug": "american-samoa",
+      "title": "美属萨摩亚",
+      "section": "大洋洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/american-samoa",
+      "wordCount": 470,
+      "images": 9,
+      "contentUpdatedAt": "2025-02-28T13:39:57.000Z",
+      "code": "ASM",
+      "mapName": "American Samoa",
+      "neId": "1159321357"
+    },
+    "australia": {
+      "slug": "australia",
+      "title": "澳大利亚",
+      "section": "大洋洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/australia",
+      "wordCount": 4968,
+      "images": 81,
+      "contentUpdatedAt": "2026-05-03T12:37:13.000Z",
+      "code": "AUS",
+      "mapName": "Australia",
+      "neId": "1159320355"
+    },
+    "christmas-island": {
+      "slug": "christmas-island",
+      "title": "圣诞岛",
+      "section": "大洋洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/christmas-island",
+      "wordCount": 781,
+      "images": 22,
+      "contentUpdatedAt": "2025-01-12T08:17:29.000Z",
+      "code": "IOA",
+      "mapName": "Christmas Island",
+      "neId": "1159320369"
+    },
+    "cocos-islands": {
+      "slug": "cocos-islands",
+      "title": "科科斯群岛",
+      "section": "大洋洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/cocos-islands",
+      "wordCount": 559,
+      "images": 13,
+      "contentUpdatedAt": "2025-02-28T13:44:54.000Z",
+      "code": "IOA",
+      "mapName": "Cocos",
+      "neId": "1159320367"
+    },
+    "guam": {
+      "slug": "guam",
+      "title": "关岛",
+      "section": "大洋洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/guam",
+      "wordCount": 404,
+      "images": 15,
+      "contentUpdatedAt": "2025-01-12T08:23:46.000Z",
+      "code": "GUM",
+      "mapName": "Guam",
+      "neId": "1159321359"
+    },
+    "new-zealand": {
+      "slug": "new-zealand",
+      "title": "新西兰",
+      "section": "大洋洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/new-zealand",
+      "wordCount": 4141,
+      "images": 95,
+      "contentUpdatedAt": "2026-03-10T06:33:19.000Z",
+      "code": "NZL",
+      "mapName": "New Zealand",
+      "neId": "1159321135"
+    },
+    "northern-mariana-islands": {
+      "slug": "northern-mariana-islands",
+      "title": "北马里亚纳群岛",
+      "section": "大洋洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/northern-mariana-islands",
+      "wordCount": 517,
+      "images": 14,
+      "contentUpdatedAt": "2025-01-12T08:24:00.000Z",
+      "code": "MNP",
+      "mapName": "Northern Mariana Islands",
+      "neId": "1159321361"
+    },
+    "pitcairn-islands": {
+      "slug": "pitcairn-islands",
+      "title": "皮特凯恩群岛",
+      "section": "大洋洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/pitcairn-islands",
+      "wordCount": 312,
+      "images": 9,
+      "contentUpdatedAt": "2024-01-26T06:11:14.000Z",
+      "code": "PCN",
+      "mapName": "Pitcairn Islands",
+      "neId": "1159320729"
+    },
+    "vanuatu": {
+      "slug": "vanuatu",
+      "title": "瓦努阿图",
+      "section": "大洋洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/vanuatu",
+      "wordCount": 577,
+      "images": 12,
+      "contentUpdatedAt": "2025-02-28T14:00:34.000Z",
+      "code": "VUT",
+      "mapName": "Vanuatu",
+      "neId": "1159321421"
+    },
+    "argentina": {
+      "slug": "argentina",
+      "title": "阿根廷",
+      "section": "南美洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/argentina",
+      "wordCount": 3175,
+      "images": 79,
+      "contentUpdatedAt": "2026-04-13T06:12:04.000Z",
+      "code": "ARG",
+      "mapName": "Argentina",
+      "neId": "1159320331"
+    },
+    "bolivia": {
+      "slug": "bolivia",
+      "title": "玻利维亚",
+      "section": "南美洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/bolivia",
+      "wordCount": 5563,
+      "images": 61,
+      "contentUpdatedAt": "2025-08-25T12:43:25.000Z",
+      "code": "BOL",
+      "mapName": "Bolivia",
+      "neId": "1159320439"
+    },
+    "brazil": {
+      "slug": "brazil",
+      "title": "巴西",
+      "section": "南美洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/brazil",
+      "wordCount": 6459,
+      "images": 108,
+      "contentUpdatedAt": "2025-05-22T09:23:58.000Z",
+      "code": "BRA",
+      "mapName": "Brazil",
+      "neId": "1159320441"
+    },
+    "chile": {
+      "slug": "chile",
+      "title": "智利",
+      "section": "南美洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/chile",
+      "wordCount": 3609,
+      "images": 70,
+      "contentUpdatedAt": "2025-01-13T14:09:43.000Z",
+      "code": "CHL",
+      "mapName": "Chile",
+      "neId": "1159320493"
+    },
+    "colombia": {
+      "slug": "colombia",
+      "title": "哥伦比亚",
+      "section": "南美洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/colombia",
+      "wordCount": 1348,
+      "images": 25,
+      "contentUpdatedAt": "2025-12-09T12:51:53.000Z",
+      "code": "COL",
+      "mapName": "Colombia",
+      "neId": "1159320517"
+    },
+    "curacao": {
+      "slug": "curacao",
+      "title": "库拉索",
+      "section": "南美洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/curacao",
+      "wordCount": 418,
+      "images": 11,
+      "contentUpdatedAt": "2024-01-26T06:10:55.000Z",
+      "code": "CUW",
+      "mapName": "Curaçao",
+      "neId": "1159321099"
+    },
+    "ecuador": {
+      "slug": "ecuador",
+      "title": "厄瓜多尔",
+      "section": "南美洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/ecuador",
+      "wordCount": 2131,
+      "images": 35,
+      "contentUpdatedAt": "2026-01-20T15:04:50.000Z",
+      "code": "ECU",
+      "mapName": "Ecuador",
+      "neId": "1159320567"
+    },
+    "falkland-islands": {
+      "slug": "falkland-islands",
+      "title": "福克兰群岛",
+      "section": "南美洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/falkland-islands",
+      "wordCount": 418,
+      "images": 9,
+      "contentUpdatedAt": "2025-01-13T06:18:14.000Z",
+      "code": "FLK",
+      "mapName": "Falkland Islands",
+      "neId": "1159320711"
+    },
+    "peru": {
+      "slug": "peru",
+      "title": "秘鲁",
+      "section": "南美洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/peru",
+      "wordCount": 3449,
+      "images": 85,
+      "contentUpdatedAt": "2025-10-13T11:28:28.000Z",
+      "code": "PER",
+      "mapName": "Peru",
+      "neId": "1159321163"
+    },
+    "south-georgia-sandwich-islands": {
+      "slug": "south-georgia-sandwich-islands",
+      "title": "南乔治亚和南桑威奇群岛",
+      "section": "南美洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/south-georgia-sandwich-islands",
+      "wordCount": 523,
+      "images": 7,
+      "contentUpdatedAt": "2025-01-13T06:18:34.000Z",
+      "code": "SGS",
+      "mapName": "South Georgia and the South Sandwich Islands",
+      "neId": "1159320731"
+    },
+    "uruguay": {
+      "slug": "uruguay",
+      "title": "乌拉圭",
+      "section": "南美洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/uruguay",
+      "wordCount": 2482,
+      "images": 41,
+      "contentUpdatedAt": "2025-09-15T15:48:21.000Z",
+      "code": "URY",
+      "mapName": "Uruguay",
+      "neId": "1159321353"
+    },
+    "antarctica": {
+      "slug": "antarctica",
+      "title": "南极洲",
+      "section": "",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/antarctica",
+      "wordCount": 722,
+      "images": 21,
+      "contentUpdatedAt": "2025-01-12T09:39:14.000Z",
+      "code": "ATA",
+      "mapName": "Antarctica",
+      "neId": "1159320335"
+    }
+  },
+  "unmatched": [
+    {
+      "slug": "gibraltar",
+      "title": "直布罗陀",
+      "section": "欧洲",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/gibraltar",
+      "wordCount": 600,
+      "images": 10,
+      "contentUpdatedAt": "2025-01-13T06:29:53.000Z"
+    }
+  ]
+}

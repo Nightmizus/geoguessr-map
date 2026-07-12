@@ -1,0 +1,1 @@
+window.PLONKIT_IMAGE_SELECTIONS = {};

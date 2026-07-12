@@ -1,0 +1,2677 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plonk It 国家/地区页面地图</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #e8eef7;
+      --muted: #9fb0c5;
+      --line: rgba(3, 8, 15, 0.72);
+      --ocean: #07111d;
+      --land: #263448;
+      --target: #ef4444;
+      --target-faded: #9b3f47;
+      --left-drive: #3b82f6;
+      --left-drive-faded: #3567a8;
+      --selected: #ffd166;
+      --panel: rgba(16, 25, 38, 0.62);
+      --panel-strong: rgba(16, 25, 38, 0.82);
+      --glass: rgba(255, 255, 255, 0.08);
+      --glass-strong: rgba(255, 255, 255, 0.14);
+      --border: rgba(195, 215, 238, 0.22);
+      --shadow: 0 22px 70px rgba(0, 0, 0, 0.38);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, "Microsoft YaHei", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 18% 12%, rgba(31, 111, 235, 0.18), transparent 28%),
+        radial-gradient(circle at 82% 6%, rgba(215, 47, 47, 0.16), transparent 24%),
+        linear-gradient(135deg, #06101c 0%, #0c1522 48%, #111827 100%);
+    }
+
+    .shell {
+      min-height: 100vh;
+      display: block;
+      padding: 0;
+    }
+
+    .map-wrap {
+      position: fixed;
+      inset: 0;
+      padding: 0;
+      min-width: 0;
+    }
+
+    .map-head {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      right: 16px;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin: 0;
+      padding: 10px 12px 10px 18px;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: rgba(10, 18, 30, 0.54);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.34);
+      backdrop-filter: blur(22px) saturate(1.24);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .source {
+      color: var(--muted);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .map-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .zoom-controls {
+      position: static;
+      display: flex;
+      gap: 6px;
+      z-index: auto;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      backdrop-filter: none;
+    }
+
+    .zoom-controls button {
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.11);
+      color: var(--ink);
+      border-radius: 12px;
+      font: 700 17px/1 Arial, sans-serif;
+      cursor: pointer;
+      box-shadow: none;
+    }
+
+    .zoom-controls button:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    svg {
+      width: 100vw;
+      height: 100vh;
+      min-height: 100vh;
+      display: block;
+      background: var(--ocean);
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+      overflow: hidden;
+    }
+
+    .sphere {
+      fill: var(--ocean);
+    }
+
+    .country-border {
+      fill: none;
+      stroke: rgba(216, 230, 248, 0.58);
+      stroke-width: 0.52;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      vector-effect: non-scaling-stroke;
+      pointer-events: none;
+    }
+
+    .map-render-layer {
+      pointer-events: none;
+    }
+
+    .country-render-fill,
+    .country-render-texture {
+      stroke: none;
+      pointer-events: none;
+    }
+
+    .country-render-texture {
+      opacity: 0.62;
+    }
+
+    .border-layer {
+      pointer-events: none;
+    }
+
+    .country-click-layer {
+      pointer-events: all;
+    }
+
+    .country-click-target {
+      fill: transparent;
+      stroke: none;
+      cursor: pointer;
+      pointer-events: all;
+    }
+
+    .image-overlay {
+      pointer-events: none;
+    }
+
+    .map-photo {
+      pointer-events: none;
+    }
+
+    .map-photo image {
+      pointer-events: none;
+    }
+
+    .profile-panel {
+      position: static;
+      z-index: auto;
+      width: auto;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      backdrop-filter: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .profile-title {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .profile-buttons {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 0;
+    }
+
+    .profile-button {
+      min-width: 0;
+      min-height: 34px;
+      max-width: 82px;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--ink);
+      font: inherit;
+      font-size: 11px;
+      cursor: pointer;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      box-shadow: none;
+    }
+
+    .profile-button.active {
+      border-color: rgba(255, 209, 102, 0.76);
+      background: rgba(255, 209, 102, 0.18);
+      color: #fff5d0;
+    }
+
+    .profile-settings {
+      border-top: 0;
+      padding-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .profile-settings label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .profile-settings input[type="text"] {
+      width: 128px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--ink);
+      padding: 7px 9px;
+      font: inherit;
+      outline: none;
+    }
+
+    .profile-toggle {
+      display: flex !important;
+      grid-template-columns: none !important;
+      align-items: center;
+      gap: 8px !important;
+      color: var(--ink) !important;
+    }
+
+    .profile-toggle input {
+      margin: 0;
+    }
+
+    .side {
+      position: fixed;
+      top: 92px;
+      right: 16px;
+      bottom: 16px;
+      z-index: 4;
+      width: 440px;
+      border: 1px solid var(--border);
+      background: rgba(10, 18, 30, 0.54);
+      padding: 14px;
+      overflow: auto;
+      max-height: none;
+      border-radius: 22px;
+      box-shadow: 0 18px 56px rgba(0, 0, 0, 0.34);
+      backdrop-filter: blur(22px) saturate(1.18);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 14px 0 16px;
+    }
+
+    .side > h2:first-child,
+    .stats {
+      display: none;
+    }
+
+    .stat {
+      border: 1px solid var(--border);
+      background: var(--glass);
+      padding: 10px;
+      border-radius: 16px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 22px;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .legend {
+      display: grid;
+      gap: 8px;
+      margin: 12px 0 16px;
+      font-size: 13px;
+      padding: 0 0 12px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .legend-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 22px;
+    }
+
+    .legend-note {
+      margin: -2px 0 0 26px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    .swatch {
+      width: 18px;
+      height: 12px;
+      border: 1px solid var(--line);
+      display: inline-block;
+      background: var(--land);
+      border-radius: 4px;
+    }
+
+    .swatch.red {
+      background: var(--target);
+    }
+
+    .language-guide {
+      margin: 12px 0 16px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      padding: 0;
+      box-shadow: none;
+      overflow: hidden;
+    }
+
+    .language-guide summary {
+      padding: 0 0 10px;
+      border-bottom: 1px solid var(--border);
+      background: transparent;
+    }
+
+    .language-guide[open] summary {
+      margin-bottom: 0;
+    }
+
+    .language-guide-list {
+      display: grid;
+      gap: 9px;
+      padding: 10px 0 2px;
+    }
+
+    .language-item {
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr);
+      gap: 8px;
+      align-items: start;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .language-swatch {
+      width: 42px;
+      height: 24px;
+      border: 1px solid var(--line);
+      background: #f7d6d6;
+      border-radius: 9px;
+    }
+
+    .language-title {
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .language-mark {
+      color: #cad5e4;
+    }
+
+    .language-hint {
+      color: var(--muted);
+    }
+
+    h2 {
+      margin: 18px 0 8px;
+      font-size: 15px;
+    }
+
+    .doc-panel {
+      border: 0;
+      background: transparent;
+      border-radius: 0;
+      min-height: 320px;
+      padding: 0;
+      box-shadow: none;
+    }
+
+    .selection-tools {
+      display: grid;
+      gap: 8px;
+      margin: 0 0 14px;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+    }
+
+    #save-selections,
+    #download-selections,
+    #selection-status,
+    .selection-tools p {
+      display: none !important;
+    }
+
+    .selection-tools p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .selection-tools button {
+      justify-self: start;
+      border: 1px solid var(--line);
+      background: rgba(232, 238, 247, 0.14);
+      color: #fff;
+      border-radius: 12px;
+      padding: 7px 10px;
+      font: inherit;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .selection-status {
+      color: #84e1a4;
+      font-size: 12px;
+      min-height: 16px;
+    }
+
+    .fade-toggle {
+      justify-self: start;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 8px;
+    }
+
+    .fade-toggle input {
+      margin: 0;
+    }
+
+    .placeholder {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .doc-title {
+      margin: 0 0 8px;
+      font-size: 20px;
+      line-height: 1.25;
+    }
+
+    .doc-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+
+    .page-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0 0 12px;
+    }
+
+    .page-tabs button {
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 6px 8px;
+      font: inherit;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .page-tabs button.active {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.34);
+    }
+
+    .article {
+      font-size: 14px;
+      line-height: 1.72;
+      overflow-wrap: anywhere;
+    }
+
+    .article h1,
+    .article h2,
+    .article h3,
+    .article h4 {
+      line-height: 1.3;
+      margin: 18px 0 8px;
+    }
+
+    .article p {
+      margin: 8px 0;
+    }
+
+    .article img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      margin: 8px auto;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+    }
+
+    .article figure {
+      position: relative;
+      margin: 12px 0;
+    }
+
+    .image-choice {
+      position: relative;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      padding-top: 30px;
+    }
+
+    .image-choice.selected-image {
+      border-color: var(--selected);
+      background: rgba(255, 209, 102, 0.12);
+    }
+
+    .image-picker {
+      position: absolute;
+      top: 4px;
+      left: 6px;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 22px;
+      padding: 2px 7px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(10, 18, 30, 0.82);
+      font-size: 12px;
+      color: var(--ink);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+      backdrop-filter: blur(12px);
+    }
+
+    .image-picker input {
+      margin: 0;
+    }
+
+    .image-rank {
+      min-width: 18px;
+      height: 18px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .article table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0;
+      font-size: 13px;
+    }
+
+    .article th,
+    .article td {
+      border: 1px solid var(--border);
+      padding: 6px;
+      vertical-align: top;
+    }
+
+    .article th {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--ink);
+    }
+
+    details {
+      margin-top: 12px;
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+    }
+
+    .side > details:not(.language-guide) {
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      padding: 10px 0 0;
+      box-shadow: none;
+      overflow: hidden;
+    }
+
+    .political-disclaimer {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255, 209, 102, 0.28);
+      border-radius: 14px;
+      background: rgba(255, 209, 102, 0.08);
+    }
+
+    .political-disclaimer p {
+      margin: 8px 0 0;
+      color: #d9e4f2;
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .political-note {
+      margin: 10px 0;
+      padding: 9px 10px;
+      border: 1px solid rgba(255, 209, 102, 0.24);
+      border-radius: 12px;
+      background: rgba(255, 209, 102, 0.08);
+      color: #d9e4f2;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--ink);
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    li {
+      margin: 4px 0;
+      font-size: 13px;
+      color: #d9e4f2;
+    }
+
+    .menu-list {
+      columns: 2;
+      column-gap: 18px;
+      margin-top: 10px;
+    }
+
+    .menu-list li {
+      break-inside: avoid;
+    }
+
+    @media (max-width: 980px) {
+      .shell {
+        padding: 12px;
+        gap: 12px;
+      }
+
+      .map-head {
+        position: fixed;
+        left: 12px;
+        right: 12px;
+        top: 12px;
+        flex-wrap: wrap;
+        align-items: flex-start;
+      }
+
+      .map-toolbar {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+      }
+
+      .profile-panel,
+      .profile-settings {
+        flex-wrap: wrap;
+      }
+
+      .side {
+        position: fixed;
+        left: 12px;
+        right: 12px;
+        top: 150px;
+        bottom: 12px;
+        width: auto;
+        border: 1px solid var(--border);
+        max-height: none;
+      }
+
+      svg {
+        height: 100vh;
+        min-height: 100vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <main class="map-wrap">
+      <div class="map-head">
+        <h1>Mizusumi的图寻地图</h1>
+        <div class="map-toolbar">
+          <div class="zoom-controls" aria-label="地图缩放控件">
+            <button type="button" id="zoom-in" title="放大">+</button>
+            <button type="button" id="zoom-out" title="缩小">−</button>
+            <button type="button" id="zoom-reset" title="重置">↺</button>
+          </div>
+          <div class="profile-panel" id="profile-panel" aria-label="Profiles">
+            <div class="profile-title">Profiles</div>
+            <div class="profile-buttons" id="profile-buttons"></div>
+            <div class="profile-settings">
+              <label>
+                <span>Profile 名称</span>
+                <input type="text" id="profile-name" maxlength="28">
+              </label>
+              <label class="profile-toggle">
+                <input type="checkbox" id="profile-show-language">
+                <span>语言形状</span>
+              </label>
+              <label class="profile-toggle">
+                <input type="checkbox" id="profile-show-left-drive">
+                <span>左右行颜色</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <svg id="map" viewBox="0 0 1280 760" role="img" aria-label="以太平洋为中心的世界地图，Plonk It 菜单国家或地区为红色"></svg>
+    </main>
+
+    <aside class="side">
+      <h2>抓取结果</h2>
+      <div class="stats">
+        <div class="stat"><strong id="page-count">...</strong><span>已抓页面</span></div>
+        <div class="stat"><strong id="red-count">...</strong><span>覆盖代码</span></div>
+        <div class="stat"><strong id="fail-count">...</strong><span>失败</span></div>
+      </div>
+
+      <div class="legend">
+        <div class="legend-row"><span class="swatch red"></span><span>右行</span></div>
+        <div class="legend-row"><span class="swatch" style="background: var(--left-drive)"></span><span>左行</span></div>
+        <div class="legend-row"><span class="swatch"></span><span>没有谷歌街景</span></div>
+        <div class="legend-note">注：中国有谷歌街景，但大陆街景数量极少，且目前没有教程文档，故显示为灰色。</div>
+      </div>
+
+      <details class="language-guide" open>
+        <summary>语言 / 文字识别折叠栏</summary>
+        <div class="language-guide-list" id="language-guide-list"></div>
+      </details>
+
+      <details class="political-disclaimer" open>
+        <summary>地图与地区表述免责声明</summary>
+        <p>本页仅用于图寻街景识别学习，地图底图、颜色和页面内容不作为国界、主权、行政区划或任何法律立场依据。</p>
+      </details>
+
+      <section class="doc-panel" id="doc-panel">
+        <div class="placeholder">数据加载中。地图鼠标交互已关闭。</div>
+      </section>
+
+      <details>
+        <summary>未单独匹配到地图面的页面</summary>
+        <ul id="unmatched-list"></ul>
+      </details>
+
+      <details>
+        <summary>已抓取页面列表</summary>
+        <ul class="menu-list" id="page-list"></ul>
+      </details>
+    </aside>
+  </div>
+  <script src="assets/vendor/d3.v7.min.js"></script>
+  <script src="data/generated/plonkit_geo_data.js"></script>
+  <script src="data/generated/plonkit_page_data.js"></script>
+  <script src="data/generated/plonkit_image_selections.js"></script>
+  <script>
+    const svg = d3.select("#map");
+    const width = 1280;
+    const height = 760;
+    const LEFT_DRIVE_CODES = new Set([
+      "AUS", "BGD", "BMU", "BWA", "CYP", "FLK", "GBR", "HKG", "IMN", "IND",
+      "IDN", "IOA", "IOT", "IRL", "JEY", "JPN", "KEN", "LKA", "LSO", "MAC",
+      "MLT", "MYS", "NAM", "NPL", "NZL", "PAK", "PCN", "SGP", "SWZ", "THA",
+      "TZA", "UGA", "VIR", "ZAF"
+    ]);
+    const SELECTION_STORAGE_KEY = "plonkit-image-selections-v1";
+    const PROFILE_STORAGE_KEY = "plonkit-profiles-v1";
+    const FADED_FEATURE_STORAGE_KEY = "plonkit-faded-features-v1";
+    const CARPLATE_PROFILE_CLEANUP_KEY = "plonkit-carplate-profile-images-cleared-v1";
+    const PROFILE_IDS = ["profile1", "profile2", "profile3", "profile4"];
+    const LAYOUT_CACHE_VERSION = 2;
+    const RENDER_CACHE_VERSION = 2;
+    const DEFAULT_PHOTO_ASPECT_RATIO = 1.5;
+    const COUNTRY_IMAGE_FILL_RATIO = 0.6;
+    const PHOTO_GAP_RATIO = 0.08;
+    const PHOTO_SAFE_MARGIN = 2;
+    const MAX_CANDIDATES_PER_FEATURE = 96;
+    const MAX_CANDIDATE_ATTEMPTS = 360;
+    const STRICT_RECT_SAMPLE_COLS = 11;
+    const STRICT_RECT_SAMPLE_ROWS = 9;
+    const RELAXED_IMAGE_CODES = new Set([
+      "BRN", "CHL", "GBR", "IDN", "ISL", "JPN", "KHM", "LAO", "MDG", "MMR",
+      "MYS", "NOR", "NZL", "PHL", "SGP", "THA", "TLS", "VNM"
+    ]);
+    const POLITICAL_DISPLAY_NAMES = new Map([
+      ["TWN", "中国台湾"],
+      ["HKG", "中国香港"],
+      ["MAC", "中国澳门"],
+      ["ISR", "巴以地区"],
+      ["PSX:Gaza", "加沙地区"],
+      ["PSX:West Bank", "约旦河西岸地区"],
+      ["KAS", "中国边境地区"],
+    ]);
+const LANGUAGE_GROUPS = [
+  {
+    id: "chinese",
+    label: "中文",
+    mark: "不加图案",
+    hint: "中文最核心的特征是汉字密度极高，单个字通常是方块结构，没有假名、谚文或拉丁字母那种明显的拼写串。图寻时先看路牌、店名、学校、医院、政府机关牌匾：如果几乎全是汉字，基本可以先归入中文。简体多见于中国大陆、新加坡部分场景；繁体常见于台湾、香港、澳门，也可能出现在海外华人街。注意本地图中中日韩不叠图案，所以中文主要靠字形本身识别。"
+  },
+  {
+    id: "japanese",
+    label: "日语",
+    mark: "不加图案",
+    hint: "日语的速判点是“汉字 + 假名混排”。如果一段文字里既有汉字，又频繁出现圆滑简单的假名，比如 の、に、は、た、し、ま、ン、ツ、カ，基本就是日语。中文通常不会夹这么多假名，韩语也不会出现这种形态。图寻时尤其看便利店、车站、路牌和广告牌，日语假名出现频率很高；本地图中中日韩不叠图案，所以日语也主要靠字形识别。"
+  },
+  {
+    id: "korean",
+    label: "韩语",
+    mark: "不加图案",
+    hint: "韩语最容易一眼认出来：文字像一个个“小方块音节”，内部有圆圈、横竖直角和短线组合，常见形状包括 ㅇ、ㅎ、ㅁ、ㄴ、ㅂ、ㅅ。它不像中文那样笔画复杂，也不像日语那样夹假名和汉字。看到大量整齐方块状谚文，基本可以直接判断为韩语。图寻里韩国路牌、店招、公交站牌都很常见；本地图中中日韩不叠图案。"
+  },
+  {
+    id: "english",
+    label: "英语",
+    mark: "黑色横线",
+    hint: "英语使用普通拉丁字母，最大的优势是地图词非常固定。看到 Road、Street、Ave、Avenue、Town、County、School、Church、Police、Market、Center/Centre 等词，就可以优先归入英语。英语容易和其他拉丁字母语言混，但它通常缺少大量重音符号，也不会像德语、荷兰语、北欧语那样出现明显的特殊字母或长复合词。图寻时先扫道路名和公共设施名，效率最高。",
+    pattern: { kind: "horizontal", color: "#111827" }
+  },
+  {
+    id: "russian",
+    label: "俄语",
+    mark: "黑色竖线",
+    hint: "俄语使用西里尔字母，第一眼会看到很多类似但又不同于拉丁字母的字符，比如 Д、Ж、Я、Л、Ц、Ч、Ш、Щ、Ы、Ю。和保加利亚语、乌克兰语、塞尔维亚语等其他西里尔文字相比，俄语常见 ы、э、ъ、ё，以及大量以 -ая、-ый、-ов、-ская 结尾的词。图寻时如果是西里尔字母，先不要直接判俄语，要结合地名、路牌词和国家环境；但如果出现典型俄式词形，俄语优先级很高。",
+    pattern: { kind: "vertical", color: "#111827" }
+  },
+  {
+    id: "french",
+    label: "法语",
+    mark: "蓝色十字点",
+    hint: "法语的速判词是 Rue、Route、Avenue、Arrêt、École、Mairie、Centre、Sortie。它常出现 é、è、ê、à、ç、ù 等重音符号，整体看起来比英语“装饰”更多。图寻中看到 Rue 基本要立刻考虑法语区，尤其是法国、比利时南部、瑞士法语区、加拿大魁北克和部分非洲国家。注意法语可能和英语、阿拉伯语或非洲本地语言并存，要看哪个语言在官方牌子上占主导。",
+    pattern: { kind: "plus", color: "#1d4ed8" }
+  },
+  {
+    id: "italian",
+    label: "意大利语",
+    mark: "绿色小圆点",
+    hint: "意大利语常见 Via、Viale、Strada、Piazza、Comune、Chiesa、Scuola 等词。它的拉丁字母比较“干净”，重音符号不算特别密集，但词尾很有特点，常见 -zione、-ale、-ini、-etti、-ello、-ità。看到 Via + 地名是非常强的意大利语线索。它和西班牙语、葡萄牙语有相似感，但意大利语的 Via、Piazza、Comune 组合非常好用。",
+    pattern: { kind: "dots", color: "#15803d" }
+  },
+  {
+    id: "german",
+    label: "德语",
+    mark: "黑色棋盘格",
+    hint: "德语最醒目的地图词是 Straße/Strasse、Weg、Platz、Bahnhof、Schule、Kirche、Rathaus。它经常出现长复合词，一个词能拖得很长，比如把几个名词连在一起。特殊字母 ä、ö、ü、ß 是重要线索，其中 Straße 几乎是德语区招牌级特征。图寻时看到 Bahnhof、Gemeinde、Hauptstraße、Schloss、Sparkasse 等，也要立刻考虑德国、奥地利、瑞士德语区。",
+    pattern: { kind: "checker", color: "#111827" }
+  },
+  {
+    id: "iberian",
+    label: "西葡语系",
+    mark: "红色右斜杠",
+    hint: "西语和葡语都使用拉丁字母，地图词非常好抓。西语常见 Calle、Avenida、Salida、Escuela、Iglesia、Municipio、Plaza；葡语常见 Rua、Avenida、Escola、Igreja、Município、Praça。想快速区分时，看葡语的 ã、õ、ç、ção，以及 Rua、Praça、Escola；西语则更常见 Calle、ñ、de la、del。拉美、伊比利亚半岛、巴西和部分非洲葡语国家都要纳入判断。",
+    pattern: { kind: "diagonal", color: "#b91c1c" }
+  },
+  {
+    id: "dutch_lowland",
+    label: "荷兰/低地语系",
+    mark: "橙色波浪",
+    hint: "荷兰语、弗拉芒语和南非荷兰语的速判词包括 Straat、weg、plein、gemeente、kerk、school。荷兰语很常见 ij、aa、oo、ee、ui、oe 这样的字母组合，看起来和英语接近但拼写更“低地”。看到 straat/weg/plein 连续出现，基本可以优先考虑荷兰、比利时弗拉芒区或南非荷兰语环境。南非场景里英语和南非荷兰语常混用，所以要结合道路、车牌和地貌判断。",
+    pattern: { kind: "wave", color: "#ea580c" }
+  },
+  {
+    id: "nordic",
+    label: "北欧语系",
+    mark: "蓝色北欧十字",
+    hint: "北欧语言的核心线索是 å、ø、æ、ä、ö，以及道路词 Vej、Väg、Vei、gata、gade、kommune。丹麦语偏 Vej/gade，瑞典语偏 Väg/gata，挪威语偏 Vei/gate，冰岛语还会出现 þ、ð 这种非常醒目的字母。注意芬兰虽然在北欧，但语言外观更像芬乌类，常有大量双元音和 ä/ö，不一定归这个组。图寻时看到 ø、å、æ 加上 kommune、kirke、skole，北欧概率很高。",
+    pattern: { kind: "nordic_cross", color: "#2563eb" }
+  },
+  {
+    id: "baltic_finnic",
+    label: "波罗的/芬乌类",
+    mark: "青色三角",
+    hint: "这个组适合用来装“看起来不像西欧主流语，但仍是拉丁字母”的北欧东侧语言。芬兰语和爱沙尼亚语常见长元音、双字母和 ä、ö、õ，词看起来很长，比如很多 aa、ee、ii、oo、uu 连续出现。拉脱维亚语、立陶宛语则常见 ā、ē、ī、ū、ė、į、ų、ģ、ķ、ļ、ņ 等带符号的拉丁字母。快速判断时：芬兰/爱沙尼亚看双元音和 õ；波罗的三国看大量变音符号和 -as、-is、-u、-ā 等词尾。",
+    pattern: { kind: "triangles", color: "#0f766e" }
+  },
+  {
+    id: "slavic_other",
+    label: "斯拉夫语系，除俄语",
+    mark: "紫色左斜杠",
+    hint: "这个组的关键是“有斯拉夫味，但不是标准俄语”。如果是拉丁字母，常见 č、š、ž、ć、ł、ń、ě、ř、ů 等符号，路牌或地名里常出现 -ska、-ski、-ice、-ow、-ów、-grad、-polje。波兰语的 ł、ą、ę 很醒目；捷克/斯洛伐克常见 ř、ě、č、š、ž；克罗地亚、斯洛文尼亚等常见 č/š/ž。若是西里尔字母但不像俄语，也可能是保加利亚语、塞尔维亚语、乌克兰语等，要结合具体字母和地理环境判断。",
+    pattern: { kind: "back_diagonal", color: "#7e22ce" }
+  },
+  {
+    id: "balkan_greek",
+    label: "巴尔干/希腊特殊组",
+    mark: "靛色回纹",
+    hint: "这个组最容易先靠希腊字母命中：Α、Β、Γ、Δ、Λ、Π、Σ、Ω 等一出现，基本就是希腊语环境。巴尔干其他语言有时使用拉丁字母，有时使用西里尔字母，容易和斯拉夫组混，所以要看特殊字母和区域线索。罗马尼亚语常见 ă、â、î、ș、ț；阿尔巴尼亚语常见 ë、ç；马耳他语常见 għ、ħ、ż。图寻时这个组的思路是：希腊字母直接判，其他则结合巴尔干/地中海地名和字母特征。",
+    pattern: { kind: "meander", color: "#4338ca" }
+  },
+  {
+    id: "arabic_middle_east",
+    label: "阿拉伯/中东组",
+    mark: "棕色弧线",
+    hint: "阿拉伯文最明显的特征是从右到左书写，字母之间经常连在一起，整体像连续的曲线和点。常见场景包括路牌、店招、政府标识、清真寺相关文字等。要注意希伯来文也从右到左，但字形更方、更分离，不像阿拉伯文那样连笔。中东地区经常双语标注，可能同时出现阿拉伯文、英文、法文或希伯来文，优先看本地文字占比和道路环境。",
+    pattern: { kind: "arc", color: "#92400e" }
+  },
+  {
+    id: "turkic_central_asia",
+    label: "突厥/中亚组",
+    mark: "红色菱形",
+    hint: "土耳其语用拉丁字母，速判符号是 ğ、ı、İ、ş、ç、ö、ü，常见词包括 cadde、sokak、mahalle、okul、belediye。中亚国家可能使用拉丁字母、西里尔字母或混用，地名里常见 -stan、-kent、-abad、-gül、-uly 等线索。这个组的难点是不要只看字母系统，因为中亚的文字政策和旧标识可能混杂。图寻时看到突厥特殊字母或中亚地名结构，再结合草原、干旱地貌、苏式建筑和道路风格，效率最高。",
+    pattern: { kind: "diamonds", color: "#be123c" }
+  },
+  {
+    id: "south_asian",
+    label: "南亚文字组",
+    mark: "琥珀菱格",
+    hint: "南亚文字组的核心是“非拉丁文字密度高，而且字形差异很大”。天城文常有一条明显的横线把字母连起来，常见于印地语、尼泊尔语等；孟加拉文更圆润，顶部也有横向结构；泰米尔文、僧伽罗文圆形笔画多；乌尔都文使用阿拉伯系文字，从右到左且连笔。图寻时不要强行细分每一种南亚文字，先判断它是不是南亚非拉丁文字，再结合道路靠左、车牌、宗教建筑和地名缩小范围。",
+    pattern: { kind: "diamond_grid", color: "#d97706" }
+  },
+  {
+    id: "southeast_asian",
+    label: "东南亚组",
+    mark: "绿色锯齿",
+    hint: "东南亚文字外观差异很大，但速判点很明显。泰文、老挝文、高棉文都有大量圆曲笔画，看起来比汉字、韩文更“卷”；缅甸文则圆圈感更强。越南语虽然用拉丁字母，但声调符号极密集，常见 ă、â、ê、ô、ơ、ư、đ 以及各种上下叠加的声调。马来语和印尼语常见 Jalan、Kampung、Sekolah、Masjid；看到 Jalan 基本要立刻考虑马来西亚、印尼、文莱或新加坡周边语境。",
+    pattern: { kind: "zigzag", color: "#16a34a" }
+  },
+  {
+    id: "african_local",
+    label: "非洲本地语言组",
+    mark: "黑色 X 点",
+    hint: "非洲很多国家的公开标识会同时使用英语、法语、葡萄牙语、阿拉伯语和本地语言，所以这个组不能只靠字母形状判断。高效方法是先识别殖民语言底色：英语区看 School/County，法语区看 Rue/École，葡语区看 Rua/Escola；再看是否夹杂本地地名、部族语言词、地区机构名或非欧洲式拼写。非洲本地语言常使用拉丁字母，但拼写组合可能很特别，比如大量 ng、ny、kh、kw、sh、ch 或重复元音。这个组更像“区域与语言环境提示”，要结合植被、道路、车牌、地名和官方语言一起判断。",
+    pattern: { kind: "crosses", color: "#27272a" }
+  },
+  {
+    id: "pacific_creole",
+    label: "太平洋/岛屿克里奥尔组",
+    mark: "青蓝海浪",
+    hint: "太平洋岛屿常见英语、法语和本地/克里奥尔语言并存，单看字母往往不够。图寻时重点看短词、地名和公共标识：比如 Bislama、Tok Pisin、Samoan、Chamorro 等语言常使用拉丁字母，但拼写和英语不完全一样。很多岛屿地名有强烈本地音节感，元音多、词较短，常见 k、ng、w、f、p、t 等组合。这个组的判断核心是：看到英语/法语混合但地名明显不像欧美大陆，再结合海岛环境、热带植被和道路规模来确认。",
+    pattern: { kind: "waves", color: "#0891b2" }
+  }
+];
+    const LANGUAGE_GROUP_BY_ID = new Map(LANGUAGE_GROUPS.map(group => [group.id, group]));
+    const LANGUAGE_BY_CODE = {
+      ALB: ["balkan_greek"], AND: ["iberian"], ARE: ["arabic_middle_east"], ARG: ["iberian"],
+      ASM: ["pacific_creole", "english"], ATA: ["english"], AUS: ["english"], AUT: ["german"],
+      BEL: ["dutch_lowland", "french", "german"], BGD: ["south_asian"], BGR: ["slavic_other"],
+      BLR: ["slavic_other", "russian"], BMU: ["english"], BOL: ["iberian"], BRA: ["iberian"],
+      BTN: ["south_asian"], BWA: ["african_local", "english"], CAN: ["english", "french"],
+      CHE: ["german", "french", "italian"], CHL: ["iberian"], CHN: ["chinese"],
+      COL: ["iberian"], CRI: ["iberian"], CUW: ["dutch_lowland", "iberian"], CYP: ["balkan_greek", "turkic_central_asia", "english"],
+      CZE: ["slavic_other"], DEU: ["german"], DNK: ["nordic"], DOM: ["iberian"],
+      ECU: ["iberian"], EGY: ["arabic_middle_east"], ESP: ["iberian"], EST: ["baltic_finnic"],
+      FIN: ["baltic_finnic", "nordic"], FLK: ["english"], FRA: ["french"], FRO: ["nordic"],
+      GBR: ["english"], GHA: ["english", "african_local"], GRC: ["balkan_greek"], GRL: ["nordic"],
+      GTM: ["iberian"], GUM: ["english", "pacific_creole"], HKG: ["chinese", "english"],
+      HRV: ["slavic_other"], HUN: ["baltic_finnic"], IDN: ["southeast_asian"], IMN: ["english"],
+      IND: ["south_asian", "english"], IOA: ["english"], IOT: ["english"], IRL: ["english"],
+      IRQ: ["arabic_middle_east"], ISL: ["nordic"], ISR: ["arabic_middle_east"], ITA: ["italian"],
+      JEY: ["english", "french"], JOR: ["arabic_middle_east"], JPN: ["japanese"],
+      KAZ: ["turkic_central_asia", "russian"], KEN: ["english", "african_local"],
+      KGZ: ["turkic_central_asia", "russian"], KHM: ["southeast_asian"], KOR: ["korean"],
+      LAO: ["southeast_asian"], LBN: ["arabic_middle_east", "french"], LIE: ["german"],
+      LKA: ["south_asian"], LSO: ["african_local", "english"], LTU: ["baltic_finnic"],
+      LUX: ["french", "german"], LVA: ["baltic_finnic"], MAC: ["chinese", "iberian"],
+      MCO: ["french"], MDG: ["african_local", "french"], MEX: ["iberian"], MKD: ["slavic_other"],
+      MLI: ["french", "african_local"], MLT: ["arabic_middle_east", "english"], MNE: ["slavic_other"],
+      MNG: ["turkic_central_asia", "russian"], MNP: ["english", "pacific_creole"],
+      MYS: ["southeast_asian", "english"], NAM: ["english", "african_local", "german"],
+      NGA: ["english", "african_local"], NLD: ["dutch_lowland"], NOR: ["nordic"],
+      NPL: ["south_asian"], NZL: ["english", "pacific_creole"], OMN: ["arabic_middle_east"],
+      PAK: ["south_asian", "english"], PAN: ["iberian"], PCN: ["english", "pacific_creole"],
+      PER: ["iberian"], PHL: ["southeast_asian", "english"], POL: ["slavic_other"],
+      PRI: ["iberian", "english"], PRT: ["iberian"], QAT: ["arabic_middle_east"],
+      ROU: ["balkan_greek"], RUS: ["russian"], RWA: ["african_local", "english", "french"],
+      SEN: ["french", "african_local"], SGP: ["english", "southeast_asian", "chinese"],
+      SGS: ["english"], SMR: ["italian"], SPM: ["french"], SRB: ["slavic_other"],
+      STP: ["iberian"], SVK: ["slavic_other"], SVN: ["slavic_other"], SWE: ["nordic"],
+      SWZ: ["african_local", "english"], THA: ["southeast_asian"], TUN: ["arabic_middle_east", "french"],
+      TUR: ["turkic_central_asia"], TWN: ["chinese"], TZA: ["african_local", "english"],
+      UGA: ["african_local", "english"], UKR: ["slavic_other", "russian"], URY: ["iberian"],
+      USA: ["english", "iberian"], VIR: ["english"], VNM: ["southeast_asian"],
+      VUT: ["pacific_creole", "english", "french"], ZAF: ["english", "african_local", "dutch_lowland"],
+    };
+    const state = {
+      index: null,
+      pages: null,
+      pagesBySlug: new Map(),
+      targetCodes: new Set(),
+      imageSelections: {},
+      profiles: null,
+      activeProfileId: "profile1",
+      fadedFeatures: new Set(),
+      mapFeatures: [],
+      featureById: new Map(),
+      renderFillSelection: null,
+      renderTextureSelection: null,
+      borderPathSelection: null,
+      clickPathSelection: null,
+      path: null,
+      projection: null,
+      zoomTransform: d3.zoomIdentity,
+      overlayLayer: null,
+      imageUpdateFrame: 0,
+      imageUpdateTimer: 0,
+      layoutCacheDirty: false,
+      renderCacheDirty: false,
+      selectedImageFeatureCache: null,
+      candidatePositionCache: new Map(),
+      imageAspectRatios: new Map(),
+      pendingAspectLoads: new Set(),
+    };
+
+    function featureCode(feature) {
+      const p = feature.properties || {};
+      if (p._codeOverride) return p._codeOverride;
+      return [p.ADM0_A3, p.ISO_A3, p.GU_A3, p.SU_A3, p.BRK_A3, p.SOV_A3]
+        .find(value => value && value !== "-99") || "";
+    }
+
+    function featureCodeCandidates(feature) {
+      const p = feature.properties || {};
+      const candidates = [
+        p._codeOverride,
+        p.ADM0_A3,
+        p.ISO_A3,
+        p.GU_A3,
+        p.SU_A3,
+        p.BRK_A3,
+        p.SOV_A3,
+        p.ADM0_A3_US,
+        p.ADM0_A3_CN,
+        p.ADM0_A3_IN,
+      ];
+      if (p._featureIdOverride && String(p._featureIdOverride).includes(":")) {
+        candidates.push(String(p._featureIdOverride).split(":")[0]);
+      }
+      const seen = new Set();
+      return candidates
+        .map(value => String(value || ""))
+        .filter(value => value && value !== "-99" && !seen.has(value) && seen.add(value));
+    }
+
+    function featureId(feature) {
+      if ((feature.properties || {})._featureIdOverride) return feature.properties._featureIdOverride;
+      return String((feature.properties || {}).NE_ID || "");
+    }
+
+    function featureFadeKey(feature) {
+      return featureId(feature) || featureCode(feature) || featureName(feature);
+    }
+
+    function safeSvgId(value) {
+      return String(value || "feature").replace(/[^a-zA-Z0-9_-]/g, "-");
+    }
+
+    function clipIdForFeature(feature) {
+      return `clip-${safeSvgId(featureId(feature) || featureCode(feature) || featureName(feature))}`;
+    }
+
+    function featureName(feature) {
+      const p = feature.properties || {};
+      if (p._displayName) return p._displayName;
+      return p.NAME_ZH || p.NAME_ZHT || p.NAME_EN || p.NAME || p.ADMIN || "未知地区";
+    }
+
+    function politicalDisplayKey(feature) {
+      const p = feature.properties || {};
+      const code = featureCode(feature);
+      if (code === "PSX" && p.NAME_EN) return `${code}:${p.NAME_EN}`;
+      return code;
+    }
+
+    function applyPoliticalOverrides(features) {
+      for (const feature of features) {
+        const p = feature.properties || (feature.properties = {});
+        const displayName = POLITICAL_DISPLAY_NAMES.get(politicalDisplayKey(feature));
+        if (displayName) p._displayName = displayName;
+        if (featureCode(feature) === "ISR" || featureCode(feature) === "PSX") {
+          p._politicalNotice = "巴以相关地图面统一按地区口径展示，仅用于街景识别参考，不表达主权或边界立场。";
+        }
+      }
+      return features;
+    }
+
+    function replacePoliticalText(text) {
+      return String(text || "")
+        .replace(/中华民国/g, "中国台湾")
+        .replace(/(^|[^中国])台湾/g, "$1中国台湾")
+        .replace(/(^|[^中国])香港/g, "$1中国香港")
+        .replace(/(^|[^中国])澳门/g, "$1中国澳门")
+        .replace(/以色列/g, "巴以地区")
+        .replace(/巴勒斯坦/g, "巴以地区")
+        .replace(/\bIsrael\b/g, "巴以地区")
+        .replace(/\bPalestine\b/g, "巴以地区")
+        .replace(/\bWest Bank\b/g, "约旦河西岸地区")
+        .replace(/\bGaza\b/g, "加沙地区");
+    }
+
+    function displayPageTitle(page) {
+      if (!page) return "";
+      return replacePoliticalText(page.title || "");
+    }
+
+    function applyPoliticalTextPolicy(root) {
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach(node => {
+        node.nodeValue = replacePoliticalText(node.nodeValue);
+      });
+    }
+
+    function polygonBounds(polygon) {
+      let minX = Infinity;
+      let maxX = -Infinity;
+      let minY = Infinity;
+      let maxY = -Infinity;
+      for (const ring of polygon) {
+        for (const [x, y] of ring) {
+          minX = Math.min(minX, x);
+          maxX = Math.max(maxX, x);
+          minY = Math.min(minY, y);
+          maxY = Math.max(maxY, y);
+        }
+      }
+      return { minX, maxX, minY, maxY };
+    }
+
+    function isAlaskaPolygon(polygon) {
+      const bounds = polygonBounds(polygon);
+      return bounds.maxY > 50 && (bounds.minX < -128 || bounds.maxX > 170);
+    }
+
+    function isHawaiiPolygon(polygon) {
+      const bounds = polygonBounds(polygon);
+      return bounds.minY > 18 && bounds.maxY < 24 && bounds.minX > -162 && bounds.maxX < -154;
+    }
+
+    function cloneFeatureWithPolygons(feature, polygons, overrides) {
+      return {
+        type: "Feature",
+        properties: { ...feature.properties, ...overrides },
+        geometry: {
+          type: polygons.length === 1 ? "Polygon" : "MultiPolygon",
+          coordinates: polygons.length === 1 ? polygons[0] : polygons,
+        },
+      };
+    }
+
+    function splitFeature(feature) {
+      if (featureCode(feature) !== "USA" || feature.geometry?.type !== "MultiPolygon") return [feature];
+      const alaska = [];
+      const hawaii = [];
+      const rest = [];
+
+      for (const polygon of feature.geometry.coordinates) {
+        if (isAlaskaPolygon(polygon)) alaska.push(polygon);
+        else if (isHawaiiPolygon(polygon)) hawaii.push(polygon);
+        else rest.push(polygon);
+      }
+
+      const split = [];
+      if (rest.length) {
+        split.push(cloneFeatureWithPolygons(feature, rest, {
+          _region: "usa-rest",
+          _featureIdOverride: `${feature.properties.NE_ID}:rest`,
+          _displayName: "美国",
+        }));
+      }
+      if (hawaii.length) {
+        split.push(cloneFeatureWithPolygons(feature, hawaii, {
+          _region: "hawaii",
+          _featureIdOverride: `${feature.properties.NE_ID}:hawaii`,
+          _displayName: "夏威夷",
+        }));
+      }
+      if (alaska.length) {
+        split.push(cloneFeatureWithPolygons(feature, alaska, {
+          _region: "alaska",
+          _codeOverride: "USA_ALASKA",
+          _featureIdOverride: `${feature.properties.NE_ID}:alaska`,
+          _displayName: "阿拉斯加",
+        }));
+      }
+      return split;
+    }
+
+    function polygonsFromFeature(feature) {
+      if (feature.geometry?.type === "Polygon") return [feature.geometry.coordinates];
+      if (feature.geometry?.type === "MultiPolygon") return feature.geometry.coordinates;
+      return [];
+    }
+
+    function countryMergeKey(feature) {
+      const p = feature.properties || {};
+      if (p._region) return featureId(feature) || `${featureCode(feature)}:${p._region}`;
+      return featureCode(feature) || featureId(feature) || featureName(feature);
+    }
+
+    function mergedCountryName(code, features) {
+      const counts = new Map();
+      const add = value => {
+        if (!value || value === "-99") return;
+        counts.set(value, (counts.get(value) || 0) + 1);
+      };
+      features.forEach(feature => {
+        const p = feature.properties || {};
+        add(p.ADMIN);
+        add(p.SOVEREIGNT);
+        add(p.NAME_EN);
+        add(p.NAME);
+      });
+      return [...counts.entries()]
+        .sort((a, b) => b[1] - a[1] || a[0].length - b[0].length)[0]?.[0] || code;
+    }
+
+    function mergeCountryFeatures(features) {
+      const groups = new Map();
+      for (const feature of features) {
+        const key = countryMergeKey(feature);
+        if (!groups.has(key)) groups.set(key, []);
+        groups.get(key).push(feature);
+      }
+
+      return [...groups.values()].map(group => {
+        if (group.length <= 1) return group[0];
+        const template = group[0];
+        const code = featureCode(template);
+        const name = mergedCountryName(code, group);
+        const polygons = group.flatMap(polygonsFromFeature);
+        return {
+          type: "Feature",
+          properties: {
+            ...(template.properties || {}),
+            _codeOverride: code,
+            _featureIdOverride: `${code}:country`,
+            _displayName: name,
+            NAME: name,
+            NAME_EN: name,
+            ADMIN: name,
+            GEOUNIT: name,
+            GU_A3: code,
+            SUBUNIT: name,
+            SU_A3: code,
+          },
+          geometry: {
+            type: polygons.length === 1 ? "Polygon" : "MultiPolygon",
+            coordinates: polygons.length === 1 ? polygons[0] : polygons,
+          },
+        };
+      });
+    }
+
+    function displayTargetCodes(index) {
+      const codes = new Set(index.redCodes);
+      codes.delete("CHN");
+      return codes;
+    }
+
+    function hasFeaturePage(feature) {
+      if ((feature.properties || {})._noPage) return false;
+      return slugsForFeature(feature).length > 0;
+    }
+
+    function isRedFeature(feature) {
+      const p = feature.properties || {};
+      if (p._region === "alaska") return false;
+      if (!hasFeaturePage(feature)) return false;
+      const code = featureCode(feature);
+      if (code === "CHN") return false;
+      return true;
+    }
+
+    function isLeftDriveFeature(feature) {
+      return activeProfile().showLeftDriveColors !== false && isRedFeature(feature) && LEFT_DRIVE_CODES.has(featureCode(feature));
+    }
+
+    function isRelaxedImageFeature(feature) {
+      return RELAXED_IMAGE_CODES.has(featureCode(feature));
+    }
+
+    function countryRenderFill(feature) {
+      if (!isRedFeature(feature)) return "transparent";
+      const faded = state.fadedFeatures.has(featureFadeKey(feature));
+      if (isLeftDriveFeature(feature)) return faded ? "var(--left-drive-faded)" : "var(--left-drive)";
+      return faded ? "var(--target-faded)" : "var(--target)";
+    }
+
+    function languagePatternId(languageId) {
+      return `language-pattern-${safeSvgId(languageId)}`;
+    }
+
+    function countryRenderTexture(feature) {
+      if (activeProfile().showLanguagePatterns === false) return "transparent";
+      const languageId = languageIdsForFeature(feature)[0];
+      return languageId ? `url(#${languagePatternId(languageId)})` : "transparent";
+    }
+
+    function updateCountryStyles() {
+      if (state.renderFillSelection) {
+        state.renderFillSelection.attr("fill", countryRenderFill);
+      }
+      if (state.renderTextureSelection) {
+        state.renderTextureSelection.attr("fill", countryRenderTexture);
+      }
+      if (state.borderPathSelection) {
+        state.borderPathSelection.attr("class", "country-border");
+      }
+    }
+
+    function languageIdsForFeature(feature) {
+      return (LANGUAGE_BY_CODE[featureCode(feature)] || []).slice(0, 3);
+    }
+
+    function languageLabelsForFeature(feature) {
+      return languageIdsForFeature(feature)
+        .map(id => LANGUAGE_GROUP_BY_ID.get(id)?.label)
+        .filter(Boolean);
+    }
+
+    function guideSwatchStyle(group) {
+      const pattern = group.pattern;
+      if (!pattern) return "background:#fff";
+      const color = pattern.color;
+      const base = "rgba(255,255,255,0.74)";
+      if (pattern.kind === "horizontal") return `background:repeating-linear-gradient(0deg,${base} 0 6px,${color} 6px 8px)`;
+      if (pattern.kind === "vertical") return `background:repeating-linear-gradient(90deg,${base} 0 6px,${color} 6px 8px)`;
+      if (pattern.kind === "diagonal") return `background:repeating-linear-gradient(135deg,${base} 0 7px,${color} 7px 9px)`;
+      if (pattern.kind === "back_diagonal") return `background:repeating-linear-gradient(45deg,${base} 0 7px,${color} 7px 9px)`;
+      if (pattern.kind === "checker") return `background-color:${base};background-image:linear-gradient(45deg,${color} 25%,transparent 25%),linear-gradient(-45deg,${color} 25%,transparent 25%),linear-gradient(45deg,transparent 75%,${color} 75%),linear-gradient(-45deg,transparent 75%,${color} 75%);background-size:12px 12px;background-position:0 0,0 6px,6px -6px,-6px 0`;
+      if (pattern.kind === "dots") return `background-color:${base};background-image:radial-gradient(${color} 2px,transparent 2.4px);background-size:10px 10px`;
+      if (pattern.kind === "plus") return `background-color:${base};background-image:linear-gradient(${color} 2px,transparent 2px),linear-gradient(90deg,${color} 2px,transparent 2px);background-size:12px 12px;background-position:5px 5px`;
+      if (pattern.kind === "nordic_cross") return `background-color:${base};background-image:linear-gradient(90deg,transparent 0 35%,${color} 35% 48%,transparent 48%),linear-gradient(0deg,transparent 0 38%,${color} 38% 52%,transparent 52%)`;
+      if (pattern.kind === "triangles") return `background-color:${base};background-image:linear-gradient(60deg,transparent 45%,${color} 45% 55%,transparent 55%),linear-gradient(120deg,transparent 45%,${color} 45% 55%,transparent 55%);background-size:14px 14px`;
+      if (pattern.kind === "diamonds" || pattern.kind === "diamond_grid") return `background-color:${base};background-image:linear-gradient(45deg,transparent 45%,${color} 45% 55%,transparent 55%),linear-gradient(-45deg,transparent 45%,${color} 45% 55%,transparent 55%);background-size:14px 14px`;
+      if (pattern.kind === "zigzag") return `background-color:${base};background-image:linear-gradient(135deg,${color} 15%,transparent 15%),linear-gradient(225deg,${color} 15%,transparent 15%);background-size:12px 12px`;
+      if (pattern.kind === "crosses") return `background-color:${base};background-image:linear-gradient(45deg,transparent 42%,${color} 42% 54%,transparent 54%),linear-gradient(-45deg,transparent 42%,${color} 42% 54%,transparent 54%);background-size:13px 13px`;
+      if (pattern.kind === "wave" || pattern.kind === "waves" || pattern.kind === "arc" || pattern.kind === "meander") {
+        return `background-color:${base};background-image:repeating-linear-gradient(135deg,transparent 0 8px,${color} 8px 10px,transparent 10px 16px)`;
+      }
+      return `background:${base}`;
+    }
+
+    function createLanguagePatterns(defs) {
+      const patternSelection = defs
+        .selectAll("pattern.language-pattern")
+        .data(LANGUAGE_GROUPS.filter(group => group.pattern), group => group.id)
+        .join("pattern")
+        .attr("class", "language-pattern")
+        .attr("id", group => languagePatternId(group.id))
+        .attr("patternUnits", "userSpaceOnUse")
+        .attr("width", 14)
+        .attr("height", 14);
+
+      patternSelection.each(function(group) {
+        const pattern = d3.select(this);
+        const kind = group.pattern.kind;
+        const color = group.pattern.color || "#111827";
+        pattern.selectAll("*").remove();
+
+        const stroke = shape => shape
+          .attr("stroke", color)
+          .attr("stroke-width", 2)
+          .attr("stroke-linecap", "round")
+          .attr("fill", "none");
+
+        if (kind === "horizontal") {
+          stroke(pattern.append("path").attr("d", "M0 4H14 M0 10H14"));
+        } else if (kind === "vertical") {
+          stroke(pattern.append("path").attr("d", "M4 0V14 M10 0V14"));
+        } else if (kind === "diagonal") {
+          stroke(pattern.append("path").attr("d", "M-4 14L14 -4 M0 18L18 0"));
+        } else if (kind === "back_diagonal") {
+          stroke(pattern.append("path").attr("d", "M-4 0L14 18 M0 -4L18 14"));
+        } else if (kind === "checker") {
+          pattern.append("rect").attr("x", 0).attr("y", 0).attr("width", 7).attr("height", 7).attr("fill", color);
+          pattern.append("rect").attr("x", 7).attr("y", 7).attr("width", 7).attr("height", 7).attr("fill", color);
+        } else if (kind === "dots") {
+          pattern.append("circle").attr("cx", 4).attr("cy", 4).attr("r", 2).attr("fill", color);
+          pattern.append("circle").attr("cx", 11).attr("cy", 11).attr("r", 2).attr("fill", color);
+        } else if (kind === "plus") {
+          stroke(pattern.append("path").attr("d", "M7 2V12 M2 7H12"));
+        } else if (kind === "nordic_cross") {
+          pattern.append("rect").attr("x", 4).attr("y", 0).attr("width", 3).attr("height", 14).attr("fill", color);
+          pattern.append("rect").attr("x", 0).attr("y", 6).attr("width", 14).attr("height", 3).attr("fill", color);
+        } else if (kind === "triangles") {
+          pattern.append("path").attr("d", "M7 1L13 12H1Z").attr("fill", "none").attr("stroke", color).attr("stroke-width", 2);
+        } else if (kind === "diamonds" || kind === "diamond_grid") {
+          pattern.append("path").attr("d", "M7 1L13 7L7 13L1 7Z").attr("fill", "none").attr("stroke", color).attr("stroke-width", 2);
+        } else if (kind === "zigzag") {
+          stroke(pattern.append("path").attr("d", "M-1 8L3 4L7 8L11 4L15 8"));
+        } else if (kind === "crosses") {
+          stroke(pattern.append("path").attr("d", "M3 3L11 11 M11 3L3 11"));
+        } else {
+          stroke(pattern.append("path").attr("d", "M-1 9C3 3 7 15 15 7"));
+        }
+      });
+    }
+
+    function renderLanguageGuide() {
+      const guide = document.querySelector("#language-guide-list");
+      if (!guide) return;
+      guide.innerHTML = LANGUAGE_GROUPS.map(group => `
+        <div class="language-item">
+          <span class="language-swatch" style="${guideSwatchStyle(group)}"></span>
+          <span>
+            <span class="language-title">${escapeHtml(group.label)}</span>
+            <span class="language-mark">｜${escapeHtml(group.mark)}</span><br>
+            <span class="language-hint">${escapeHtml(group.hint)}</span>
+          </span>
+        </div>
+      `).join("");
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    function defaultProfiles() {
+      const profiles = {};
+      PROFILE_IDS.forEach((id, index) => {
+        profiles[id] = {
+          name: `Profile${index + 1}`,
+          showLanguagePatterns: true,
+          showLeftDriveColors: true,
+          selections: {},
+          fadedFeatures: [],
+          layoutCache: {},
+          renderCache: null,
+        };
+      });
+      return { activeProfileId: "profile1", profiles };
+    }
+
+    function normalizeFadedFeatureList(source) {
+      const seen = new Set();
+      return Array.isArray(source)
+        ? source.map(String).filter(value => value && !seen.has(value) && seen.add(value))
+        : [];
+    }
+
+    function normalizeLayoutCache(source) {
+      const normalized = {};
+      if (!source || typeof source !== "object") return normalized;
+      for (const [key, entry] of Object.entries(source)) {
+        if (!entry || typeof entry !== "object" || typeof entry.signature !== "string" || !Array.isArray(entry.photos)) continue;
+        normalized[key] = {
+          signature: entry.signature,
+          photos: entry.photos
+            .map(photo => ({
+              ...photo,
+              x: Number(photo.x),
+              y: Number(photo.y),
+              width: Number(photo.width),
+              height: Number(photo.height),
+            }))
+            .filter(photo => photo.src && Number.isFinite(photo.x) && Number.isFinite(photo.y) && Number.isFinite(photo.width) && Number.isFinite(photo.height)),
+        };
+      }
+      return normalized;
+    }
+
+    function normalizeRenderCache(source) {
+      if (!source || typeof source !== "object") return null;
+      if (typeof source.signature !== "string" || typeof source.html !== "string") return null;
+      return {
+        signature: source.signature,
+        html: source.html,
+      };
+    }
+
+    function normalizeProfileStore(source, legacySelections = {}, legacyFadedFeatures = []) {
+      const defaults = defaultProfiles();
+      const incomingProfiles = source?.profiles && typeof source.profiles === "object" ? source.profiles : {};
+      for (const id of PROFILE_IDS) {
+        const incoming = incomingProfiles[id] || {};
+        defaults.profiles[id] = {
+          name: String(incoming.name || defaults.profiles[id].name).slice(0, 28),
+          showLanguagePatterns: incoming.showLanguagePatterns !== false,
+          showLeftDriveColors: incoming.showLeftDriveColors !== false,
+          selections: normalizeSelections(incoming.selections || {}),
+          fadedFeatures: normalizeFadedFeatureList(incoming.fadedFeatures || []),
+          layoutCache: normalizeLayoutCache(incoming.layoutCache || {}),
+          renderCache: normalizeRenderCache(incoming.renderCache),
+        };
+      }
+      if (!Object.keys(defaults.profiles.profile1.selections).length && Object.keys(legacySelections).length) {
+        defaults.profiles.profile1.selections = normalizeSelections(legacySelections);
+      }
+      if (!defaults.profiles.profile1.fadedFeatures.length && legacyFadedFeatures.length) {
+        defaults.profiles.profile1.fadedFeatures = normalizeFadedFeatureList(legacyFadedFeatures);
+      }
+      if (PROFILE_IDS.includes(source?.activeProfileId)) {
+        defaults.activeProfileId = source.activeProfileId;
+      }
+      return defaults;
+    }
+
+    function clearCarplateProfileImagesOnce(store) {
+      if (!store?.profiles || localStorage.getItem(CARPLATE_PROFILE_CLEANUP_KEY) === "1") return store;
+      const entry = Object.entries(store.profiles)
+        .find(([, profile]) => profile && profile.name === "车牌");
+      if (!entry) {
+        localStorage.setItem(CARPLATE_PROFILE_CLEANUP_KEY, "1");
+        return store;
+      }
+
+      const [profileId, profile] = entry;
+      profile.selections = {};
+      profile.layoutCache = {};
+      profile.renderCache = null;
+      localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(store));
+      if (store.activeProfileId === profileId) {
+        localStorage.setItem(SELECTION_STORAGE_KEY, "{}");
+      }
+      localStorage.setItem(CARPLATE_PROFILE_CLEANUP_KEY, "1");
+      return store;
+    }
+
+    function loadProfiles() {
+      const legacySelections = loadImageSelections();
+      const legacyFadedFeatures = [...loadFadedFeatures()];
+      const fromFile = window.PLONKIT_PROFILES && typeof window.PLONKIT_PROFILES === "object"
+        ? window.PLONKIT_PROFILES
+        : null;
+      try {
+        const fromStorage = JSON.parse(localStorage.getItem(PROFILE_STORAGE_KEY) || "null");
+        return clearCarplateProfileImagesOnce(normalizeProfileStore(fromStorage || fromFile, legacySelections, legacyFadedFeatures));
+      } catch {
+        return clearCarplateProfileImagesOnce(normalizeProfileStore(fromFile, legacySelections, legacyFadedFeatures));
+      }
+    }
+
+    function activeProfile() {
+      return state.profiles?.profiles?.[state.activeProfileId] || defaultProfiles().profiles.profile1;
+    }
+
+    function syncActiveProfileSelections() {
+      const profile = activeProfile();
+      state.imageSelections = profile.selections || {};
+      state.fadedFeatures = new Set(normalizeFadedFeatureList(profile.fadedFeatures || []));
+    }
+
+    function persistProfiles() {
+      if (!state.profiles) return;
+      const profile = activeProfile();
+      profile.selections = normalizeSelections(state.imageSelections);
+      profile.fadedFeatures = normalizeFadedFeatureList([...state.fadedFeatures]);
+      profile.layoutCache = normalizeLayoutCache(profile.layoutCache || {});
+      profile.renderCache = normalizeRenderCache(profile.renderCache);
+      state.imageSelections = profile.selections;
+      state.profiles.activeProfileId = state.activeProfileId;
+      localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(state.profiles));
+      localStorage.setItem(SELECTION_STORAGE_KEY, JSON.stringify(state.imageSelections));
+      localStorage.setItem(FADED_FEATURE_STORAGE_KEY, JSON.stringify([...state.fadedFeatures]));
+      window.PLONKIT_PROFILES = state.profiles;
+      window.PLONKIT_IMAGE_SELECTIONS = state.imageSelections;
+      window.PLONKIT_FADED_FEATURES = [...state.fadedFeatures];
+      updateSelectionExport();
+    }
+
+    function persistLayoutCache() {
+      if ((!state.layoutCacheDirty && !state.renderCacheDirty) || !state.profiles) return;
+      state.layoutCacheDirty = false;
+      state.renderCacheDirty = false;
+      state.profiles.activeProfileId = state.activeProfileId;
+      localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(state.profiles));
+      window.PLONKIT_PROFILES = state.profiles;
+    }
+
+    function renderProfilePanel() {
+      if (!state.profiles) return;
+      const buttons = document.querySelector("#profile-buttons");
+      const nameInput = document.querySelector("#profile-name");
+      const languageInput = document.querySelector("#profile-show-language");
+      const leftDriveInput = document.querySelector("#profile-show-left-drive");
+      if (!buttons || !nameInput || !languageInput || !leftDriveInput) return;
+
+      buttons.innerHTML = PROFILE_IDS.map(id => {
+        const profile = state.profiles.profiles[id];
+        return `<button type="button" class="profile-button ${id === state.activeProfileId ? "active" : ""}" data-profile-id="${id}" title="${escapeHtml(profile.name)}">${escapeHtml(profile.name)}</button>`;
+      }).join("");
+
+      const profile = activeProfile();
+      nameInput.value = profile.name;
+      languageInput.checked = profile.showLanguagePatterns !== false;
+      leftDriveInput.checked = profile.showLeftDriveColors !== false;
+
+      buttons.querySelectorAll(".profile-button").forEach(button => {
+        button.addEventListener("click", () => switchProfile(button.dataset.profileId));
+      });
+    }
+
+    function switchProfile(profileId) {
+      if (!PROFILE_IDS.includes(profileId) || profileId === state.activeProfileId) return;
+      persistProfiles();
+      state.activeProfileId = profileId;
+      syncActiveProfileSelections();
+      state.selectedImageFeatureCache = null;
+      renderProfilePanel();
+      updateCountryStyles();
+      updateMapImages();
+    }
+
+    function bindProfilePanel() {
+      const nameInput = document.querySelector("#profile-name");
+      const languageInput = document.querySelector("#profile-show-language");
+      const leftDriveInput = document.querySelector("#profile-show-left-drive");
+      if (!nameInput || !languageInput || !leftDriveInput) return;
+
+      nameInput.addEventListener("input", () => {
+        const profile = activeProfile();
+        profile.name = nameInput.value.trim() || state.activeProfileId.replace("profile", "Profile");
+        const activeButton = document.querySelector(`.profile-button[data-profile-id="${state.activeProfileId}"]`);
+        if (activeButton) {
+          activeButton.textContent = profile.name;
+          activeButton.title = profile.name;
+        }
+        persistProfiles();
+      });
+
+      languageInput.addEventListener("change", () => {
+        activeProfile().showLanguagePatterns = languageInput.checked;
+        persistProfiles();
+      });
+
+      leftDriveInput.addEventListener("change", () => {
+        activeProfile().showLeftDriveColors = leftDriveInput.checked;
+        persistProfiles();
+        updateCountryStyles();
+      });
+    }
+
+    function loadImageSelections() {
+      const fromFile = window.PLONKIT_IMAGE_SELECTIONS && typeof window.PLONKIT_IMAGE_SELECTIONS === "object"
+        ? window.PLONKIT_IMAGE_SELECTIONS
+        : {};
+      try {
+        const fromStorage = JSON.parse(localStorage.getItem(SELECTION_STORAGE_KEY) || "{}");
+        return normalizeSelections({ ...fromFile, ...fromStorage });
+      } catch {
+        return normalizeSelections(fromFile);
+      }
+    }
+
+    function normalizeSelections(source) {
+      const normalized = {};
+      for (const [slug, indices] of Object.entries(source || {})) {
+        const page = state.pagesBySlug.get(slug);
+        const max = page ? page.images.length : Number.MAX_SAFE_INTEGER;
+        const seen = new Set();
+        normalized[slug] = Array.isArray(indices)
+          ? indices
+              .map(value => Number(value))
+              .filter(value => Number.isInteger(value) && value >= 0 && value < max && !seen.has(value) && seen.add(value))
+          : [];
+      }
+      return normalized;
+    }
+
+    function loadFadedFeatures() {
+      const fromFile = Array.isArray(window.PLONKIT_FADED_FEATURES) ? window.PLONKIT_FADED_FEATURES : [];
+      try {
+        const fromStorage = JSON.parse(localStorage.getItem(FADED_FEATURE_STORAGE_KEY) || "[]");
+        return new Set([...fromFile, ...(Array.isArray(fromStorage) ? fromStorage : [])].map(String).filter(Boolean));
+      } catch {
+        return new Set(fromFile.map(String).filter(Boolean));
+      }
+    }
+
+    function persistSelections(affectedSlug = "") {
+      state.imageSelections = normalizeSelections(state.imageSelections);
+      if (affectedSlug) {
+        invalidateLayoutCacheForSlug(affectedSlug);
+        invalidateRenderCache();
+      }
+      if (state.profiles?.profiles?.[state.activeProfileId]) {
+        state.profiles.profiles[state.activeProfileId].selections = state.imageSelections;
+      }
+      persistProfiles();
+      localStorage.setItem(SELECTION_STORAGE_KEY, JSON.stringify(state.imageSelections));
+      localStorage.setItem(FADED_FEATURE_STORAGE_KEY, JSON.stringify([...state.fadedFeatures]));
+      window.PLONKIT_FADED_FEATURES = [...state.fadedFeatures];
+      state.selectedImageFeatureCache = null;
+      updateSelectionExport();
+      scheduleMapImagesUpdate();
+    }
+
+    function persistFadedFeatures() {
+      persistProfiles();
+      updateSelectionExport();
+      updateCountryStyles();
+    }
+
+    function selectionFileText() {
+      return [
+        `window.PLONKIT_PROFILES = ${JSON.stringify(state.profiles, null, 2)};`,
+        `window.PLONKIT_IMAGE_SELECTIONS = ${JSON.stringify(state.imageSelections, null, 2)};`,
+        `window.PLONKIT_FADED_FEATURES = ${JSON.stringify([...state.fadedFeatures], null, 2)};`,
+        "",
+      ].join("\n");
+    }
+
+    function updateSelectionExport() {
+      const anchor = document.querySelector("#download-selections");
+      if (!anchor) return;
+      const blob = new Blob([selectionFileText()], { type: "text/javascript;charset=utf-8" });
+      if (anchor.dataset.objectUrl) URL.revokeObjectURL(anchor.dataset.objectUrl);
+      const url = URL.createObjectURL(blob);
+      anchor.href = url;
+      anchor.dataset.objectUrl = url;
+    }
+
+    async function saveSelectionFile() {
+      const text = selectionFileText();
+      const status = document.querySelector("#selection-status");
+      if (window.showSaveFilePicker) {
+        try {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: "plonkit_image_selections.js",
+            types: [{
+              description: "JavaScript selection data",
+              accept: { "text/javascript": [".js"] },
+            }],
+          });
+          const writable = await handle.createWritable();
+          await writable.write(text);
+          await writable.close();
+          if (status) status.textContent = "已保存选择文件";
+          return;
+        } catch (error) {
+          if (error?.name === "AbortError") return;
+        }
+      }
+      const anchor = document.querySelector("#download-selections");
+      if (anchor) anchor.click();
+      if (status) status.textContent = "已下载选择文件，请替换同名文件后再打包";
+    }
+
+    function decodeHtml(value) {
+      const textarea = document.createElement("textarea");
+      textarea.innerHTML = String(value || "");
+      return textarea.value;
+    }
+
+    function parseImageCard(attrs) {
+      const valueMatch = attrs.match(/\bvalue="([^"]+)"/i);
+      if (!valueMatch) return "";
+      let value = decodeHtml(valueMatch[1]);
+      if (value.startsWith("data:")) value = value.slice(5);
+      try {
+        const data = JSON.parse(decodeURIComponent(value));
+        if (!data.src) return "";
+        const alt = escapeHtml(data.alt || data.name || "");
+        return `<figure><img src="${escapeHtml(data.src)}" alt="${alt}" loading="lazy"></figure>`;
+      } catch {
+        return "";
+      }
+    }
+
+    function lakeToHtml(content) {
+      const html = String(content || "")
+        .replace(/<!doctype\s+lake>/gi, "")
+        .replace(/<meta\b[^>]*\/?>/gi, "")
+        .replace(/<card\b([^>]*)>/gi, (full, attrs) => {
+          const name = (attrs.match(/\bname="([^"]+)"/i) || [])[1] || "";
+          if (name === "image") return parseImageCard(attrs);
+          if (name === "hr") return "<hr>";
+          return "";
+        });
+
+      const template = document.createElement("template");
+      template.innerHTML = html;
+
+      template.content.querySelectorAll("script, style, iframe, object, embed, form, input, button").forEach(node => node.remove());
+      template.content.querySelectorAll("*").forEach(node => {
+        for (const attr of [...node.attributes]) {
+          const name = attr.name.toLowerCase();
+          const value = attr.value || "";
+          if (name.startsWith("on") || name === "srcdoc" || name === "style") {
+            node.removeAttribute(attr.name);
+          }
+          if ((name === "href" || name === "src") && !/^(https?:|data:image\/)/i.test(value)) {
+            node.removeAttribute(attr.name);
+          }
+        }
+        if (node.tagName === "A") {
+          node.setAttribute("target", "_blank");
+          node.setAttribute("rel", "noopener noreferrer");
+        }
+        if (node.tagName === "IMG") {
+          node.setAttribute("loading", "lazy");
+        }
+      });
+
+      return template.innerHTML;
+    }
+
+    function pageForSlug(slug) {
+      return state.pagesBySlug.get(slug);
+    }
+
+    function slugsForFeature(feature) {
+      const region = (feature.properties || {})._region;
+      if (region === "alaska") return [];
+      if (region === "hawaii") return state.index.pages.hawaii ? ["hawaii"] : [];
+      if (region === "usa-rest") {
+        return ["united-states", "us-minor-outlying-islands"].filter(slug => state.index.pages[slug]);
+      }
+      const id = featureId(feature);
+      const code = featureCode(feature);
+      const direct = state.index.featurePages[id] || [];
+      if (direct.length) return direct;
+      if (code === "CHN") return [];
+      for (const candidate of featureCodeCandidates(feature)) {
+        if (candidate === "CHN") return [];
+        const pages = state.index.codePages[candidate] || [];
+        if (pages.length) return pages;
+      }
+      return [];
+    }
+
+    function renderPageTabs(slugs, activeSlug) {
+      if (slugs.length <= 1) return "";
+      return `<div class="page-tabs">${slugs.map(slug => {
+        const page = pageForSlug(slug);
+        const label = page ? displayPageTitle(page) : slug;
+        const active = slug === activeSlug ? " active" : "";
+        return `<button type="button" class="page-tab${active}" data-slug="${escapeHtml(slug)}">${escapeHtml(label)}</button>`;
+      }).join("")}</div>`;
+    }
+
+    function renderPage(slugs, activeSlug = slugs[0], feature = null) {
+      const panel = document.querySelector("#doc-panel");
+      const page = pageForSlug(activeSlug);
+      if (!page) {
+        panel.innerHTML = `<div class="placeholder">没有找到本地抓取页面。</div>`;
+        return;
+      }
+      const fadeKey = feature ? featureFadeKey(feature) : "";
+      const faded = fadeKey && state.fadedFeatures.has(fadeKey);
+
+      panel.innerHTML = `
+        ${renderPageTabs(slugs, activeSlug)}
+        <h2 class="doc-title">${escapeHtml(displayPageTitle(page))}</h2>
+        <div class="doc-meta">
+          <span>${escapeHtml(page.section || "Plonk It")}</span>
+          <span>${Number(page.yuque?.wordCount || 0)} 字</span>
+          <span>${Number(page.images?.length || 0)} 图</span>
+          <span>更新：${escapeHtml((page.yuque?.contentUpdatedAt || "").slice(0, 10) || "未知")}</span>
+        </div>
+        <div class="political-note">本页内容仅作街景识别学习参考；涉及地区名称、边界、主权或行政归属时，以中国大陆发布和审定的标准地图及公开规范表述为准。</div>
+        <div class="selection-tools">
+          <button type="button" id="save-selections">保存选择文件</button>
+          <a id="download-selections" download="plonkit_image_selections.js" style="display:none"></a>
+          <div class="selection-status" id="selection-status"></div>
+          ${fadeKey ? `
+            <label class="fade-toggle">
+              <input type="checkbox" id="fade-country" ${faded ? "checked" : ""}>
+              <span>淡化这个国家/地区</span>
+            </label>
+          ` : ""}
+          <p>勾选图片后会按当前页面内的勾选顺序标号，并显示到对应地图区域。要把结果发给朋友，请点击保存选择文件，并用下载得到的文件替换 <code>data/generated/plonkit_image_selections.js</code> 后再打包。</p>
+        </div>
+        <article class="article">${lakeToHtml(page.content)}</article>
+      `;
+      applyPoliticalTextPolicy(panel);
+
+      panel.querySelectorAll(".page-tab").forEach(button => {
+        button.addEventListener("click", () => renderPage(slugs, button.dataset.slug, feature));
+      });
+      panel.querySelector("#save-selections").addEventListener("click", saveSelectionFile);
+      const fadeInput = panel.querySelector("#fade-country");
+      if (fadeInput && fadeKey) {
+        fadeInput.addEventListener("change", () => {
+          if (fadeInput.checked) state.fadedFeatures.add(fadeKey);
+          else state.fadedFeatures.delete(fadeKey);
+          persistFadedFeatures();
+        });
+      }
+      decorateArticleImages(page);
+      updateSelectionExport();
+    }
+
+    function decorateArticleImages(page) {
+      const panel = document.querySelector("#doc-panel");
+      const article = panel.querySelector(".article");
+      const images = [...article.querySelectorAll("img")];
+      const selected = state.imageSelections[page.slug] || [];
+
+      images.forEach((img, index) => {
+        let wrapper = img.closest("figure") || img.parentElement;
+        if (!wrapper || wrapper === article) {
+          wrapper = document.createElement("figure");
+          img.replaceWith(wrapper);
+          wrapper.appendChild(img);
+        }
+        wrapper.classList.add("image-choice");
+        wrapper.dataset.imageIndex = String(index);
+
+        const checked = selected.includes(index);
+        const rank = checked ? selected.indexOf(index) + 1 : "";
+        const picker = document.createElement("label");
+        picker.className = "image-picker";
+        picker.innerHTML = `
+          <input type="checkbox" ${checked ? "checked" : ""} data-image-index="${index}">
+          <span class="image-rank">${rank || "-"}</span>
+          <span>地图图片</span>
+        `;
+        wrapper.prepend(picker);
+        wrapper.classList.toggle("selected-image", checked);
+      });
+
+      article.querySelectorAll('.image-picker input[type="checkbox"]').forEach(input => {
+        input.addEventListener("change", () => {
+          const index = Number(input.dataset.imageIndex);
+          const current = state.imageSelections[page.slug] ? [...state.imageSelections[page.slug]] : [];
+          const existing = current.indexOf(index);
+          if (input.checked && existing === -1) current.push(index);
+          if (!input.checked && existing !== -1) current.splice(existing, 1);
+          state.imageSelections[page.slug] = current;
+          refreshArticleImageRanks(page.slug);
+          persistSelections(page.slug);
+        });
+      });
+    }
+
+    function refreshArticleImageRanks(slug) {
+      const selected = state.imageSelections[slug] || [];
+      document.querySelectorAll(".image-choice").forEach(wrapper => {
+        const index = Number(wrapper.dataset.imageIndex);
+        const rank = selected.indexOf(index);
+        wrapper.classList.toggle("selected-image", rank !== -1);
+        const input = wrapper.querySelector('input[type="checkbox"]');
+        const badge = wrapper.querySelector(".image-rank");
+        if (input) input.checked = rank !== -1;
+        if (badge) badge.textContent = rank === -1 ? "-" : String(rank + 1);
+      });
+    }
+
+    function renderSkippedChina() {
+      document.querySelector("#doc-panel").innerHTML = `
+        <h2 class="doc-title">中国大陆</h2>
+        <div class="placeholder">中国大陆没有街景，按要求保持白色；中国页面也没有抓取。</div>
+      `;
+    }
+
+    function renderNoStreetView(name) {
+      document.querySelector("#doc-panel").innerHTML = `
+        <h2 class="doc-title">${escapeHtml(name)}</h2>
+        <div class="placeholder">${escapeHtml(name)}没有街景，因此保持白色，不显示教程页面。</div>
+      `;
+    }
+
+    function renderNoPage(feature) {
+      document.querySelector("#doc-panel").innerHTML = `
+        <h2 class="doc-title">${escapeHtml(featureName(feature))}</h2>
+        <div class="political-note">本页不以地图面名称、颜色或边界表达任何法律或政治立场。</div>
+        <div class="placeholder">这个地图面没有对应的本地抓取页面。</div>
+      `;
+    }
+
+    function renderFeaturePage(feature) {
+      const slugs = slugsForFeature(feature);
+      if (!slugs.length) {
+        renderNoPage(feature);
+        return;
+      }
+      renderPage(slugs, slugs[0], feature);
+    }
+
+    function selectedImagesForFeature(feature) {
+      const code = featureCode(feature);
+      if (code === "CHN" || !hasFeaturePage(feature) || (feature.properties || {})._region === "alaska") {
+        return [];
+      }
+      const slugs = slugsForFeature(feature);
+      const images = [];
+      for (const slug of slugs) {
+        const page = pageForSlug(slug);
+        const selection = state.imageSelections[slug] || [];
+        selection.forEach((imageIndex, selectionIndex) => {
+          const image = page?.images?.[imageIndex];
+          if (image?.src) {
+            images.push({
+              key: `${featureId(feature)}:${slug}:${imageIndex}`,
+              src: image.src,
+              title: page.title,
+              slug,
+              imageIndex,
+              aspectRatio: aspectRatioForImage(image),
+              order: selectionIndex + 1,
+            });
+          }
+        });
+      }
+      return images;
+    }
+
+    function selectedImageFeatureEntries() {
+      if (!state.selectedImageFeatureCache) {
+        state.selectedImageFeatureCache = state.mapFeatures
+          .map(feature => ({ feature, images: selectedImagesForFeature(feature) }))
+          .filter(entry => entry.images.length);
+      }
+      return state.selectedImageFeatureCache;
+    }
+
+    function aspectRatioForImage(image) {
+      const cached = state.imageAspectRatios.get(image?.src);
+      if (cached) return cached;
+      const width = Number(image?.width);
+      const height = Number(image?.height);
+      if (width > 0 && height > 0) return width / height;
+      return DEFAULT_PHOTO_ASPECT_RATIO;
+    }
+
+    function loadImageAspectRatio(image) {
+      if (!image?.src || state.imageAspectRatios.has(image.src) || state.pendingAspectLoads.has(image.src)) return;
+      state.pendingAspectLoads.add(image.src);
+      const probe = new Image();
+      probe.onload = () => {
+        state.pendingAspectLoads.delete(image.src);
+        if (probe.naturalWidth > 0 && probe.naturalHeight > 0) {
+          state.imageAspectRatios.set(image.src, probe.naturalWidth / probe.naturalHeight);
+          invalidateLayoutCacheForImageSrc(image.src);
+          state.selectedImageFeatureCache = null;
+          scheduleMapImagesUpdate();
+        }
+      };
+      probe.onerror = () => {
+        state.pendingAspectLoads.delete(image.src);
+      };
+      probe.src = image.src;
+    }
+
+    function transformedBounds(feature) {
+      const bounds = feature.properties?._baseBounds || state.path.bounds(feature);
+      const t = state.zoomTransform;
+      return {
+        x0: t.applyX(bounds[0][0]),
+        y0: t.applyY(bounds[0][1]),
+        x1: t.applyX(bounds[1][0]),
+        y1: t.applyY(bounds[1][1]),
+      };
+    }
+
+    function rectsOverlap(a, b) {
+      const gap = Math.max(0.2, Math.min(a.width, a.height, b.width, b.height) * PHOTO_GAP_RATIO);
+      return !(
+        a.x + a.width + gap <= b.x ||
+        b.x + b.width + gap <= a.x ||
+        a.y + a.height + gap <= b.y ||
+        b.y + b.height + gap <= a.y
+      );
+    }
+
+    function photoGapForSize(size) {
+      return Math.max(0.2, Math.min(size.width, size.height) * PHOTO_GAP_RATIO);
+    }
+
+    function photoSizeForArea(image, targetArea) {
+      const ratio = Math.max(0.18, Math.min(6, Number(image?.aspectRatio) || DEFAULT_PHOTO_ASPECT_RATIO));
+      const width = Math.sqrt(targetArea * ratio);
+      return {
+        width,
+        height: width / ratio,
+      };
+    }
+
+    function layoutCacheKeyForFeature(feature) {
+      return featureFadeKey(feature) || featureCode(feature) || featureName(feature);
+    }
+
+    function layoutSignatureForFeature(feature, images) {
+      const area = Math.round(Math.max(1, feature.properties?._baseArea || state.path?.area(feature) || 1) * 100);
+      const imagePart = images
+        .map(image => [
+          image.slug,
+          image.imageIndex,
+          image.src,
+          Number(image.aspectRatio || DEFAULT_PHOTO_ASPECT_RATIO).toFixed(4),
+        ].join(","))
+        .join("|");
+      return [
+        `v${LAYOUT_CACHE_VERSION}`,
+        layoutCacheKeyForFeature(feature),
+        Math.round(COUNTRY_IMAGE_FILL_RATIO * 1000),
+        isRelaxedImageFeature(feature) ? "relaxed" : "strict",
+        area,
+        imagePart,
+      ].join("::");
+    }
+
+    function cachedLayoutForFeature(feature, images) {
+      const cache = activeProfile().layoutCache || {};
+      const entry = cache[layoutCacheKeyForFeature(feature)];
+      const signature = layoutSignatureForFeature(feature, images);
+      if (!entry || entry.signature !== signature || !Array.isArray(entry.photos)) return null;
+      return entry.photos.map(photo => ({ ...photo }));
+    }
+
+    function stableSelectionsSignature(selections) {
+      return Object.keys(selections || {})
+        .sort()
+        .map(slug => `${slug}:${(selections[slug] || []).join(",")}`)
+        .join("|");
+    }
+
+    function layoutCacheSignature(profile) {
+      return Object.keys(profile.layoutCache || {})
+        .sort()
+        .map(key => `${key}:${profile.layoutCache[key]?.signature || ""}`)
+        .join("|");
+    }
+
+    function renderSignatureForProfile(profile = activeProfile()) {
+      return [
+        `v${RENDER_CACHE_VERSION}`,
+        `layout-v${LAYOUT_CACHE_VERSION}`,
+        stableSelectionsSignature(profile.selections || state.imageSelections),
+        layoutCacheSignature(profile),
+      ].join("::");
+    }
+
+    function cachedRenderHtml() {
+      const profile = activeProfile();
+      const cache = normalizeRenderCache(profile.renderCache);
+      if (!cache || cache.signature !== renderSignatureForProfile(profile)) return null;
+      return cache.html;
+    }
+
+    function storeRenderHtml(html) {
+      const profile = activeProfile();
+      profile.renderCache = {
+        signature: renderSignatureForProfile(profile),
+        html,
+      };
+      state.renderCacheDirty = true;
+    }
+
+    function invalidateRenderCache() {
+      const profile = activeProfile();
+      if (profile.renderCache) {
+        profile.renderCache = null;
+        state.renderCacheDirty = true;
+      }
+    }
+
+    function storeLayoutForFeature(feature, images, photos) {
+      const profile = activeProfile();
+      profile.layoutCache = profile.layoutCache || {};
+      profile.layoutCache[layoutCacheKeyForFeature(feature)] = {
+        signature: layoutSignatureForFeature(feature, images),
+        photos: photos.map(photo => ({
+          ...photo,
+          x: Number(photo.x),
+          y: Number(photo.y),
+          width: Number(photo.width),
+          height: Number(photo.height),
+        })),
+      };
+      state.layoutCacheDirty = true;
+      invalidateRenderCache();
+    }
+
+    function invalidateLayoutCacheForFeature(feature) {
+      const profile = activeProfile();
+      if (!profile.layoutCache) return;
+      const key = layoutCacheKeyForFeature(feature);
+      if (profile.layoutCache[key]) {
+        delete profile.layoutCache[key];
+        state.layoutCacheDirty = true;
+        invalidateRenderCache();
+      }
+    }
+
+    function invalidateLayoutCacheForSlug(slug) {
+      for (const feature of state.mapFeatures) {
+        if (slugsForFeature(feature).includes(slug)) invalidateLayoutCacheForFeature(feature);
+      }
+      persistLayoutCache();
+    }
+
+    function invalidateLayoutCacheForImageSrc(src) {
+      if (!src) return;
+      const profile = activeProfile();
+      const cache = profile.layoutCache || {};
+      for (const [key, entry] of Object.entries(cache)) {
+        if (entry?.photos?.some(photo => photo.src === src)) {
+          delete cache[key];
+          state.layoutCacheDirty = true;
+          invalidateRenderCache();
+        }
+      }
+      persistLayoutCache();
+    }
+
+    function pointInFeatureBase(feature, x, y) {
+      const lonLat = state.projection?.invert([x, y]);
+      return Array.isArray(lonLat) && Number.isFinite(lonLat[0]) && Number.isFinite(lonLat[1]) && d3.geoContains(feature, lonLat);
+    }
+
+    function rectInsideFeatureBase(feature, x, y, rectWidth, rectHeight) {
+      const left = x;
+      const right = x + rectWidth;
+      const top = y;
+      const bottom = y + rectHeight;
+      const cols = STRICT_RECT_SAMPLE_COLS;
+      const rows = STRICT_RECT_SAMPLE_ROWS;
+      for (let row = 0; row < rows; row += 1) {
+        const sampleY = top + (bottom - top) * (row / (rows - 1));
+        for (let col = 0; col < cols; col += 1) {
+          const sampleX = left + (right - left) * (col / (cols - 1));
+          if (!pointInFeatureBase(feature, sampleX, sampleY)) return false;
+        }
+      }
+      return true;
+    }
+
+    function addCandidate(candidates, feature, x, y, centerX, centerY, rectWidth, rectHeight, relaxed) {
+      if (candidates.length >= MAX_CANDIDATES_PER_FEATURE) return;
+      if (!relaxed && !rectInsideFeatureBase(feature, x, y, rectWidth, rectHeight)) return;
+      const dx = x + rectWidth / 2 - centerX;
+      const dy = y + rectHeight / 2 - centerY;
+      candidates.push({
+        x,
+        y,
+        distance: dx * dx + dy * dy,
+      });
+    }
+
+    function candidateCacheKey(feature, size, forceRelaxed) {
+      return [
+        featureId(feature),
+        Math.round(size.width * 100),
+        Math.round(size.height * 100),
+        forceRelaxed ? "relaxed" : "strict",
+      ].join(":");
+    }
+
+    function candidateImagePositions(feature, size, forceRelaxed = false) {
+      const cacheKey = candidateCacheKey(feature, size, forceRelaxed);
+      const cached = state.candidatePositionCache.get(cacheKey);
+      if (cached) return cached;
+
+      const relaxed = forceRelaxed || isRelaxedImageFeature(feature);
+      const bounds = feature.properties?._baseBounds || state.path.bounds(feature);
+      const spanX = bounds[1][0] - bounds[0][0];
+      const spanY = bounds[1][1] - bounds[0][1];
+      const relaxedOverflowX = relaxed ? size.width * 0.62 : 0;
+      const relaxedOverflowY = relaxed ? size.height * 0.62 : 0;
+      const overflowX = relaxedOverflowX + Math.max(0, (size.width - spanX) / 2);
+      const overflowY = relaxedOverflowY + Math.max(0, (size.height - spanY) / 2);
+      const x0 = bounds[0][0] - overflowX;
+      const y0 = bounds[0][1] - overflowY;
+      const x1 = bounds[1][0] + overflowX;
+      const y1 = bounds[1][1] + overflowY;
+      if (x1 - x0 < size.width || y1 - y0 < size.height) {
+        state.candidatePositionCache.set(cacheKey, []);
+        return [];
+      }
+
+      const centroid = feature.properties?._baseCentroid || state.path.centroid(feature);
+      const centerX = centroid[0];
+      const centerY = centroid[1];
+      const gap = photoGapForSize(size);
+      const stepX = Math.max(size.width * 0.45, size.width + gap);
+      const stepY = Math.max(size.height * 0.45, size.height + gap);
+      const candidates = [];
+      let attempts = 0;
+      const centerCandidateX = Math.min(Math.max(centerX - size.width / 2, x0), x1 - size.width);
+      const centerCandidateY = Math.min(Math.max(centerY - size.height / 2, y0), y1 - size.height);
+
+      addCandidate(candidates, feature, centerCandidateX, centerCandidateY, centerX, centerY, size.width, size.height, relaxed);
+      attempts += 1;
+
+      for (let y = y0; y <= y1 - size.height && attempts < MAX_CANDIDATE_ATTEMPTS && candidates.length < MAX_CANDIDATES_PER_FEATURE; y += stepY) {
+        for (let x = x0; x <= x1 - size.width && attempts < MAX_CANDIDATE_ATTEMPTS && candidates.length < MAX_CANDIDATES_PER_FEATURE; x += stepX) {
+          attempts += 1;
+          addCandidate(candidates, feature, x, y, centerX, centerY, size.width, size.height, relaxed);
+        }
+      }
+
+      const edgeX = x1 - size.width;
+      const edgeY = y1 - size.height;
+      for (let y = y0; y <= y1 - size.height && attempts < MAX_CANDIDATE_ATTEMPTS && candidates.length < MAX_CANDIDATES_PER_FEATURE; y += stepY) {
+        attempts += 1;
+        addCandidate(candidates, feature, edgeX, y, centerX, centerY, size.width, size.height, relaxed);
+      }
+      for (let x = x0; x <= x1 - size.width && attempts < MAX_CANDIDATE_ATTEMPTS && candidates.length < MAX_CANDIDATES_PER_FEATURE; x += stepX) {
+        attempts += 1;
+        addCandidate(candidates, feature, x, edgeY, centerX, centerY, size.width, size.height, relaxed);
+      }
+
+      const unique = new Map();
+      for (const candidate of candidates) {
+        const key = `${Math.round(candidate.x)}:${Math.round(candidate.y)}`;
+        if (!unique.has(key)) unique.set(key, candidate);
+      }
+
+      const sorted = [...unique.values()]
+        .sort((a, b) => a.distance - b.distance)
+        .slice(0, MAX_CANDIDATES_PER_FEATURE);
+      state.candidatePositionCache.set(cacheKey, sorted);
+      return sorted;
+    }
+
+    function layoutImagesInFeature(feature, images) {
+      if (!images.length || !state.path || !state.projection) return [];
+      const cached = cachedLayoutForFeature(feature, images);
+      if (cached) return cached;
+
+      for (const image of images) {
+        loadImageAspectRatio(image);
+        image.aspectRatio = state.imageAspectRatios.get(image.src) || image.aspectRatio;
+      }
+
+      const featureArea = Math.max(1, feature.properties?._baseArea || state.path.area(feature) || 1);
+      const targetImageArea = featureArea * COUNTRY_IMAGE_FILL_RATIO / images.length;
+      const scaleSteps = [1, 0.82, 0.68, 0.56, 0.46, 0.38, 0.31, 0.25, 0.2, 0.16, 0.13, 0.1];
+      const clipPathId = isRelaxedImageFeature(feature) ? null : clipIdForFeature(feature);
+
+      for (const scale of scaleSteps) {
+        const placed = [];
+        for (let index = 0; index < images.length; index += 1) {
+          const size = photoSizeForArea(images[index], targetImageArea * scale * scale);
+          const candidates = candidateImagePositions(feature, size);
+          if (!candidates.length) continue;
+          const candidate = candidates.find(position => {
+            const rect = { x: position.x, y: position.y, width: size.width, height: size.height };
+            return !placed.some(existing => rectsOverlap(rect, existing));
+          });
+          if (!candidate) continue;
+          const photo = {
+            ...images[index],
+            x: candidate.x,
+            y: candidate.y,
+            width: size.width,
+            height: size.height,
+            displayOrder: index + 1,
+            clipPathId,
+          };
+          placed.push(photo);
+        }
+        if (placed.length === images.length || placed.length > 0 && scale === scaleSteps[scaleSteps.length - 1]) {
+          storeLayoutForFeature(feature, images, placed);
+          return placed;
+        }
+      }
+      storeLayoutForFeature(feature, images, []);
+      return [];
+    }
+
+    function formatNumber(value) {
+      return Number(value).toFixed(3).replace(/\.?0+$/, "");
+    }
+
+    function renderMapPhotosHtml(imageData) {
+      return imageData.map(photo => {
+        const clip = photo.clipPathId ? ` clip-path="url(#${escapeHtml(photo.clipPathId)})"` : "";
+        return `<g class="map-photo"${clip}><image href="${escapeHtml(photo.src)}" x="${formatNumber(photo.x)}" y="${formatNumber(photo.y)}" width="${formatNumber(photo.width)}" height="${formatNumber(photo.height)}" preserveAspectRatio="xMidYMid meet"></image></g>`;
+      }).join("");
+    }
+
+    function updateMapImages() {
+      if (!state.overlayLayer || !state.mapFeatures.length || !state.path) return;
+      const cachedHtml = cachedRenderHtml();
+      if (cachedHtml !== null) {
+        state.overlayLayer.html(cachedHtml);
+        return;
+      }
+
+      const imageData = selectedImageFeatureEntries().flatMap(entry => layoutImagesInFeature(entry.feature, entry.images));
+      const html = renderMapPhotosHtml(imageData);
+      state.overlayLayer.html(html);
+      storeRenderHtml(html);
+      persistLayoutCache();
+      return;
+
+    }
+
+    function scheduleMapImagesUpdate() {
+      if (state.imageUpdateFrame) return;
+      if (state.imageUpdateTimer) return;
+      state.imageUpdateTimer = window.setTimeout(() => {
+        state.imageUpdateTimer = 0;
+        if (state.imageUpdateFrame) return;
+        state.imageUpdateFrame = 0;
+        state.imageUpdateFrame = requestAnimationFrame(() => {
+          state.imageUpdateFrame = 0;
+          updateMapImages();
+        });
+      }, 80);
+    }
+
+    function renderLists() {
+      const pages = [...state.pages.pages].sort((a, b) => a.title.localeCompare(b.title, "zh-CN"));
+      document.querySelector("#page-count").textContent = state.pages.count;
+      document.querySelector("#red-count").textContent = state.targetCodes.size;
+      document.querySelector("#fail-count").textContent = state.pages.failureCount;
+      document.querySelector("#page-list").innerHTML = pages
+        .map(page => `<li>${escapeHtml(displayPageTitle(page))} <span style="color:#5f6c76">/${escapeHtml(page.slug)}</span></li>`)
+        .join("");
+
+      const unmatched = [
+        ...state.index.unmatched.map(page => `${replacePoliticalText(page.title)}：当前地图数据没有独立面`),
+        ...state.index.skipped.map(page => `${replacePoliticalText(page.title)}：${replacePoliticalText(page.reason)}`),
+        "中国香港：有街景但暂无页面",
+        "中国澳门：有街景但暂无页面",
+        "中国台湾：有街景但暂无页面",
+        "中国藏南地区：按中国国土显示，暂无教程页面",
+        "阿拉斯加：没有街景，已保持白色"
+      ];
+      document.querySelector("#unmatched-list").innerHTML = unmatched
+        .map(item => `<li>${escapeHtml(item)}</li>`)
+        .join("");
+    }
+
+    function findSingaporeFeature(features) {
+      return features.find(feature => featureCodeCandidates(feature).includes("SGP"))
+        || features.find(feature => slugsForFeature(feature).includes("singapore"));
+    }
+
+    function zoomLimitForFeature(feature) {
+      if (!feature || !state.path) return 200;
+      const bounds = feature.properties?._baseBounds || state.path.bounds(feature);
+      const spanX = Math.max(0.001, bounds[1][0] - bounds[0][0]);
+      const spanY = Math.max(0.001, bounds[1][1] - bounds[0][1]);
+      const fitScale = Math.min(width / spanX, height / spanY) * 0.98;
+      return Math.max(1, Math.min(2000, fitScale));
+    }
+
+    function bindMapZoom(zoomLayer, mapFeatures) {
+      const maxZoom = zoomLimitForFeature(findSingaporeFeature(mapFeatures));
+      let zoomFrame = 0;
+      let pendingTransform = d3.zoomIdentity;
+
+      function applyZoomTransform(transform) {
+        state.zoomTransform = transform;
+        pendingTransform = transform;
+        if (zoomFrame) return;
+        zoomFrame = requestAnimationFrame(() => {
+          zoomFrame = 0;
+          zoomLayer.attr("transform", pendingTransform);
+        });
+      }
+
+      const zoom = d3.zoom()
+        .scaleExtent([1, maxZoom])
+        .translateExtent([[-width * 24, -height * 24], [width * 25, height * 25]])
+        .on("zoom", event => applyZoomTransform(event.transform))
+        .on("end", event => applyZoomTransform(event.transform));
+
+      svg.call(zoom);
+      svg.on("dblclick.zoom", null);
+
+      document.querySelector("#zoom-in")?.addEventListener("click", () => {
+        svg.transition().duration(180).call(zoom.scaleBy, 1.6);
+      });
+      document.querySelector("#zoom-out")?.addEventListener("click", () => {
+        svg.transition().duration(180).call(zoom.scaleBy, 0.625);
+      });
+      document.querySelector("#zoom-reset")?.addEventListener("click", () => {
+        svg.transition().duration(220).call(zoom.transform, d3.zoomIdentity);
+      });
+    }
+
+    async function boot() {
+      const geo = window.PLONKIT_GEO;
+      const index = window.PLONKIT_MAP_INDEX;
+      const pages = window.PLONKIT_PAGES;
+      if (!geo || !index || !pages) {
+        throw new Error("本地数据文件没有加载成功");
+      }
+
+      state.index = index;
+      state.pages = pages;
+      state.pagesBySlug = new Map(pages.pages.map(page => [page.slug, page]));
+      state.targetCodes = displayTargetCodes(index);
+      state.profiles = loadProfiles();
+      state.activeProfileId = state.profiles.activeProfileId;
+      syncActiveProfileSelections();
+
+      renderLists();
+      renderLanguageGuide();
+      renderProfilePanel();
+      bindProfilePanel();
+
+      const projection = d3.geoNaturalEarth1()
+        .rotate([-150, 0])
+        .fitExtent([[18, 20], [width - 18, height - 20]], { type: "Sphere" });
+
+      const path = d3.geoPath(projection);
+      state.path = path;
+      state.projection = projection;
+
+      const zoomLayer = svg.append("g")
+        .attr("class", "zoom-layer");
+
+      zoomLayer.append("path")
+        .datum({ type: "Sphere" })
+        .attr("class", "sphere")
+        .attr("d", path);
+
+      const mapFeatures = applyPoliticalOverrides(mergeCountryFeatures(geo.features.flatMap(splitFeature)));
+      mapFeatures.forEach(feature => {
+        const properties = feature.properties || (feature.properties = {});
+        properties._baseBounds = path.bounds(feature);
+        properties._baseCentroid = path.centroid(feature);
+        properties._baseArea = Math.max(1, path.area(feature));
+      });
+      state.mapFeatures = mapFeatures;
+      state.featureById = new Map(mapFeatures.map(feature => [featureId(feature), feature]));
+
+      const defs = svg.append("defs");
+      createLanguagePatterns(defs);
+
+      defs
+        .selectAll("clipPath")
+        .data(mapFeatures.filter(feature => !isRelaxedImageFeature(feature)))
+        .join("clipPath")
+        .attr("id", clipIdForFeature)
+        .attr("clipPathUnits", "userSpaceOnUse")
+        .append("path")
+        .attr("d", path);
+
+      const renderFeatures = mapFeatures.filter(hasFeaturePage);
+      const renderLayer = zoomLayer.append("g")
+        .attr("class", "map-render-layer");
+
+      state.renderFillSelection = renderLayer.append("g")
+        .attr("class", "render-fill-layer")
+        .selectAll("path")
+        .data(renderFeatures)
+        .join("path")
+        .attr("class", "country-render-fill")
+        .attr("data-code", d => featureCodeCandidates(d).join(" "))
+        .attr("data-slugs", d => slugsForFeature(d).join(" "))
+        .attr("fill", countryRenderFill)
+        .attr("d", path);
+
+      state.renderTextureSelection = renderLayer.append("g")
+        .attr("class", "render-texture-layer")
+        .selectAll("path")
+        .data(renderFeatures)
+        .join("path")
+        .attr("class", "country-render-texture")
+        .attr("data-code", d => featureCodeCandidates(d).join(" "))
+        .attr("data-slugs", d => slugsForFeature(d).join(" "))
+        .attr("fill", countryRenderTexture)
+        .attr("d", path);
+
+      state.overlayLayer = zoomLayer.append("g")
+        .attr("class", "image-overlay");
+
+      state.clickPathSelection = zoomLayer.append("g")
+        .attr("class", "country-click-layer")
+        .selectAll("path")
+        .data(mapFeatures.filter(hasFeaturePage))
+        .join("path")
+        .attr("class", "country-click-target")
+        .attr("data-code", d => featureCodeCandidates(d).join(" "))
+        .attr("data-slugs", d => slugsForFeature(d).join(" "))
+        .attr("d", path)
+        .on("click", (event, feature) => {
+          if (event.defaultPrevented) return;
+          renderFeaturePage(feature);
+        });
+
+      const borderLayer = zoomLayer.append("g")
+        .attr("class", "border-layer");
+
+      state.borderPathSelection = borderLayer.append("g")
+        .attr("class", "border-line-layer")
+        .selectAll("path")
+        .data(mapFeatures)
+        .join("path")
+        .attr("class", "country-border")
+        .attr("data-code", d => featureCodeCandidates(d).join(" "))
+        .attr("data-slugs", d => slugsForFeature(d).join(" "))
+        .attr("d", path);
+
+      bindMapZoom(zoomLayer, mapFeatures);
+      updateSelectionExport();
+      updateMapImages();
+
+      document.querySelector("#doc-panel").innerHTML = `
+        <div class="placeholder">已加载 ${pages.count} 个本地抓取页面。点击地图上有页面的国家或地区，右侧会显示页面内容；地图可缩放。</div>
+      `;
+    }
+
+    boot().catch(error => {
+      document.querySelector("#doc-panel").innerHTML = `<div class="placeholder">加载失败：${escapeHtml(error.message)}</div>`;
+    });
+  </script>
+</body>
+</html>

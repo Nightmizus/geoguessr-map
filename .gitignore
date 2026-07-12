@@ -1,0 +1,18 @@
+# Runtime output
+logs/
+
+# Dependency/cache folders
+node_modules/
+__pycache__/
+.pytest_cache/
+
+# Local environment
+.env
+.env.*
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+*.log
