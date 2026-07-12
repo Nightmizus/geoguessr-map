@@ -1266,6 +1266,22 @@ const LANGUAGE_GROUPS = [
       return [];
     }
 
+    function normalizedFillFeature(feature) {
+      const polygons = polygonsFromFeature(feature).map(polygon => {
+        const polygonFeature = { type: "Polygon", coordinates: polygon };
+        if (d3.geoArea(polygonFeature) <= 2 * Math.PI) return polygon;
+        return polygon.map(ring => [...ring].reverse());
+      });
+      return {
+        type: "Feature",
+        properties: feature.properties || {},
+        geometry: {
+          type: polygons.length === 1 ? "Polygon" : "MultiPolygon",
+          coordinates: polygons.length === 1 ? polygons[0] : polygons,
+        },
+      };
+    }
+
     function countryMergeKey(feature) {
       const p = feature.properties || {};
       if (p._region) return featureId(feature) || `${featureCode(feature)}:${p._region}`;
@@ -2616,7 +2632,7 @@ const LANGUAGE_GROUPS = [
           .attr("fill", "white");
 
         indiaChinaRenderMask.append("path")
-          .datum(chinaBoundaryFeature)
+          .datum(normalizedFillFeature(chinaBoundaryFeature))
           .attr("fill", "black")
           .attr("d", path);
       }
