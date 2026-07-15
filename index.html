@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Plonk It 国家/地区页面地图</title>
+  <title>geoguessr-map</title>
   <style>
     :root {
       color-scheme: dark;
@@ -814,7 +814,7 @@
   <div class="shell">
     <main class="map-wrap">
       <div class="map-head">
-        <h1>Mizusumi的图寻地图</h1>
+        <h1>geoguessr-map</h1>
         <div class="map-toolbar">
           <div class="zoom-controls" aria-label="地图缩放控件">
             <button type="button" id="zoom-in" title="放大">+</button>
@@ -907,7 +907,6 @@
     const SELECTION_STORAGE_KEY = "plonkit-image-selections-v1";
     const PROFILE_STORAGE_KEY = "plonkit-profiles-v1";
     const FADED_FEATURE_STORAGE_KEY = "plonkit-faded-features-v1";
-    const CARPLATE_PROFILE_CLEANUP_KEY = "plonkit-carplate-profile-images-cleared-v1";
     const PROFILE_BACKUP_FORMAT = "tuxunmap-profiles";
     const PROFILE_BACKUP_VERSION = 1;
     const PROFILE_BACKUP_MAX_BYTES = 15 * 1024 * 1024;
@@ -1653,27 +1652,6 @@ const LANGUAGE_GROUPS = [
       return defaults;
     }
 
-    function clearCarplateProfileImagesOnce(store) {
-      if (!store?.profiles || localStorage.getItem(CARPLATE_PROFILE_CLEANUP_KEY) === "1") return store;
-      const entry = Object.entries(store.profiles)
-        .find(([, profile]) => profile && profile.name === "车牌");
-      if (!entry) {
-        localStorage.setItem(CARPLATE_PROFILE_CLEANUP_KEY, "1");
-        return store;
-      }
-
-      const [profileId, profile] = entry;
-      profile.selections = {};
-      profile.layoutCache = {};
-      profile.renderCache = null;
-      localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(store));
-      if (store.activeProfileId === profileId) {
-        localStorage.setItem(SELECTION_STORAGE_KEY, "{}");
-      }
-      localStorage.setItem(CARPLATE_PROFILE_CLEANUP_KEY, "1");
-      return store;
-    }
-
     function loadProfiles() {
       const legacySelections = loadImageSelections();
       const legacyFadedFeatures = [...loadFadedFeatures()];
@@ -1682,9 +1660,9 @@ const LANGUAGE_GROUPS = [
         : null;
       try {
         const fromStorage = JSON.parse(localStorage.getItem(PROFILE_STORAGE_KEY) || "null");
-        return clearCarplateProfileImagesOnce(normalizeProfileStore(fromStorage || fromFile, legacySelections, legacyFadedFeatures));
+        return normalizeProfileStore(fromStorage || fromFile, legacySelections, legacyFadedFeatures);
       } catch {
-        return clearCarplateProfileImagesOnce(normalizeProfileStore(fromFile, legacySelections, legacyFadedFeatures));
+        return normalizeProfileStore(fromFile, legacySelections, legacyFadedFeatures);
       }
     }
 
@@ -1838,7 +1816,7 @@ const LANGUAGE_GROUPS = [
       const url = URL.createObjectURL(blob);
       const anchor = document.createElement("a");
       anchor.href = url;
-      anchor.download = `tuxunmap-profiles-${new Date().toISOString().slice(0, 10)}.json`;
+      anchor.download = `geoguessr-map-profiles-${new Date().toISOString().slice(0, 10)}.json`;
       document.body.appendChild(anchor);
       anchor.click();
       anchor.remove();

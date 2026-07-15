@@ -4,8 +4,10 @@
 
 ## 根目录
 
-- `plonkit_pacific_map.html`：主页面入口。
+- `index.html`：主页面入口，也是静态托管的默认入口。
 - `PROJECT_STRUCTURE.md`：当前说明文件。
+- `edgeone.json`：EdgeOne Pages 构建配置。
+- `package.json`：项目名称和静态站点构建命令。
 
 ## assets/
 
@@ -24,6 +26,7 @@
 
 ## scripts/
 
+- `scripts/build-static-site.mjs`：把页面运行所需文件复制到 `dist/`，供静态托管平台发布。
 - `scripts/crawl_plonkit_pages.mjs`：文章抓取脚本。运行它才会访问语雀 API，并重新生成 `data/source/plonkit_pages.json` 和 `data/source/plonkit_pages_summary.json`。
 
 ## raw/

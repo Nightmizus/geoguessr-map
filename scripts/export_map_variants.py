@@ -14,7 +14,7 @@ from export_no_color_map import (
 )
 
 
-HTML = ROOT / "plonkit_pacific_map.html"
+HTML = ROOT / "index.html"
 INDEX = ROOT / "data" / "source" / "plonkit_map_index.json"
 GEOJSON = ROOT / "data" / "source" / "ne_50m_admin_0_map_units.geojson"
 OUTPUT_DRIVING = ROOT / "exports" / "driving_side_map.png"

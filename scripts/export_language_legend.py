@@ -5,7 +5,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 ROOT = Path(__file__).resolve().parents[1]
-HTML = ROOT / "plonkit_pacific_map.html"
+HTML = ROOT / "index.html"
 OUTPUT = ROOT / "exports" / "language_legend.png"
 
 WIDTH = 1920
