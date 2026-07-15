@@ -95,6 +95,26 @@
       flex: 1;
     }
 
+    .map-head-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex: 0 0 auto;
+    }
+
+    .mobile-menu-toggle {
+      display: none;
+      width: 34px;
+      height: 34px;
+      padding: 0;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.11);
+      color: var(--ink);
+      font: 700 18px/1 Arial, sans-serif;
+      cursor: pointer;
+    }
+
     .zoom-controls {
       position: static;
       display: flex;
@@ -769,44 +789,163 @@
     }
 
     @media (max-width: 980px) {
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
       .shell {
-        padding: 12px;
-        gap: 12px;
+        position: fixed;
+        inset: 0;
+        display: grid;
+        min-height: 0;
+        padding: 0;
+        gap: 0;
+      }
+
+      .map-wrap {
+        position: relative;
+        inset: auto;
+        width: auto;
+        height: auto;
+        min-width: 0;
+        min-height: 0;
+        overflow: hidden;
       }
 
       .map-head {
-        position: fixed;
-        left: 12px;
-        right: 12px;
-        top: 12px;
-        flex-wrap: wrap;
-        align-items: flex-start;
+        position: absolute;
+        left: 8px;
+        right: 8px;
+        top: 8px;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 8px 7px 12px;
+        border-radius: 14px;
+      }
+
+      .map-head h1 {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 16px;
       }
 
       .map-toolbar {
-        flex-wrap: wrap;
+        position: absolute;
+        top: calc(100% + 6px);
+        left: 0;
+        right: 0;
+        display: none;
+        min-width: 0;
+        padding: 10px;
+        overflow: auto;
         justify-content: flex-start;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: rgba(10, 18, 30, 0.96);
+        box-shadow: 0 18px 48px rgba(0, 0, 0, 0.48);
+        backdrop-filter: blur(22px) saturate(1.2);
       }
 
-      .profile-panel,
-      .profile-settings {
+      .map-head.menu-open .map-toolbar {
+        display: block;
+      }
+
+      .mobile-menu-toggle {
+        display: grid;
+        place-items: center;
+      }
+
+      .profile-panel {
+        align-items: flex-start;
         flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .profile-settings {
+        width: 100%;
+        flex-wrap: wrap;
+      }
+
+      .profile-settings input[type="text"] {
+        width: min(128px, 32vw);
       }
 
       .side {
-        position: fixed;
-        left: 12px;
-        right: 12px;
-        top: 150px;
-        bottom: 12px;
+        position: relative;
+        inset: auto;
+        z-index: 4;
+        display: flex;
+        flex-direction: column;
         width: auto;
+        height: auto;
+        min-width: 0;
+        min-height: 0;
+        padding: 12px;
         border: 1px solid var(--border);
+        border-radius: 0;
         max-height: none;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .doc-panel {
+        order: -1;
+        min-height: 0;
+      }
+
+      .article {
+        font-size: 14px;
+        line-height: 1.65;
       }
 
       svg {
-        height: 100vh;
-        min-height: 100vh;
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+      }
+    }
+
+    @media (max-width: 980px) and (orientation: portrait) {
+      .shell {
+        grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .map-wrap {
+        grid-row: 1;
+      }
+
+      .side {
+        grid-row: 2;
+        border-width: 1px 0 0;
+      }
+
+      .map-toolbar {
+        max-height: calc(50dvh - 70px);
+      }
+    }
+
+    @media (max-width: 980px) and (orientation: landscape) {
+      .shell {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-rows: minmax(0, 1fr);
+      }
+
+      .map-wrap {
+        grid-column: 1;
+      }
+
+      .side {
+        grid-column: 2;
+        border-width: 0 0 0 1px;
+      }
+
+      .map-toolbar {
+        max-height: calc(100dvh - 70px);
       }
     }
   </style>
@@ -816,12 +955,7 @@
     <main class="map-wrap">
       <div class="map-head">
         <h1>geoguessr-map</h1>
-        <div class="map-toolbar">
-          <div class="zoom-controls" aria-label="地图缩放控件">
-            <button type="button" id="zoom-in" title="放大">+</button>
-            <button type="button" id="zoom-out" title="缩小">−</button>
-            <button type="button" id="zoom-reset" title="重置">↺</button>
-          </div>
+        <div class="map-toolbar" id="map-toolbar">
           <div class="profile-panel" id="profile-panel" aria-label="Profiles">
             <div class="profile-title">Profiles</div>
             <div class="profile-buttons" id="profile-buttons"></div>
@@ -845,6 +979,14 @@
               <input type="file" id="profile-file-input" accept="application/json,.json" hidden>
             </div>
           </div>
+        </div>
+        <div class="map-head-actions">
+          <div class="zoom-controls" aria-label="地图缩放控件">
+            <button type="button" id="zoom-in" title="放大" aria-label="放大">+</button>
+            <button type="button" id="zoom-out" title="缩小" aria-label="缩小">−</button>
+            <button type="button" id="zoom-reset" title="重置" aria-label="重置地图缩放">↺</button>
+          </div>
+          <button type="button" class="mobile-menu-toggle" id="mobile-menu-toggle" title="打开配置菜单" aria-label="打开配置菜单" aria-expanded="false" aria-controls="map-toolbar">☰</button>
         </div>
       </div>
       <svg id="map" viewBox="0 0 1280 760" role="img" aria-label="以太平洋为中心的世界地图，Plonk It 菜单国家或地区为红色"></svg>
@@ -1784,6 +1926,42 @@ const LANGUAGE_GROUPS = [
       });
     }
 
+    function bindMobileMenu() {
+      const head = document.querySelector(".map-head");
+      const toggle = document.querySelector("#mobile-menu-toggle");
+      if (!head || !toggle) return;
+
+      const setOpen = open => {
+        head.classList.toggle("menu-open", open);
+        toggle.setAttribute("aria-expanded", String(open));
+        toggle.setAttribute("aria-label", open ? "关闭配置菜单" : "打开配置菜单");
+        toggle.setAttribute("title", open ? "关闭配置菜单" : "打开配置菜单");
+        toggle.textContent = open ? "×" : "☰";
+      };
+
+      toggle.addEventListener("click", event => {
+        event.stopPropagation();
+        setOpen(!head.classList.contains("menu-open"));
+      });
+      document.addEventListener("click", event => {
+        if (head.classList.contains("menu-open") && !head.contains(event.target)) setOpen(false);
+      });
+      document.addEventListener("keydown", event => {
+        if (event.key === "Escape") setOpen(false);
+      });
+
+      const mobileQuery = window.matchMedia("(max-width: 980px)");
+      const orientationQuery = window.matchMedia("(orientation: portrait)");
+      mobileQuery.addEventListener("change", () => setOpen(false));
+      orientationQuery.addEventListener("change", () => setOpen(false));
+    }
+
+    function resetMobileDocumentScroll() {
+      if (!window.matchMedia("(max-width: 980px)").matches) return;
+      const side = document.querySelector(".side");
+      if (side) requestAnimationFrame(() => { side.scrollTop = 0; });
+    }
+
     let profileTransferStatusTimer = null;
 
     function showProfileTransferStatus(message, isError = false) {
@@ -2147,6 +2325,7 @@ const LANGUAGE_GROUPS = [
       }
       decorateArticleImages(page);
       updateSelectionExport();
+      resetMobileDocumentScroll();
     }
 
     function decorateArticleImages(page) {
@@ -2231,6 +2410,7 @@ const LANGUAGE_GROUPS = [
       const slugs = slugsForFeature(feature);
       if (!slugs.length) {
         renderNoPage(feature);
+        resetMobileDocumentScroll();
         return;
       }
       renderPage(slugs, slugs[0], feature);
@@ -2754,6 +2934,7 @@ const LANGUAGE_GROUPS = [
       renderLanguageGuide();
       renderProfilePanel();
       bindProfilePanel();
+      bindMobileMenu();
 
       const projection = d3.geoNaturalEarth1()
         .rotate([-150, 0])
