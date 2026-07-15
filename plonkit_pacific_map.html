@@ -284,6 +284,58 @@
       margin: 0;
     }
 
+    .profile-transfer {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .profile-transfer-button {
+      width: 34px;
+      height: 34px;
+      flex: 0 0 34px;
+      padding: 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--ink);
+      font: 700 19px/1 Arial, sans-serif;
+      cursor: pointer;
+    }
+
+    .profile-transfer-button:hover {
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .profile-transfer-status {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      z-index: 10;
+      max-width: min(420px, calc(100vw - 32px));
+      padding: 9px 12px;
+      border: 1px solid rgba(122, 214, 156, 0.56);
+      border-radius: 8px;
+      background: rgba(16, 34, 27, 0.94);
+      color: #d9ffe6;
+      font-size: 13px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 8px);
+      transition: opacity 150ms ease, transform 150ms ease;
+    }
+
+    .profile-transfer-status.visible {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .profile-transfer-status.error {
+      border-color: rgba(248, 113, 113, 0.62);
+      background: rgba(57, 23, 27, 0.95);
+      color: #ffe2e2;
+    }
+
     .side {
       position: fixed;
       top: 92px;
@@ -786,6 +838,11 @@
                 <span>左右行颜色</span>
               </label>
             </div>
+            <div class="profile-transfer">
+              <button type="button" class="profile-transfer-button" id="download-profiles" title="下载全部 Profile" aria-label="下载全部 Profile">⇩</button>
+              <button type="button" class="profile-transfer-button" id="upload-profiles" title="导入全部 Profile" aria-label="导入全部 Profile">⇧</button>
+              <input type="file" id="profile-file-input" accept="application/json,.json" hidden>
+            </div>
           </div>
         </div>
       </div>
@@ -832,6 +889,7 @@
       </details>
     </aside>
   </div>
+  <div class="profile-transfer-status" id="profile-transfer-status" role="status" aria-live="polite"></div>
   <script src="assets/vendor/d3.v7.min.js"></script>
   <script src="data/generated/plonkit_geo_data.js"></script>
   <script src="data/generated/plonkit_page_data.js"></script>
@@ -850,6 +908,9 @@
     const PROFILE_STORAGE_KEY = "plonkit-profiles-v1";
     const FADED_FEATURE_STORAGE_KEY = "plonkit-faded-features-v1";
     const CARPLATE_PROFILE_CLEANUP_KEY = "plonkit-carplate-profile-images-cleared-v1";
+    const PROFILE_BACKUP_FORMAT = "tuxunmap-profiles";
+    const PROFILE_BACKUP_VERSION = 1;
+    const PROFILE_BACKUP_MAX_BYTES = 15 * 1024 * 1024;
     const INDIA_CHINA_RENDER_MASK_ID = "india-china-render-mask";
     const PROFILE_IDS = ["profile1", "profile2", "profile3", "profile4"];
     const LAYOUT_CACHE_VERSION = 2;
@@ -1702,7 +1763,10 @@ const LANGUAGE_GROUPS = [
       const nameInput = document.querySelector("#profile-name");
       const languageInput = document.querySelector("#profile-show-language");
       const leftDriveInput = document.querySelector("#profile-show-left-drive");
-      if (!nameInput || !languageInput || !leftDriveInput) return;
+      const downloadButton = document.querySelector("#download-profiles");
+      const uploadButton = document.querySelector("#upload-profiles");
+      const fileInput = document.querySelector("#profile-file-input");
+      if (!nameInput || !languageInput || !leftDriveInput || !downloadButton || !uploadButton || !fileInput) return;
 
       nameInput.addEventListener("input", () => {
         const profile = activeProfile();
@@ -1725,6 +1789,133 @@ const LANGUAGE_GROUPS = [
         persistProfiles();
         updateCountryStyles();
       });
+
+      downloadButton.addEventListener("click", downloadProfileBackup);
+      uploadButton.addEventListener("click", () => fileInput.click());
+      fileInput.addEventListener("change", async () => {
+        const file = fileInput.files?.[0];
+        fileInput.value = "";
+        if (!file) return;
+        try {
+          await importProfileBackup(file);
+          showProfileTransferStatus("全部 Profile 已恢复");
+        } catch (error) {
+          showProfileTransferStatus(error?.message || "配置文件无法导入", true);
+        }
+      });
+    }
+
+    let profileTransferStatusTimer = null;
+
+    function showProfileTransferStatus(message, isError = false) {
+      const status = document.querySelector("#profile-transfer-status");
+      if (!status) return;
+      if (profileTransferStatusTimer) clearTimeout(profileTransferStatusTimer);
+      status.textContent = message;
+      status.classList.toggle("error", isError);
+      status.classList.add("visible");
+      profileTransferStatusTimer = setTimeout(() => status.classList.remove("visible"), 2600);
+    }
+
+    function profileBackupData() {
+      persistProfiles();
+      const profileStore = JSON.parse(JSON.stringify(state.profiles));
+      for (const profile of Object.values(profileStore.profiles || {})) {
+        profile.renderCache = null;
+      }
+      return {
+        format: PROFILE_BACKUP_FORMAT,
+        version: PROFILE_BACKUP_VERSION,
+        exportedAt: new Date().toISOString(),
+        activeProfileId: profileStore.activeProfileId,
+        profiles: profileStore.profiles,
+      };
+    }
+
+    function downloadProfileBackup() {
+      const backup = JSON.stringify(profileBackupData(), null, 2);
+      const blob = new Blob([backup], { type: "application/json;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = `tuxunmap-profiles-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 0);
+      showProfileTransferStatus("全部 Profile 已下载");
+    }
+
+    async function importProfileBackup(file) {
+      if (file.size > PROFILE_BACKUP_MAX_BYTES) {
+        throw new Error("配置文件过大，无法导入");
+      }
+
+      let backup;
+      try {
+        backup = JSON.parse(await file.text());
+      } catch {
+        throw new Error("这不是有效的 JSON 配置文件");
+      }
+      if (backup?.format !== PROFILE_BACKUP_FORMAT) {
+        throw new Error("配置文件类型不正确");
+      }
+      if (backup.version !== PROFILE_BACKUP_VERSION) {
+        throw new Error("配置文件版本不受支持");
+      }
+      if (!backup.profiles || typeof backup.profiles !== "object"
+          || !PROFILE_IDS.every(id => backup.profiles[id] && typeof backup.profiles[id] === "object")) {
+        throw new Error("配置文件缺少完整的 Profile 数据");
+      }
+
+      const incomingProfiles = {};
+      for (const id of PROFILE_IDS) {
+        incomingProfiles[id] = { ...backup.profiles[id], renderCache: null };
+      }
+      const restored = normalizeProfileStore({
+        activeProfileId: backup.activeProfileId,
+        profiles: incomingProfiles,
+      });
+
+      const previous = {
+        profiles: state.profiles,
+        activeProfileId: state.activeProfileId,
+        imageSelections: state.imageSelections,
+        fadedFeatures: state.fadedFeatures,
+        profileStorage: localStorage.getItem(PROFILE_STORAGE_KEY),
+        selectionStorage: localStorage.getItem(SELECTION_STORAGE_KEY),
+        fadedStorage: localStorage.getItem(FADED_FEATURE_STORAGE_KEY),
+      };
+
+      try {
+        state.profiles = restored;
+        state.activeProfileId = restored.activeProfileId;
+        syncActiveProfileSelections();
+        state.selectedImageFeatureCache = null;
+        state.layoutCacheDirty = false;
+        state.renderCacheDirty = false;
+        persistProfiles();
+      } catch (error) {
+        state.profiles = previous.profiles;
+        state.activeProfileId = previous.activeProfileId;
+        state.imageSelections = previous.imageSelections;
+        state.fadedFeatures = previous.fadedFeatures;
+        const restoreStorage = (key, value) => {
+          if (value === null) localStorage.removeItem(key);
+          else localStorage.setItem(key, value);
+        };
+        restoreStorage(PROFILE_STORAGE_KEY, previous.profileStorage);
+        restoreStorage(SELECTION_STORAGE_KEY, previous.selectionStorage);
+        restoreStorage(FADED_FEATURE_STORAGE_KEY, previous.fadedStorage);
+        window.PLONKIT_PROFILES = state.profiles;
+        window.PLONKIT_IMAGE_SELECTIONS = state.imageSelections;
+        window.PLONKIT_FADED_FEATURES = [...state.fadedFeatures];
+        throw new Error("浏览器存储空间不足，原配置未更改", { cause: error });
+      }
+
+      renderProfilePanel();
+      updateCountryStyles();
+      updateMapImages();
     }
 
     function loadImageSelections() {
