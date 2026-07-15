@@ -2,6 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
+  <meta name="referrer" content="no-referrer">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>geoguessr-map</title>
   <style>
@@ -913,7 +914,7 @@
     const INDIA_CHINA_RENDER_MASK_ID = "india-china-render-mask";
     const PROFILE_IDS = ["profile1", "profile2", "profile3", "profile4"];
     const LAYOUT_CACHE_VERSION = 2;
-    const RENDER_CACHE_VERSION = 2;
+    const RENDER_CACHE_VERSION = 3;
     const DEFAULT_PHOTO_ASPECT_RATIO = 1.5;
     const COUNTRY_IMAGE_FILL_RATIO = 0.6;
     const PHOTO_GAP_RATIO = 0.08;
@@ -2017,7 +2018,7 @@ const LANGUAGE_GROUPS = [
         const data = JSON.parse(decodeURIComponent(value));
         if (!data.src) return "";
         const alt = escapeHtml(data.alt || data.name || "");
-        return `<figure><img src="${escapeHtml(data.src)}" alt="${alt}" loading="lazy"></figure>`;
+        return `<figure><img src="${escapeHtml(data.src)}" alt="${alt}" loading="lazy" referrerpolicy="no-referrer"></figure>`;
       } catch {
         return "";
       }
@@ -2055,6 +2056,7 @@ const LANGUAGE_GROUPS = [
         }
         if (node.tagName === "IMG") {
           node.setAttribute("loading", "lazy");
+          node.setAttribute("referrerpolicy", "no-referrer");
         }
       });
 
@@ -2284,6 +2286,7 @@ const LANGUAGE_GROUPS = [
       if (!image?.src || state.imageAspectRatios.has(image.src) || state.pendingAspectLoads.has(image.src)) return;
       state.pendingAspectLoads.add(image.src);
       const probe = new Image();
+      probe.referrerPolicy = "no-referrer";
       probe.onload = () => {
         state.pendingAspectLoads.delete(image.src);
         if (probe.naturalWidth > 0 && probe.naturalHeight > 0) {
@@ -2624,7 +2627,7 @@ const LANGUAGE_GROUPS = [
     function renderMapPhotosHtml(imageData) {
       return imageData.map(photo => {
         const clip = photo.clipPathId ? ` clip-path="url(#${escapeHtml(photo.clipPathId)})"` : "";
-        return `<g class="map-photo"${clip}><image href="${escapeHtml(photo.src)}" x="${formatNumber(photo.x)}" y="${formatNumber(photo.y)}" width="${formatNumber(photo.width)}" height="${formatNumber(photo.height)}" preserveAspectRatio="xMidYMid meet"></image></g>`;
+        return `<g class="map-photo"${clip}><image href="${escapeHtml(photo.src)}" x="${formatNumber(photo.x)}" y="${formatNumber(photo.y)}" width="${formatNumber(photo.width)}" height="${formatNumber(photo.height)}" preserveAspectRatio="xMidYMid meet" referrerpolicy="no-referrer"></image></g>`;
       }).join("");
     }
 
