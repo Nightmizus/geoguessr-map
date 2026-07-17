@@ -884,17 +884,25 @@
         height: auto;
         min-width: 0;
         min-height: 0;
-        padding: 12px;
+        padding: 12px 12px calc(12px + env(safe-area-inset-bottom));
         border: 1px solid var(--border);
         border-radius: 0;
         max-height: none;
+        overflow-x: hidden;
+        overflow-y: auto;
         overscroll-behavior: contain;
         -webkit-overflow-scrolling: touch;
       }
 
+      .side > .doc-panel,
+      .side > .legend,
+      .side > details {
+        flex: 0 0 auto;
+        min-width: 0;
+      }
+
       .doc-panel {
         order: -1;
-        min-height: 0;
       }
 
       .article {
