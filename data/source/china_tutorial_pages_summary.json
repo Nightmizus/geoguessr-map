@@ -2,7 +2,7 @@
   "source": "https://www.yuque.com/chaofun/tuxun",
   "tocUpdatedAt": "2026-08-03T13:25:29.000Z",
   "crawledAt": "2026-08-04T09:42:42.938Z",
-  "count": 25,
+  "count": 23,
   "failureCount": 0,
   "failures": [],
   "externalLinks": [
@@ -293,37 +293,6 @@
     },
     {
       "type": "DOC",
-      "title": "上海市 v1.14 | 斯瓦西里 & 斧头帮",
-      "slug": "shanghai",
-      "url": null,
-      "docId": 156336991,
-      "uuid": "35361605:dpWlp9MJKdzGhSfB",
-      "parentUuid": "35361605:i7jagjZKubRAPC30",
-      "depth": 2,
-      "path": [
-        "中国教程",
-        "寻友教程",
-        "上海市 v1.14 | 斯瓦西里 & 斧头帮"
-      ]
-    },
-    {
-      "type": "DOC",
-      "title": "上海崇明岛 v5.14 | 他定绿雷",
-      "slug": "chongming",
-      "url": null,
-      "docId": 146561821,
-      "uuid": "35361605:hY3MNodD31gBH1G3",
-      "parentUuid": "35361605:dpWlp9MJKdzGhSfB",
-      "depth": 3,
-      "path": [
-        "中国教程",
-        "寻友教程",
-        "上海市 v1.14 | 斯瓦西里 & 斧头帮",
-        "上海崇明岛 v5.14 | 他定绿雷"
-      ]
-    },
-    {
-      "type": "DOC",
       "title": "福建省｜威海八景",
       "slug": "fujian",
       "url": null,
@@ -599,24 +568,6 @@
       "images": 68,
       "contentUpdatedAt": "2023-11-02T12:08:35.000Z",
       "sourceUrl": "https://www.yuque.com/chaofun/tuxun/hebei"
-    },
-    {
-      "title": "上海市 v1.14 | 斯瓦西里 & 斧头帮",
-      "slug": "shanghai",
-      "section": "寻友教程",
-      "wordCount": 22350,
-      "images": 412,
-      "contentUpdatedAt": "2026-07-01T06:00:58.000Z",
-      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/shanghai"
-    },
-    {
-      "title": "上海崇明岛 v5.14 | 他定绿雷",
-      "slug": "chongming",
-      "section": "寻友教程",
-      "wordCount": 2829,
-      "images": 59,
-      "contentUpdatedAt": "2024-02-09T09:44:59.000Z",
-      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/chongming"
     },
     {
       "title": "福建省｜威海八景",

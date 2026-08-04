@@ -160,7 +160,7 @@ async function main() {
     })()`);
     if (failures.length) throw new Error(`Province rendering failures: ${JSON.stringify(failures)}`);
 
-    for (const [adcode, expectedTabs] of [["310000", 2], ["500000", 2]]) {
+    for (const [adcode, expectedTabs] of [["310000", 0], ["500000", 2]]) {
       const tabsResult = await evaluate(`(() => {
         document.querySelector('.country-click-target[data-adcode="${adcode}"]').dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
         const tabs = [...document.querySelectorAll('.page-tab')];
@@ -168,12 +168,41 @@ async function main() {
         tabs.at(-1)?.click();
         return { count: tabs.length, firstTitle, switchedTitle: document.querySelector('.doc-title')?.textContent.trim() };
       })()`);
-      if (tabsResult.count !== expectedTabs || tabsResult.firstTitle === tabsResult.switchedTitle) {
+      const didSwitch = tabsResult.firstTitle !== tabsResult.switchedTitle;
+      if (tabsResult.count !== expectedTabs || (expectedTabs > 1 && !didSwitch)) {
         throw new Error(`Tab test failed for ${adcode}: ${JSON.stringify(tabsResult)}`);
       }
     }
+
+    await evaluate(`document.querySelector('[data-profile-id="profile1"]').click()`);
+    await evaluate(`document.querySelector('.country-click-target[data-code~="USA"]').dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }))`);
+    const pasteResult = await evaluate(`(async () => {
+      const bytes = Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII='), character => character.charCodeAt(0));
+      const clipboard = new DataTransfer();
+      clipboard.items.add(new File([bytes], 'clipboard-test.png', { type: 'image/png' }));
+      document.querySelector('#paste-image-zone').dispatchEvent(new ClipboardEvent('paste', {
+        bubbles: true,
+        cancelable: true,
+        clipboardData: clipboard,
+      }));
+      const deadline = Date.now() + 3000;
+      while ((!document.querySelector('#selection-status')?.textContent.includes('已粘贴')
+          || !document.querySelector('.image-overlay image[href^="data:image/png"]')) && Date.now() < deadline) {
+        await new Promise(resolve => setTimeout(resolve, 20));
+      }
+      const preview = document.querySelector('.article img[src^="data:image/png"]');
+      return {
+        status: document.querySelector('#selection-status')?.textContent || '',
+        hasPreview: Boolean(preview),
+        hasMapImage: Boolean(document.querySelector('.image-overlay image[href^="data:image/png"]')),
+        selected: Boolean(preview?.closest('.image-choice')?.classList.contains('selected-image')),
+      };
+    })()`);
+    if (!pasteResult.hasPreview || !pasteResult.hasMapImage || !pasteResult.selected || !pasteResult.status.includes("已粘贴")) {
+      throw new Error(`Clipboard image test failed: ${JSON.stringify(pasteResult)}`);
+    }
     cdp.close();
-    console.log("Verified real province hit-testing, all 34 province pages, and Shanghai/Chongqing tabs.");
+    console.log("Verified province pages, Shanghai fallback, Chongqing tabs, and clipboard image preview/selection.");
   } finally {
     browser.kill();
     await Promise.race([

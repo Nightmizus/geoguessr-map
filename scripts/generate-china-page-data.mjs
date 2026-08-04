@@ -23,7 +23,6 @@ const featuredSourceByAdcode = new Map([
 ]);
 const friendSourcesByAdcode = new Map([
   ["130000", ["hebei"]],
-  ["310000", ["shanghai", "chongming"]],
   ["350000", ["fujian"]],
   ["430000", ["hunan_sidelines"]],
   ["460000", ["hainan_is_in_sv"]],
@@ -109,10 +108,10 @@ const provincePages = guides.guides.map(guide => {
   };
 });
 
-// A province can have more than one community article (for example Shanghai plus
-// Chongming). Keep the broad province article first and expose the remaining exact
-// originals as tabs on the same province. A curated article suppresses all community
-// tabs for that province, preserving the requested curated-over-community priority.
+// A province can have more than one community article. Keep the broad province
+// article first and expose the remaining exact originals as tabs on the same
+// province. A curated article suppresses all community tabs for that province,
+// preserving the requested curated-over-community priority.
 const additionalFriendPages = guides.guides.flatMap(guide => {
   if (featuredSourceByAdcode.has(guide.adcode)) return [];
   return (friendSourcesByAdcode.get(guide.adcode) || []).slice(1).map(slug => {
