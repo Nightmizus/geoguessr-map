@@ -1611,6 +1611,11 @@ const LANGUAGE_GROUPS = [
       return slugsForFeature(feature).length > 0;
     }
 
+    function isChinaProvinceFeature(feature) {
+      const properties = feature.properties || {};
+      return properties.level === "province" && /^\d{6}$/.test(String(properties.adcode || ""));
+    }
+
     function isRedFeature(feature) {
       const p = feature.properties || {};
       if (p._region === "alaska") return false;
@@ -2481,6 +2486,12 @@ const LANGUAGE_GROUPS = [
       renderPage(slugs, slugs[0], feature);
     }
 
+    function renderChinaProvincePlaceholder(feature) {
+      const name = featureName(feature);
+      document.querySelector("#doc-panel").innerHTML = `<div role="region" aria-label="${escapeHtml(name)}占位页"></div>`;
+      resetMobileDocumentScroll();
+    }
+
     function selectedImagesForFeature(feature) {
       const code = featureCode(feature);
       if (code === "CHN" || !hasFeaturePage(feature) || (feature.properties || {})._region === "alaska") {
@@ -2945,6 +2956,10 @@ const LANGUAGE_GROUPS = [
       return Math.max(1, Math.min(2000, fitScale));
     }
 
+    function zoomLimitForFeatures(features) {
+      return Math.max(1, ...features.map(zoomLimitForFeature));
+    }
+
     function bindMapZoom() {
       let zoomFrame = 0;
       let pendingTransform = d3.zoomIdentity;
@@ -2986,7 +3001,7 @@ const LANGUAGE_GROUPS = [
         const adcode = String(properties.adcode || `feature-${index + 1}`);
         const name = properties.name || (adcode === "100000_JD" ? "南海诸岛" : `中国省级区域 ${index + 1}`);
         return {
-          ...feature,
+          ...normalizedFillFeature(feature),
           properties: {
             ...properties,
             NAME: name,
@@ -3092,6 +3107,9 @@ const LANGUAGE_GROUPS = [
       }
 
       const renderFeatures = mapFeatures.filter(hasFeaturePage);
+      const clickableFeatures = scope === "china"
+        ? mapFeatures.filter(isChinaProvinceFeature)
+        : renderFeatures;
       const renderLayer = zoomLayer.append("g").attr("class", "map-render-layer");
       state.renderFillSelection = renderLayer.append("g")
         .attr("class", "render-fill-layer")
@@ -3120,14 +3138,17 @@ const LANGUAGE_GROUPS = [
       state.clickPathSelection = zoomLayer.append("g")
         .attr("class", "country-click-layer")
         .selectAll("path")
-        .data(renderFeatures)
+        .data(clickableFeatures)
         .join("path")
         .attr("class", "country-click-target")
         .attr("data-code", d => featureCodeCandidates(d).join(" "))
+        .attr("data-adcode", d => d.properties?.adcode || "")
         .attr("data-slugs", d => slugsForFeature(d).join(" "))
         .attr("d", path)
         .on("click", (event, feature) => {
-          if (!event.defaultPrevented && hasFeaturePage(feature)) renderFeaturePage(feature);
+          if (event.defaultPrevented) return;
+          if (scope === "china") renderChinaProvincePlaceholder(feature);
+          else if (hasFeaturePage(feature)) renderFeaturePage(feature);
         });
 
       state.borderPathSelection = zoomLayer.append("g")
@@ -3143,7 +3164,7 @@ const LANGUAGE_GROUPS = [
 
       const maxZoom = scope === "world"
         ? zoomLimitForFeature(findSingaporeFeature(mapFeatures))
-        : 200;
+        : zoomLimitForFeatures(clickableFeatures);
       state.zoomBehavior.scaleExtent([1, maxZoom]);
       svg.call(state.zoomBehavior.transform, d3.zoomIdentity);
       updateCountryStyles();
