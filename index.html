@@ -1084,6 +1084,7 @@
   <script src="assets/vendor/d3.v7.min.js"></script>
   <script src="data/generated/plonkit_geo_data.js"></script>
   <script src="data/generated/plonkit_china_geo_data.js"></script>
+  <script src="data/generated/plonkit_china_page_data.js"></script>
   <script src="data/generated/plonkit_page_data.js"></script>
   <script src="data/generated/plonkit_image_selections.js"></script>
   <script>
@@ -1311,6 +1312,7 @@ const LANGUAGE_GROUPS = [
     };
     const state = {
       index: null,
+      chinaIndex: null,
       pages: null,
       pagesBySlug: new Map(),
       targetCodes: new Set(),
@@ -2316,6 +2318,9 @@ const LANGUAGE_GROUPS = [
     }
 
     function slugsForFeature(feature) {
+      const adcode = String((feature.properties || {}).adcode || "");
+      const chinaSlugs = state.chinaIndex?.adcodePages?.[adcode] || [];
+      if (chinaSlugs.length) return chinaSlugs;
       const region = (feature.properties || {})._region;
       if (region === "alaska") return [];
       if (region === "hawaii") return state.index.pages.hawaii ? ["hawaii"] : [];
@@ -2354,6 +2359,7 @@ const LANGUAGE_GROUPS = [
       }
       const fadeKey = feature ? featureFadeKey(feature) : "";
       const faded = fadeKey && state.fadedFeatures.has(fadeKey);
+      const isChinaProvinceGuide = page.guideType === "china-province";
 
       panel.innerHTML = `
         ${renderPageTabs(slugs, activeSlug)}
@@ -2365,7 +2371,7 @@ const LANGUAGE_GROUPS = [
           <span>更新：${escapeHtml((page.yuque?.contentUpdatedAt || "").slice(0, 10) || "未知")}</span>
         </div>
         <div class="political-note">本页内容仅作街景识别学习参考；涉及地区名称、边界、主权或行政归属时，以中国大陆发布和审定的标准地图及公开规范表述为准。</div>
-        <div class="selection-tools">
+        ${isChinaProvinceGuide ? "" : `<div class="selection-tools">
           <button type="button" id="save-selections">保存选择文件</button>
           <a id="download-selections" download="plonkit_image_selections.js" style="display:none"></a>
           <div class="selection-status" id="selection-status"></div>
@@ -2376,7 +2382,7 @@ const LANGUAGE_GROUPS = [
             </label>
           ` : ""}
           <p>勾选图片后会按当前页面内的勾选顺序标号，并显示到对应地图区域。要把结果发给朋友，请点击保存选择文件，并用下载得到的文件替换 <code>data/generated/plonkit_image_selections.js</code> 后再打包。</p>
-        </div>
+        </div>`}
         <article class="article">${lakeToHtml(page.content)}</article>
       `;
       applyPoliticalTextPolicy(panel);
@@ -2384,7 +2390,7 @@ const LANGUAGE_GROUPS = [
       panel.querySelectorAll(".page-tab").forEach(button => {
         button.addEventListener("click", () => renderPage(slugs, button.dataset.slug, feature));
       });
-      panel.querySelector("#save-selections").addEventListener("click", saveSelectionFile);
+      panel.querySelector("#save-selections")?.addEventListener("click", saveSelectionFile);
       const fadeInput = panel.querySelector("#fade-country");
       if (fadeInput && fadeKey) {
         fadeInput.addEventListener("change", () => {
@@ -2484,12 +2490,6 @@ const LANGUAGE_GROUPS = [
         return;
       }
       renderPage(slugs, slugs[0], feature);
-    }
-
-    function renderChinaProvincePlaceholder(feature) {
-      const name = featureName(feature);
-      document.querySelector("#doc-panel").innerHTML = `<div role="region" aria-label="${escapeHtml(name)}占位页"></div>`;
-      resetMobileDocumentScroll();
     }
 
     function selectedImagesForFeature(feature) {
@@ -3147,7 +3147,7 @@ const LANGUAGE_GROUPS = [
         .attr("d", path)
         .on("click", (event, feature) => {
           if (event.defaultPrevented) return;
-          if (scope === "china") renderChinaProvincePlaceholder(feature);
+          if (scope === "china") renderFeaturePage(feature);
           else if (hasFeaturePage(feature)) renderFeaturePage(feature);
         });
 
@@ -3174,15 +3174,17 @@ const LANGUAGE_GROUPS = [
     async function boot() {
       const geo = window.PLONKIT_GEO;
       const chinaGeo = window.PLONKIT_CHINA_GEO;
+      const chinaPages = window.PLONKIT_CHINA_PAGES;
       const index = window.PLONKIT_MAP_INDEX;
       const pages = window.PLONKIT_PAGES;
-      if (!geo || !chinaGeo || !index || !pages) {
+      if (!geo || !chinaGeo || !chinaPages || !index || !pages) {
         throw new Error("本地数据文件没有加载成功");
       }
 
       state.index = index;
+      state.chinaIndex = chinaPages;
       state.pages = pages;
-      state.pagesBySlug = new Map(pages.pages.map(page => [page.slug, page]));
+      state.pagesBySlug = new Map([...pages.pages, ...chinaPages.pages].map(page => [page.slug, page]));
       state.targetCodes = displayTargetCodes(index);
       state.profiles = loadProfiles();
       state.activeProfileId = state.profiles.activeProfileId;
@@ -3201,7 +3203,7 @@ const LANGUAGE_GROUPS = [
       updateSelectionExport();
 
       document.querySelector("#doc-panel").innerHTML = `
-        <div class="placeholder">已加载 ${pages.count} 个本地抓取页面。点击地图上有页面的国家或地区，右侧会显示页面内容；地图可缩放。</div>
+        <div class="placeholder">已加载 ${pages.count} 个世界教程页面和 ${chinaPages.count} 个中国省级指南。点击地图上的国家、地区或省级行政区，右侧会显示对应内容；地图可缩放。</div>
       `;
     }
 

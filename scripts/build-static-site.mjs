@@ -9,6 +9,7 @@ const runtimeFiles = [
   "assets/vendor/d3.v7.min.js",
   "data/generated/plonkit_geo_data.js",
   "data/generated/plonkit_china_geo_data.js",
+  "data/generated/plonkit_china_page_data.js",
   "data/generated/plonkit_page_data.js",
   "data/generated/plonkit_image_selections.js",
 ];
