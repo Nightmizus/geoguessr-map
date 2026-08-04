@@ -170,6 +170,22 @@
       pointer-events: none;
     }
 
+    .china-province-fill {
+      fill: var(--land);
+      stroke: none;
+      pointer-events: none;
+    }
+
+    .china-province-border {
+      fill: none;
+      stroke: rgba(216, 230, 248, 0.72);
+      stroke-width: 0.72;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      vector-effect: non-scaling-stroke;
+      pointer-events: none;
+    }
+
     .map-render-layer {
       pointer-events: none;
     }
@@ -240,6 +256,19 @@
       display: flex;
       gap: 6px;
       margin-bottom: 0;
+    }
+
+    .profile-group {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .profile-group-title {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
     }
 
     .profile-button {
@@ -1054,6 +1083,7 @@
   <div class="profile-transfer-status" id="profile-transfer-status" role="status" aria-live="polite"></div>
   <script src="assets/vendor/d3.v7.min.js"></script>
   <script src="data/generated/plonkit_geo_data.js"></script>
+  <script src="data/generated/plonkit_china_geo_data.js"></script>
   <script src="data/generated/plonkit_page_data.js"></script>
   <script src="data/generated/plonkit_image_selections.js"></script>
   <script>
@@ -1074,6 +1104,7 @@
     const PROFILE_BACKUP_MAX_BYTES = 15 * 1024 * 1024;
     const INDIA_CHINA_RENDER_MASK_ID = "india-china-render-mask";
     const PROFILE_IDS = ["profile1", "profile2", "profile3", "profile4"];
+    const PROFILE_SCOPES = ["world", "china"];
     const LAYOUT_CACHE_VERSION = 2;
     const RENDER_CACHE_VERSION = 3;
     const DEFAULT_PHOTO_ASPECT_RATIO = 1.5;
@@ -1305,6 +1336,11 @@ const LANGUAGE_GROUPS = [
       candidatePositionCache: new Map(),
       imageAspectRatios: new Map(),
       pendingAspectLoads: new Set(),
+      mapScope: "",
+      worldFeatures: [],
+      chinaFeatures: [],
+      zoomLayer: null,
+      zoomBehavior: null,
     };
 
     function featureCode(feature) {
@@ -1617,7 +1653,7 @@ const LANGUAGE_GROUPS = [
         state.renderTextureSelection.attr("fill", countryRenderTexture);
       }
       if (state.borderPathSelection) {
-        state.borderPathSelection.attr("class", "country-border");
+        state.borderPathSelection.attr("class", state.mapScope === "china" ? "china-province-border" : "country-border");
       }
     }
 
@@ -1739,6 +1775,7 @@ const LANGUAGE_GROUPS = [
       PROFILE_IDS.forEach((id, index) => {
         profiles[id] = {
           name: `Profile${index + 1}`,
+          scope: index < 2 ? "world" : "china",
           showLanguagePatterns: true,
           showLeftDriveColors: true,
           selections: {},
@@ -1792,8 +1829,12 @@ const LANGUAGE_GROUPS = [
       const incomingProfiles = source?.profiles && typeof source.profiles === "object" ? source.profiles : {};
       for (const id of PROFILE_IDS) {
         const incoming = incomingProfiles[id] || {};
+        const hasIncomingProfile = Object.prototype.hasOwnProperty.call(incomingProfiles, id);
         defaults.profiles[id] = {
           name: String(incoming.name || defaults.profiles[id].name).slice(0, 28),
+          scope: PROFILE_SCOPES.includes(incoming.scope)
+            ? incoming.scope
+            : hasIncomingProfile ? "world" : defaults.profiles[id].scope,
           showLanguagePatterns: incoming.showLanguagePatterns !== false,
           showLeftDriveColors: incoming.showLeftDriveColors !== false,
           selections: normalizeSelections(incoming.selections || {}),
@@ -1873,9 +1914,16 @@ const LANGUAGE_GROUPS = [
       const leftDriveInput = document.querySelector("#profile-show-left-drive");
       if (!buttons || !nameInput || !languageInput || !leftDriveInput) return;
 
-      buttons.innerHTML = PROFILE_IDS.map(id => {
-        const profile = state.profiles.profiles[id];
-        return `<button type="button" class="profile-button ${id === state.activeProfileId ? "active" : ""}" data-profile-id="${id}" title="${escapeHtml(profile.name)}">${escapeHtml(profile.name)}</button>`;
+      buttons.innerHTML = PROFILE_SCOPES.map(scope => {
+        const title = scope === "china" ? "中国" : "世界";
+        const profileButtons = PROFILE_IDS
+          .filter(id => state.profiles.profiles[id].scope === scope)
+          .map(id => {
+            const profile = state.profiles.profiles[id];
+            return `<button type="button" class="profile-button ${id === state.activeProfileId ? "active" : ""}" data-profile-id="${id}" title="${escapeHtml(profile.name)}">${escapeHtml(profile.name)}</button>`;
+          }).join("");
+        if (!profileButtons) return "";
+        return `<div class="profile-group" data-scope="${scope}"><span class="profile-group-title">${title}</span>${profileButtons}</div>`;
       }).join("");
 
       const profile = activeProfile();
@@ -1890,11 +1938,13 @@ const LANGUAGE_GROUPS = [
 
     function switchProfile(profileId) {
       if (!PROFILE_IDS.includes(profileId) || profileId === state.activeProfileId) return;
+      const previousScope = activeProfile().scope;
       persistProfiles();
       state.activeProfileId = profileId;
       syncActiveProfileSelections();
       state.selectedImageFeatureCache = null;
       renderProfilePanel();
+      if (activeProfile().scope !== previousScope) renderMapScope(activeProfile().scope);
       updateCountryStyles();
       updateMapImages();
     }
@@ -2090,8 +2140,7 @@ const LANGUAGE_GROUPS = [
       }
 
       renderProfilePanel();
-      updateCountryStyles();
-      updateMapImages();
+      renderMapScope(activeProfile().scope);
     }
 
     function loadImageSelections() {
@@ -2585,6 +2634,7 @@ const LANGUAGE_GROUPS = [
       return [
         `v${RENDER_CACHE_VERSION}`,
         `layout-v${LAYOUT_CACHE_VERSION}`,
+        `scope-${profile.scope || "world"}`,
         stableSelectionsSignature(profile.selections || state.imageSelections),
         layoutCacheSignature(profile),
       ].join("::");
@@ -2898,8 +2948,7 @@ const LANGUAGE_GROUPS = [
       return Math.max(1, Math.min(2000, fitScale));
     }
 
-    function bindMapZoom(zoomLayer, mapFeatures) {
-      const maxZoom = zoomLimitForFeature(findSingaporeFeature(mapFeatures));
+    function bindMapZoom() {
       let zoomFrame = 0;
       let pendingTransform = d3.zoomIdentity;
 
@@ -2909,18 +2958,19 @@ const LANGUAGE_GROUPS = [
         if (zoomFrame) return;
         zoomFrame = requestAnimationFrame(() => {
           zoomFrame = 0;
-          zoomLayer.attr("transform", pendingTransform);
+          state.zoomLayer?.attr("transform", pendingTransform);
         });
       }
 
       const zoom = d3.zoom()
-        .scaleExtent([1, maxZoom])
+        .scaleExtent([1, 2000])
         .translateExtent([[-width * 24, -height * 24], [width * 25, height * 25]])
         .on("zoom", event => applyZoomTransform(event.transform))
         .on("end", event => applyZoomTransform(event.transform));
 
       svg.call(zoom);
       svg.on("dblclick.zoom", null);
+      state.zoomBehavior = zoom;
 
       document.querySelector("#zoom-in")?.addEventListener("click", () => {
         svg.transition().duration(180).call(zoom.scaleBy, 1.6);
@@ -2933,11 +2983,182 @@ const LANGUAGE_GROUPS = [
       });
     }
 
+    function prepareChinaFeatures(geo) {
+      return (geo?.features || []).map((feature, index) => {
+        const properties = feature.properties || {};
+        const adcode = String(properties.adcode || `feature-${index + 1}`);
+        const name = properties.name || (adcode === "100000_JD" ? "南海诸岛" : `中国省级区域 ${index + 1}`);
+        return {
+          ...feature,
+          properties: {
+            ...properties,
+            NAME: name,
+            NAME_ZH: name,
+            ADM0_A3: "CHN",
+            _codeOverride: "CHN",
+            _featureIdOverride: `CHN:province:${adcode}`,
+            _displayName: name,
+            _noPage: true,
+          },
+        };
+      });
+    }
+
+    function renderMapScope(requestedScope) {
+      const scope = requestedScope === "china" ? "china" : "world";
+      const mapFeatures = scope === "china" ? state.chinaFeatures : state.worldFeatures;
+      if (!mapFeatures.length || !state.zoomBehavior) return;
+
+      if (state.imageUpdateTimer) clearTimeout(state.imageUpdateTimer);
+      if (state.imageUpdateFrame) cancelAnimationFrame(state.imageUpdateFrame);
+      state.imageUpdateTimer = 0;
+      state.imageUpdateFrame = 0;
+      state.mapScope = scope;
+      state.selectedImageFeatureCache = null;
+      state.candidatePositionCache.clear();
+
+      const collection = { type: "FeatureCollection", features: mapFeatures };
+      const projection = scope === "china"
+        ? d3.geoMercator().fitExtent([[60, 36], [width - 60, height - 36]], collection)
+        : d3.geoNaturalEarth1()
+            .rotate([-150, 0])
+            .fitExtent([[18, 20], [width - 18, height - 20]], { type: "Sphere" });
+      const path = d3.geoPath(projection);
+
+      state.path = path;
+      state.projection = projection;
+      state.mapFeatures = mapFeatures;
+      state.featureById = new Map(mapFeatures.map(feature => [featureId(feature), feature]));
+      mapFeatures.forEach(feature => {
+        const properties = feature.properties || (feature.properties = {});
+        properties._baseBounds = path.bounds(feature);
+        properties._baseCentroid = path.centroid(feature);
+        properties._baseArea = Math.max(1, path.area(feature));
+      });
+
+      svg.interrupt();
+      svg.selectAll("*").remove();
+      svg.attr("aria-label", scope === "china" ? "中国省级行政区划地图" : "以太平洋为中心的世界地图");
+
+      const defs = svg.append("defs");
+      createLanguagePatterns(defs);
+      const zoomLayer = svg.append("g").attr("class", "zoom-layer");
+      state.zoomLayer = zoomLayer;
+
+      if (scope === "world") {
+        zoomLayer.append("path")
+          .datum({ type: "Sphere" })
+          .attr("class", "sphere")
+          .attr("d", path);
+      }
+
+      const chinaBoundaryFeature = scope === "world"
+        ? mapFeatures.find(feature => featureCode(feature) === "CHN")
+        : null;
+      if (chinaBoundaryFeature) {
+        const indiaChinaRenderMask = defs.append("mask")
+          .attr("id", INDIA_CHINA_RENDER_MASK_ID)
+          .attr("maskUnits", "userSpaceOnUse")
+          .attr("maskContentUnits", "userSpaceOnUse")
+          .attr("x", 0)
+          .attr("y", 0)
+          .attr("width", width)
+          .attr("height", height)
+          .style("mask-type", "luminance");
+        indiaChinaRenderMask.append("rect")
+          .attr("x", 0).attr("y", 0)
+          .attr("width", width).attr("height", height)
+          .attr("fill", "white");
+        indiaChinaRenderMask.append("path")
+          .datum(normalizedFillFeature(chinaBoundaryFeature))
+          .attr("fill", "black")
+          .attr("d", path);
+      }
+
+      defs.selectAll("clipPath")
+        .data(mapFeatures.filter(feature => hasFeaturePage(feature) && !isRelaxedImageFeature(feature)))
+        .join("clipPath")
+        .attr("id", clipIdForFeature)
+        .attr("clipPathUnits", "userSpaceOnUse")
+        .append("path")
+        .attr("d", path);
+
+      if (scope === "china") {
+        zoomLayer.append("g")
+          .attr("class", "china-province-fill-layer")
+          .selectAll("path")
+          .data(mapFeatures)
+          .join("path")
+          .attr("class", "china-province-fill")
+          .attr("data-adcode", d => d.properties?.adcode || "")
+          .attr("d", path);
+      }
+
+      const renderFeatures = mapFeatures.filter(hasFeaturePage);
+      const renderLayer = zoomLayer.append("g").attr("class", "map-render-layer");
+      state.renderFillSelection = renderLayer.append("g")
+        .attr("class", "render-fill-layer")
+        .selectAll("path")
+        .data(renderFeatures)
+        .join("path")
+        .attr("class", "country-render-fill")
+        .attr("data-code", d => featureCodeCandidates(d).join(" "))
+        .attr("data-slugs", d => slugsForFeature(d).join(" "))
+        .attr("fill", countryRenderFill)
+        .attr("mask", d => chinaBoundaryFeature && featureCode(d) === "IND" ? `url(#${INDIA_CHINA_RENDER_MASK_ID})` : null)
+        .attr("d", path);
+      state.renderTextureSelection = renderLayer.append("g")
+        .attr("class", "render-texture-layer")
+        .selectAll("path")
+        .data(renderFeatures)
+        .join("path")
+        .attr("class", "country-render-texture")
+        .attr("data-code", d => featureCodeCandidates(d).join(" "))
+        .attr("data-slugs", d => slugsForFeature(d).join(" "))
+        .attr("fill", countryRenderTexture)
+        .attr("mask", d => chinaBoundaryFeature && featureCode(d) === "IND" ? `url(#${INDIA_CHINA_RENDER_MASK_ID})` : null)
+        .attr("d", path);
+
+      state.overlayLayer = zoomLayer.append("g").attr("class", "image-overlay");
+      state.clickPathSelection = zoomLayer.append("g")
+        .attr("class", "country-click-layer")
+        .selectAll("path")
+        .data(renderFeatures)
+        .join("path")
+        .attr("class", "country-click-target")
+        .attr("data-code", d => featureCodeCandidates(d).join(" "))
+        .attr("data-slugs", d => slugsForFeature(d).join(" "))
+        .attr("d", path)
+        .on("click", (event, feature) => {
+          if (!event.defaultPrevented && hasFeaturePage(feature)) renderFeaturePage(feature);
+        });
+
+      state.borderPathSelection = zoomLayer.append("g")
+        .attr("class", "border-layer")
+        .selectAll("path")
+        .data(mapFeatures)
+        .join("path")
+        .attr("class", scope === "china" ? "china-province-border" : "country-border")
+        .attr("data-code", d => featureCodeCandidates(d).join(" "))
+        .attr("data-adcode", d => d.properties?.adcode || "")
+        .attr("data-slugs", d => slugsForFeature(d).join(" "))
+        .attr("d", path);
+
+      const maxZoom = scope === "world"
+        ? zoomLimitForFeature(findSingaporeFeature(mapFeatures))
+        : 200;
+      state.zoomBehavior.scaleExtent([1, maxZoom]);
+      svg.call(state.zoomBehavior.transform, d3.zoomIdentity);
+      updateCountryStyles();
+      updateMapImages();
+    }
+
     async function boot() {
       const geo = window.PLONKIT_GEO;
+      const chinaGeo = window.PLONKIT_CHINA_GEO;
       const index = window.PLONKIT_MAP_INDEX;
       const pages = window.PLONKIT_PAGES;
-      if (!geo || !index || !pages) {
+      if (!geo || !chinaGeo || !index || !pages) {
         throw new Error("本地数据文件没有加载成功");
       }
 
@@ -2955,134 +3176,11 @@ const LANGUAGE_GROUPS = [
       bindProfilePanel();
       bindMobileMenu();
 
-      const projection = d3.geoNaturalEarth1()
-        .rotate([-150, 0])
-        .fitExtent([[18, 20], [width - 18, height - 20]], { type: "Sphere" });
-
-      const path = d3.geoPath(projection);
-      state.path = path;
-      state.projection = projection;
-
-      const zoomLayer = svg.append("g")
-        .attr("class", "zoom-layer");
-
-      zoomLayer.append("path")
-        .datum({ type: "Sphere" })
-        .attr("class", "sphere")
-        .attr("d", path);
-
-      const mapFeatures = applyPoliticalOverrides(mergeCountryFeatures(geo.features.flatMap(splitFeature)));
-      mapFeatures.forEach(feature => {
-        const properties = feature.properties || (feature.properties = {});
-        properties._baseBounds = path.bounds(feature);
-        properties._baseCentroid = path.centroid(feature);
-        properties._baseArea = Math.max(1, path.area(feature));
-      });
-      state.mapFeatures = mapFeatures;
-      state.featureById = new Map(mapFeatures.map(feature => [featureId(feature), feature]));
-
-      const defs = svg.append("defs");
-      createLanguagePatterns(defs);
-
-      const chinaBoundaryFeature = mapFeatures.find(feature => featureCode(feature) === "CHN");
-      if (chinaBoundaryFeature) {
-        const indiaChinaRenderMask = defs.append("mask")
-          .attr("id", INDIA_CHINA_RENDER_MASK_ID)
-          .attr("maskUnits", "userSpaceOnUse")
-          .attr("maskContentUnits", "userSpaceOnUse")
-          .attr("x", 0)
-          .attr("y", 0)
-          .attr("width", width)
-          .attr("height", height)
-          .style("mask-type", "luminance");
-
-        indiaChinaRenderMask.append("rect")
-          .attr("x", 0)
-          .attr("y", 0)
-          .attr("width", width)
-          .attr("height", height)
-          .attr("fill", "white");
-
-        indiaChinaRenderMask.append("path")
-          .datum(normalizedFillFeature(chinaBoundaryFeature))
-          .attr("fill", "black")
-          .attr("d", path);
-      }
-
-      defs
-        .selectAll("clipPath")
-        .data(mapFeatures.filter(feature => !isRelaxedImageFeature(feature)))
-        .join("clipPath")
-        .attr("id", clipIdForFeature)
-        .attr("clipPathUnits", "userSpaceOnUse")
-        .append("path")
-        .attr("d", path);
-
-      const renderFeatures = mapFeatures.filter(hasFeaturePage);
-      const renderLayer = zoomLayer.append("g")
-        .attr("class", "map-render-layer");
-
-      state.renderFillSelection = renderLayer.append("g")
-        .attr("class", "render-fill-layer")
-        .selectAll("path")
-        .data(renderFeatures)
-        .join("path")
-        .attr("class", "country-render-fill")
-        .attr("data-code", d => featureCodeCandidates(d).join(" "))
-        .attr("data-slugs", d => slugsForFeature(d).join(" "))
-        .attr("fill", countryRenderFill)
-        .attr("mask", d => chinaBoundaryFeature && featureCode(d) === "IND"
-          ? `url(#${INDIA_CHINA_RENDER_MASK_ID})`
-          : null)
-        .attr("d", path);
-
-      state.renderTextureSelection = renderLayer.append("g")
-        .attr("class", "render-texture-layer")
-        .selectAll("path")
-        .data(renderFeatures)
-        .join("path")
-        .attr("class", "country-render-texture")
-        .attr("data-code", d => featureCodeCandidates(d).join(" "))
-        .attr("data-slugs", d => slugsForFeature(d).join(" "))
-        .attr("fill", countryRenderTexture)
-        .attr("mask", d => chinaBoundaryFeature && featureCode(d) === "IND"
-          ? `url(#${INDIA_CHINA_RENDER_MASK_ID})`
-          : null)
-        .attr("d", path);
-
-      state.overlayLayer = zoomLayer.append("g")
-        .attr("class", "image-overlay");
-
-      state.clickPathSelection = zoomLayer.append("g")
-        .attr("class", "country-click-layer")
-        .selectAll("path")
-        .data(mapFeatures.filter(hasFeaturePage))
-        .join("path")
-        .attr("class", "country-click-target")
-        .attr("data-code", d => featureCodeCandidates(d).join(" "))
-        .attr("data-slugs", d => slugsForFeature(d).join(" "))
-        .attr("d", path)
-        .on("click", (event, feature) => {
-          if (event.defaultPrevented) return;
-          renderFeaturePage(feature);
-        });
-
-      const borderLayer = zoomLayer.append("g")
-        .attr("class", "border-layer");
-
-      state.borderPathSelection = borderLayer.append("g")
-        .attr("class", "border-line-layer")
-        .selectAll("path")
-        .data(mapFeatures)
-        .join("path")
-        .attr("class", "country-border")
-        .attr("data-code", d => featureCodeCandidates(d).join(" "))
-        .attr("data-slugs", d => slugsForFeature(d).join(" "))
-        .attr("d", path);
-
-      bindMapZoom(zoomLayer, mapFeatures);
+      state.worldFeatures = applyPoliticalOverrides(mergeCountryFeatures(geo.features.flatMap(splitFeature)));
+      state.chinaFeatures = prepareChinaFeatures(chinaGeo);
+      bindMapZoom();
+      renderMapScope(activeProfile().scope);
       updateSelectionExport();
-      updateMapImages();
 
       document.querySelector("#doc-panel").innerHTML = `
         <div class="placeholder">已加载 ${pages.count} 个本地抓取页面。点击地图上有页面的国家或地区，右侧会显示页面内容；地图可缩放。</div>

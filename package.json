@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node scripts/build-static-site.mjs"
+    "build": "node scripts/build-static-site.mjs",
+    "generate:china-geo": "node scripts/generate-china-geo-data.mjs"
   }
 }
