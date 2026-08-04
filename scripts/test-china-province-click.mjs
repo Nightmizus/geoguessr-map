@@ -174,35 +174,48 @@ async function main() {
       }
     }
 
-    await evaluate(`document.querySelector('[data-profile-id="profile1"]').click()`);
-    await evaluate(`document.querySelector('.country-click-target[data-code~="USA"]').dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }))`);
-    const pasteResult = await evaluate(`(async () => {
-      const bytes = Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII='), character => character.charCodeAt(0));
-      const clipboard = new DataTransfer();
-      clipboard.items.add(new File([bytes], 'clipboard-test.png', { type: 'image/png' }));
-      document.querySelector('#paste-image-zone').dispatchEvent(new ClipboardEvent('paste', {
-        bubbles: true,
-        cancelable: true,
-        clipboardData: clipboard,
-      }));
-      const deadline = Date.now() + 3000;
-      while ((!document.querySelector('#selection-status')?.textContent.includes('已粘贴')
-          || !document.querySelector('.image-overlay image[href^="data:image/png"]')) && Date.now() < deadline) {
+    await evaluate(`document.querySelector('.country-click-target[data-adcode="500000"]').dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }))`);
+    await evaluate(`document.querySelectorAll('.page-tab')[1].click()`);
+    const imageSelectionResult = await evaluate(`(async () => {
+      const checkbox = document.querySelector('.image-picker input[type="checkbox"]');
+      if (!checkbox) throw new Error('重庆教程没有可勾选图片');
+      const imageSrc = checkbox.closest('.image-choice').querySelector('img').src;
+      checkbox.click();
+      const selectedDeadline = Date.now() + 3000;
+      while (!document.querySelector('.image-overlay image') && Date.now() < selectedDeadline) {
         await new Promise(resolve => setTimeout(resolve, 20));
       }
-      const preview = document.querySelector('.article img[src^="data:image/png"]');
+      const selectedMapImage = document.querySelector('.image-overlay image');
+      const storedAfterSelect = JSON.parse(localStorage.getItem('plonkit-image-selections-v1') || '{}');
+      const profileAfterSelect = JSON.parse(localStorage.getItem('plonkit-profiles-v1') || '{}');
+      const selected = {
+        checked: checkbox.checked,
+        mapImageSrc: selectedMapImage?.href?.baseVal || '',
+        stored: storedAfterSelect.a_deconstructed_chongqing || [],
+        profileStored: profileAfterSelect.profiles?.profile3?.selections?.a_deconstructed_chongqing || [],
+      };
+      checkbox.click();
+      const removedDeadline = Date.now() + 3000;
+      while (document.querySelector('.image-overlay image') && Date.now() < removedDeadline) {
+        await new Promise(resolve => setTimeout(resolve, 20));
+      }
       return {
-        status: document.querySelector('#selection-status')?.textContent || '',
-        hasPreview: Boolean(preview),
-        hasMapImage: Boolean(document.querySelector('.image-overlay image[href^="data:image/png"]')),
-        selected: Boolean(preview?.closest('.image-choice')?.classList.contains('selected-image')),
+        imageSrc,
+        selected,
+        unchecked: !checkbox.checked,
+        removed: !document.querySelector('.image-overlay image'),
       };
     })()`);
-    if (!pasteResult.hasPreview || !pasteResult.hasMapImage || !pasteResult.selected || !pasteResult.status.includes("已粘贴")) {
-      throw new Error(`Clipboard image test failed: ${JSON.stringify(pasteResult)}`);
+    if (!imageSelectionResult.selected.checked
+        || imageSelectionResult.selected.mapImageSrc !== imageSelectionResult.imageSrc
+        || imageSelectionResult.selected.stored[0] !== 0
+        || imageSelectionResult.selected.profileStored[0] !== 0
+        || !imageSelectionResult.unchecked
+        || !imageSelectionResult.removed) {
+      throw new Error(`Image selection test failed: ${JSON.stringify(imageSelectionResult)}`);
     }
     cdp.close();
-    console.log("Verified province pages, Shanghai fallback, Chongqing tabs, and clipboard image preview/selection.");
+    console.log("Verified province pages, Shanghai fallback, Chongqing tabs, and image selection add/remove rendering.");
   } finally {
     browser.kill();
     await Promise.race([

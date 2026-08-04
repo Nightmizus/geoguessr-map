@@ -790,33 +790,6 @@
       font-weight: 700;
     }
 
-    .image-paste-zone {
-      margin-top: 10px;
-      padding: 12px;
-      border: 1px dashed var(--border);
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--muted);
-      cursor: text;
-      outline: none;
-    }
-
-    .image-paste-zone:focus {
-      border-color: var(--selected);
-      box-shadow: 0 0 0 2px rgba(255, 209, 102, 0.18);
-      color: var(--ink);
-    }
-
-    .image-paste-zone strong {
-      color: var(--ink);
-    }
-
-    .pasted-image-label {
-      margin: 18px 0 4px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
     .article table {
       width: 100%;
       border-collapse: collapse;
@@ -1435,8 +1408,6 @@ const LANGUAGE_GROUPS = [
       candidatePositionCache: new Map(),
       imageAspectRatios: new Map(),
       pendingAspectLoads: new Set(),
-      pastedImagesBySlug: new Map(),
-      currentPageContext: null,
       mapScope: "",
       worldFeatures: [],
       chinaFeatures: [],
@@ -2433,14 +2404,6 @@ const LANGUAGE_GROUPS = [
       return `<div class="repost-notice" role="note"><strong>转载声明</strong><span>本文章转载自 <a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(sourceUrl)}</a></span></div>`;
     }
 
-    function renderPastedImages(slug) {
-      const images = state.pastedImagesBySlug.get(slug) || [];
-      if (!images.length) return "";
-      return `<div class="pasted-image-label">本次打开页面后粘贴的图片</div>${images.map(image =>
-        `<figure><img src="${escapeHtml(image.src)}" alt="${escapeHtml(image.alt)}" width="${image.width}" height="${image.height}"></figure>`
-      ).join("")}`;
-    }
-
     function renderPage(slugs, activeSlug = slugs[0], feature = null) {
       const panel = document.querySelector("#doc-panel");
       const page = pageForSlug(activeSlug);
@@ -2451,7 +2414,6 @@ const LANGUAGE_GROUPS = [
       const fadeKey = feature ? featureFadeKey(feature) : "";
       const faded = fadeKey && state.fadedFeatures.has(fadeKey);
       const isChinaProvinceGuide = page.guideType === "china-province";
-      state.currentPageContext = { slugs: [...slugs], activeSlug, feature };
 
       panel.innerHTML = `
         ${renderPageTabs(slugs, activeSlug)}
@@ -2473,12 +2435,9 @@ const LANGUAGE_GROUPS = [
               <span>淡化这个国家/地区</span>
             </label>
           ` : ""}
-          <div class="image-paste-zone" id="paste-image-zone" tabindex="0" role="button" aria-label="粘贴剪贴板图片">
-            <strong>粘贴图片：</strong>点击这里后按 Ctrl+V，或直接在页面空白处粘贴。图片会自动加入当前页面的图片选择并显示到地图区域。
-          </div>
-          <p>勾选图片后会按当前页面内的勾选顺序标号，并显示到对应地图区域。粘贴的本地图片仅在本次打开页面期间有效；要把教程图片选择发给朋友，请点击保存选择文件，并用下载得到的文件替换 <code>data/generated/plonkit_image_selections.js</code> 后再打包。</p>
+          <p>勾选图片后会按当前页面内的勾选顺序标号，并显示到对应地图区域。要把结果发给朋友，请点击保存选择文件，并用下载得到的文件替换 <code>data/generated/plonkit_image_selections.js</code> 后再打包。</p>
         </div>`}
-        <article class="article">${renderRepostNotice(page)}${lakeToHtml(page.content)}${renderPastedImages(page.slug)}</article>
+        <article class="article">${renderRepostNotice(page)}${lakeToHtml(page.content)}</article>
       `;
       applyPoliticalTextPolicy(panel);
 
@@ -2497,76 +2456,6 @@ const LANGUAGE_GROUPS = [
       decorateArticleImages(page);
       updateSelectionExport();
       resetMobileDocumentScroll();
-    }
-
-    function imageFilesFromPaste(event) {
-      const itemFiles = [...(event.clipboardData?.items || [])]
-        .filter(item => item.kind === "file" && item.type.startsWith("image/"))
-        .map(item => item.getAsFile())
-        .filter(Boolean);
-      if (itemFiles.length) return itemFiles;
-      return [...(event.clipboardData?.files || [])].filter(file => file.type.startsWith("image/"));
-    }
-
-    function readFileAsDataUrl(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(String(reader.result || ""));
-        reader.onerror = () => reject(reader.error || new Error("无法读取剪贴板图片"));
-        reader.readAsDataURL(file);
-      });
-    }
-
-    function readImageSize(src) {
-      return new Promise((resolve, reject) => {
-        const image = new Image();
-        image.onload = () => resolve({ width: image.naturalWidth || 1, height: image.naturalHeight || 1 });
-        image.onerror = () => reject(new Error("剪贴板中的图片数据无法显示"));
-        image.src = src;
-      });
-    }
-
-    async function addPastedImageFiles(files) {
-      const context = state.currentPageContext;
-      const page = context ? pageForSlug(context.activeSlug) : null;
-      if (!page || page.guideType === "china-province") throw new Error("请先打开一个支持图片选择的教程页面");
-
-      const pasted = state.pastedImagesBySlug.get(page.slug) || [];
-      const selected = state.imageSelections[page.slug] ? [...state.imageSelections[page.slug]] : [];
-      for (const file of files) {
-        const src = await readFileAsDataUrl(file);
-        const size = await readImageSize(src);
-        const image = {
-          src,
-          alt: file.name || "剪贴板图片",
-          width: size.width,
-          height: size.height,
-        };
-        page.images.push(image);
-        pasted.push(image);
-        selected.push(page.images.length - 1);
-      }
-      state.pastedImagesBySlug.set(page.slug, pasted);
-      state.imageSelections[page.slug] = selected;
-      persistSelections(page.slug);
-      renderPage(context.slugs, context.activeSlug, context.feature);
-      const status = document.querySelector("#selection-status");
-      if (status) status.textContent = `已粘贴并选中 ${files.length} 张图片`;
-    }
-
-    function bindImagePaste() {
-      document.addEventListener("paste", event => {
-        const files = imageFilesFromPaste(event);
-        if (!files.length || !document.querySelector("#paste-image-zone")) return;
-        const target = event.target;
-        if (target instanceof HTMLElement && (target.isContentEditable || /^(INPUT|TEXTAREA)$/.test(target.tagName))) return;
-        event.preventDefault();
-        addPastedImageFiles(files).catch(error => {
-          const status = document.querySelector("#selection-status");
-          if (status) status.textContent = error.message;
-          console.error("粘贴图片失败", error);
-        });
-      });
     }
 
     function decorateArticleImages(page) {
@@ -2659,7 +2548,7 @@ const LANGUAGE_GROUPS = [
 
     function selectedImagesForFeature(feature) {
       const code = featureCode(feature);
-      if (code === "CHN" || !hasFeaturePage(feature) || (feature.properties || {})._region === "alaska") {
+      if ((code === "CHN" && state.mapScope !== "china") || !hasFeaturePage(feature) || (feature.properties || {})._region === "alaska") {
         return [];
       }
       const slugs = slugsForFeature(feature);
@@ -3462,7 +3351,6 @@ const LANGUAGE_GROUPS = [
       renderProfilePanel();
       bindProfilePanel();
       bindMobileMenu();
-      bindImagePaste();
 
       state.worldFeatures = applyPoliticalOverrides(mergeCountryFeatures(geo.features.flatMap(splitFeature)));
       state.chinaFeatures = prepareChinaFeatures(chinaGeo);
