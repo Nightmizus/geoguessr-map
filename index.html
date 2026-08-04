@@ -1090,7 +1090,7 @@
           </div>
         </div>
         <div class="map-head-actions">
-          <button type="button" class="clear-cache-button" id="clear-site-cache" title="清除本站离线缓存并刷新（保留 Profile 和设置）">清理缓存</button>
+          <button type="button" class="clear-cache-button" id="clear-site-cache" title="清除本站缓存并强制刷新（保留 Profile 和设置）">清理缓存</button>
           <div class="zoom-controls" aria-label="地图缩放控件">
             <button type="button" id="zoom-in" title="放大" aria-label="放大">+</button>
             <button type="button" id="zoom-out" title="缩小" aria-label="缩小">−</button>
@@ -1167,7 +1167,7 @@
       PROFILE_STORAGE_KEY,
       FADED_FEATURE_STORAGE_KEY,
     ]);
-    const PRELOAD_STORAGE_KEY_PATTERN = /(?:preload|precache|cache|service[-_]?worker|workbox)/i;
+    const CACHE_REFRESH_QUERY_PARAM = "_cache_refresh";
     const PROFILE_BACKUP_FORMAT = "tuxunmap-profiles";
     const PROFILE_BACKUP_VERSION = 1;
     const PROFILE_BACKUP_MAX_BYTES = 15 * 1024 * 1024;
@@ -3075,7 +3075,7 @@ const LANGUAGE_GROUPS = [
 
       button.addEventListener("click", async () => {
         if (button.disabled) return;
-        const confirmed = window.confirm("将清除本站离线缓存并刷新页面。Profile、图片选择和地图设置会保留，是否继续？");
+        const confirmed = window.confirm("将清除本站缓存并强制刷新页面。Profile、图片选择和地图设置会保留，是否继续？");
         if (!confirmed) return;
 
         button.disabled = true;
@@ -3094,6 +3094,21 @@ const LANGUAGE_GROUPS = [
             )
           );
         }
+        if ("indexedDB" in window && typeof indexedDB.databases === "function") {
+          cleanupTasks.push(
+            indexedDB.databases().then(databases => Promise.all(
+              databases
+                .map(database => database.name)
+                .filter(Boolean)
+                .map(name => new Promise((resolve, reject) => {
+                  const request = indexedDB.deleteDatabase(name);
+                  request.onsuccess = () => resolve(name);
+                  request.onerror = () => reject(request.error || new Error(`无法删除 IndexedDB：${name}`));
+                  request.onblocked = () => resolve(name);
+                }))
+            ))
+          );
+        }
 
         try {
           const storedProfiles = JSON.parse(localStorage.getItem(PROFILE_STORAGE_KEY) || "null");
@@ -3105,31 +3120,54 @@ const LANGUAGE_GROUPS = [
             }
             localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(storedProfiles));
           }
-          if (state.profiles?.profiles) {
-            for (const profile of Object.values(state.profiles.profiles)) {
-              profile.layoutCache = {};
-              profile.renderCache = null;
-            }
-            state.layoutCacheDirty = false;
-            state.renderCacheDirty = false;
-          }
+        } catch (error) {
+          console.warn("清理 Profile 内的布局/渲染缓存失败", error);
+        }
 
+        try {
           for (let index = localStorage.length - 1; index >= 0; index -= 1) {
             const key = localStorage.key(index);
-            if (key && !USER_STORAGE_KEYS.has(key) && PRELOAD_STORAGE_KEY_PATTERN.test(key)) {
-              localStorage.removeItem(key);
-            }
+            if (key && !USER_STORAGE_KEYS.has(key)) localStorage.removeItem(key);
           }
         } catch (error) {
-          console.warn("清理预加载 localStorage 数据失败", error);
+          console.warn("清理非用户配置 localStorage 数据失败", error);
         }
+
+        try {
+          sessionStorage.clear();
+        } catch (error) {
+          console.warn("清理 sessionStorage 数据失败", error);
+        }
+
+        if (state.profiles?.profiles) {
+          for (const profile of Object.values(state.profiles.profiles)) {
+            if (!profile || typeof profile !== "object") continue;
+            profile.layoutCache = {};
+            profile.renderCache = null;
+          }
+        }
+        state.layoutCacheDirty = false;
+        state.renderCacheDirty = false;
+        state.selectedImageFeatureCache = null;
+        state.candidatePositionCache.clear();
+        state.imageAspectRatios.clear();
+        state.pendingAspectLoads.clear();
 
         const results = await Promise.allSettled(cleanupTasks);
         results
           .filter(result => result.status === "rejected")
           .forEach(result => console.warn("清理站点缓存失败", result.reason));
-        location.reload();
+        const refreshUrl = new URL(location.href);
+        refreshUrl.searchParams.set(CACHE_REFRESH_QUERY_PARAM, `${Date.now()}`);
+        location.replace(refreshUrl.href);
       });
+    }
+
+    function removeCacheRefreshMarker() {
+      const url = new URL(location.href);
+      if (!url.searchParams.has(CACHE_REFRESH_QUERY_PARAM)) return;
+      url.searchParams.delete(CACHE_REFRESH_QUERY_PARAM);
+      history.replaceState(history.state, "", url.href);
     }
 
     function prepareChinaFeatures(geo) {
@@ -3342,6 +3380,7 @@ const LANGUAGE_GROUPS = [
       `;
     }
 
+    removeCacheRefreshMarker();
     bindCacheCleanup();
     boot().catch(error => {
       document.querySelector("#doc-panel").innerHTML = `<div class="placeholder">加载失败：${escapeHtml(error.message)}</div>`;
