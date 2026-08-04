@@ -1829,12 +1829,9 @@ const LANGUAGE_GROUPS = [
       const incomingProfiles = source?.profiles && typeof source.profiles === "object" ? source.profiles : {};
       for (const id of PROFILE_IDS) {
         const incoming = incomingProfiles[id] || {};
-        const hasIncomingProfile = Object.prototype.hasOwnProperty.call(incomingProfiles, id);
         defaults.profiles[id] = {
           name: String(incoming.name || defaults.profiles[id].name).slice(0, 28),
-          scope: PROFILE_SCOPES.includes(incoming.scope)
-            ? incoming.scope
-            : hasIncomingProfile ? "world" : defaults.profiles[id].scope,
+          scope: defaults.profiles[id].scope,
           showLanguagePatterns: incoming.showLanguagePatterns !== false,
           showLeftDriveColors: incoming.showLeftDriveColors !== false,
           selections: normalizeSelections(incoming.selections || {}),
