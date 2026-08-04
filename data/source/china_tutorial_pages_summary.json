@@ -1,8 +1,8 @@
 {
   "source": "https://www.yuque.com/chaofun/tuxun",
   "tocUpdatedAt": "2026-08-03T13:25:29.000Z",
-  "crawledAt": "2026-08-04T09:05:52.300Z",
-  "count": 24,
+  "crawledAt": "2026-08-04T09:42:42.938Z",
+  "count": 25,
   "failureCount": 0,
   "failures": [],
   "externalLinks": [
@@ -11,7 +11,466 @@
       "url": "https://docs.qq.com/aio/DR1BQY0tUQWpudHdh",
       "uuid": "e8TH9zoM0OU5ADlI",
       "parentUuid": "35361605:i7jagjZKubRAPC30",
-      "section": "寻友教程"
+      "section": "寻友教程",
+      "sectionPath": [
+        "寻友教程"
+      ]
+    }
+  ],
+  "categories": [
+    "综合指南",
+    "精选篇目",
+    "寻友教程",
+    "其他"
+  ],
+  "catalog": [
+    {
+      "type": "TITLE",
+      "title": "综合指南",
+      "slug": null,
+      "url": null,
+      "docId": null,
+      "uuid": "YRZJAEJJn1X76890",
+      "parentUuid": "u5LU_sXLRaoA4b4l",
+      "depth": 1,
+      "path": [
+        "中国教程",
+        "综合指南"
+      ]
+    },
+    {
+      "type": "DOC",
+      "title": "图寻中国入门笔记",
+      "slug": "china_beginners_guide",
+      "url": null,
+      "docId": 180675311,
+      "uuid": "9KGV4QWB3nAPtRxN",
+      "parentUuid": "YRZJAEJJn1X76890",
+      "depth": 2,
+      "path": [
+        "中国教程",
+        "综合指南",
+        "图寻中国入门笔记"
+      ]
+    },
+    {
+      "type": "DOC",
+      "title": "图寻：中国匹配入门",
+      "slug": "china_match_beginner",
+      "url": null,
+      "docId": 195131126,
+      "uuid": "VKwnyHxKrhHpR5Gc",
+      "parentUuid": "YRZJAEJJn1X76890",
+      "depth": 2,
+      "path": [
+        "中国教程",
+        "综合指南",
+        "图寻：中国匹配入门"
+      ]
+    },
+    {
+      "type": "DOC",
+      "title": "中国固定电话区号",
+      "slug": "chinese_area_code",
+      "url": null,
+      "docId": 127982810,
+      "uuid": "35361605:XlkeAQrByppeIPqZ",
+      "parentUuid": "YRZJAEJJn1X76890",
+      "depth": 2,
+      "path": [
+        "中国教程",
+        "综合指南",
+        "中国固定电话区号"
+      ]
+    },
+    {
+      "type": "DOC",
+      "title": "中国出租车大全｜轻井泽惠",
+      "slug": "cn_taxi_all",
+      "url": null,
+      "docId": 226805324,
+      "uuid": "ft9pfpxpn5CB9-dy",
+      "parentUuid": "YRZJAEJJn1X76890",
+      "depth": 2,
+      "path": [
+        "中国教程",
+        "综合指南",
+        "中国出租车大全｜轻井泽惠"
+      ]
+    },
+    {
+      "type": "DOC",
+      "title": "全国主要城市出租车｜何以为龢",
+      "slug": "cn_taxi_major_city",
+      "url": null,
+      "docId": 158487668,
+      "uuid": "35361605:LiD1S1gH3PnQQHwX",
+      "parentUuid": "YRZJAEJJn1X76890",
+      "depth": 2,
+      "path": [
+        "中国教程",
+        "综合指南",
+        "全国主要城市出租车｜何以为龢"
+      ]
+    },
+    {
+      "type": "TITLE",
+      "title": "精选篇目",
+      "slug": null,
+      "url": null,
+      "docId": null,
+      "uuid": "_ffNqnyZOxoF1Y6Q",
+      "parentUuid": "u5LU_sXLRaoA4b4l",
+      "depth": 1,
+      "path": [
+        "中国教程",
+        "精选篇目"
+      ]
+    },
+    {
+      "type": "DOC",
+      "title": "天津市 | 陳點燈",
+      "slug": "tianjin",
+      "url": null,
+      "docId": 242090190,
+      "uuid": "4NsGB5vgFxUCwKqE",
+      "parentUuid": "_ffNqnyZOxoF1Y6Q",
+      "depth": 2,
+      "path": [
+        "中国教程",
+        "精选篇目",
+        "天津市 | 陳點燈"
+      ]
+    },
+    {
+      "type": "DOC",
+      "title": "山西省 | 荒诞的藩篱",
+      "slug": "shanxi",
+      "url": null,
+      "docId": 225083380,
+      "uuid": "8Nzp0BkvXDOyqLmd",
+      "parentUuid": "_ffNqnyZOxoF1Y6Q",
+      "depth": 2,
+      "path": [
+        "中国教程",
+        "精选篇目",
+        "山西省 | 荒诞的藩篱"
+      ]
+    },
+    {
+      "type": "DOC",
+      "title": "内蒙古自治区 | 海月",
+      "slug": "neimenggu",
+      "url": null,
+      "docId": 158614986,
+      "uuid": "35361605:qclL074bjo9Lo8yR",
+      "parentUuid": "_ffNqnyZOxoF1Y6Q",
+      "depth": 2,
+      "path": [
+        "中国教程",
+        "精选篇目",
+        "内蒙古自治区 | 海月"
+      ]
+    },
+    {
+      "type": "DOC",
+      "title": "吉林省 | 炸胡集训队，728",
+      "slug": "jilin",
+      "url": null,
+      "docId": 176918857,
+      "uuid": "h6mAt-UC_TSgtxCN",
+      "parentUuid": "_ffNqnyZOxoF1Y6Q",
+      "depth": 2,
+      "path": [
+        "中国教程",
+        "精选篇目",
+        "吉林省 | 炸胡集训队，728"
+      ]
+    },
+    {
+      "type": "DOC",
+      "title": "湖北省 | 汉桥",
+      "slug": "hubei",
+      "url": null,
+      "docId": 275451785,
+      "uuid": "eiF5L7dMLNKWz0Bn",
+      "parentUuid": "_ffNqnyZOxoF1Y6Q",
+      "depth": 2,
+      "path": [
+        "中国教程",
+        "精选篇目",
+        "湖北省 | 汉桥"
+      ]
+    },
+    {
+      "type": "DOC",
+      "title": "广西壮族自治区 | 海月",
+      "slug": "guangxi",
+      "url": null,
+      "docId": 184626017,
+      "uuid": "D6ozIUQufgpKAiY6",
+      "parentUuid": "_ffNqnyZOxoF1Y6Q",
+      "depth": 2,
+      "path": [
+        "中国教程",
+        "精选篇目",
+        "广西壮族自治区 | 海月"
+      ]
+    },
+    {
+      "type": "DOC",
+      "title": "云南省 | 骆绎",
+      "slug": "yunnan",
+      "url": null,
+      "docId": 256240547,
+      "uuid": "s_81pdH5JMUCgo3p",
+      "parentUuid": "_ffNqnyZOxoF1Y6Q",
+      "depth": 2,
+      "path": [
+        "中国教程",
+        "精选篇目",
+        "云南省 | 骆绎"
+      ]
+    },
+    {
+      "type": "DOC",
+      "title": "新疆维吾尔自治区 | 海月",
+      "slug": "xinjiang",
+      "url": null,
+      "docId": 165316547,
+      "uuid": "l5Y-toMNo1t8dN3Q",
+      "parentUuid": "_ffNqnyZOxoF1Y6Q",
+      "depth": 2,
+      "path": [
+        "中国教程",
+        "精选篇目",
+        "新疆维吾尔自治区 | 海月"
+      ]
+    },
+    {
+      "type": "TITLE",
+      "title": "寻友教程",
+      "slug": null,
+      "url": null,
+      "docId": null,
+      "uuid": "35361605:i7jagjZKubRAPC30",
+      "parentUuid": "u5LU_sXLRaoA4b4l",
+      "depth": 1,
+      "path": [
+        "中国教程",
+        "寻友教程"
+      ]
+    },
+    {
+      "type": "LINK",
+      "title": "腾讯街景覆盖指南｜孤月临渊 薛添",
+      "slug": null,
+      "url": "https://docs.qq.com/aio/DR1BQY0tUQWpudHdh",
+      "docId": null,
+      "uuid": "e8TH9zoM0OU5ADlI",
+      "parentUuid": "35361605:i7jagjZKubRAPC30",
+      "depth": 2,
+      "path": [
+        "中国教程",
+        "寻友教程",
+        "腾讯街景覆盖指南｜孤月临渊 薛添"
+      ]
+    },
+    {
+      "type": "DOC",
+      "title": "图寻河北教程1.0｜石英刚玉",
+      "slug": "hebei",
+      "url": null,
+      "docId": 145693775,
+      "uuid": "35361605:7QDXdxRvxPiAdSrw",
+      "parentUuid": "35361605:i7jagjZKubRAPC30",
+      "depth": 2,
+      "path": [
+        "中国教程",
+        "寻友教程",
+        "图寻河北教程1.0｜石英刚玉"
+      ]
+    },
+    {
+      "type": "DOC",
+      "title": "上海市 v1.14 | 斯瓦西里 & 斧头帮",
+      "slug": "shanghai",
+      "url": null,
+      "docId": 156336991,
+      "uuid": "35361605:dpWlp9MJKdzGhSfB",
+      "parentUuid": "35361605:i7jagjZKubRAPC30",
+      "depth": 2,
+      "path": [
+        "中国教程",
+        "寻友教程",
+        "上海市 v1.14 | 斯瓦西里 & 斧头帮"
+      ]
+    },
+    {
+      "type": "DOC",
+      "title": "上海崇明岛 v5.14 | 他定绿雷",
+      "slug": "chongming",
+      "url": null,
+      "docId": 146561821,
+      "uuid": "35361605:hY3MNodD31gBH1G3",
+      "parentUuid": "35361605:dpWlp9MJKdzGhSfB",
+      "depth": 3,
+      "path": [
+        "中国教程",
+        "寻友教程",
+        "上海市 v1.14 | 斯瓦西里 & 斧头帮",
+        "上海崇明岛 v5.14 | 他定绿雷"
+      ]
+    },
+    {
+      "type": "DOC",
+      "title": "福建省｜威海八景",
+      "slug": "fujian",
+      "url": null,
+      "docId": 223275623,
+      "uuid": "Zs7k6PzW8chC1zmd",
+      "parentUuid": "35361605:i7jagjZKubRAPC30",
+      "depth": 2,
+      "path": [
+        "中国教程",
+        "寻友教程",
+        "福建省｜威海八景"
+      ]
+    },
+    {
+      "type": "DOC",
+      "title": "湖南道路黄色边线分布｜KoiShi514",
+      "slug": "hunan_sidelines",
+      "url": null,
+      "docId": 145696038,
+      "uuid": "35361605:ZXwF41Bn3AhU_8Lt",
+      "parentUuid": "35361605:i7jagjZKubRAPC30",
+      "depth": 2,
+      "path": [
+        "中国教程",
+        "寻友教程",
+        "湖南道路黄色边线分布｜KoiShi514"
+      ]
+    },
+    {
+      "type": "DOC",
+      "title": "重庆市 | 人生河海",
+      "slug": "chongqing",
+      "url": null,
+      "docId": 150092966,
+      "uuid": "eksR46LwtcK6-88F",
+      "parentUuid": "35361605:i7jagjZKubRAPC30",
+      "depth": 2,
+      "path": [
+        "中国教程",
+        "寻友教程",
+        "重庆市 | 人生河海"
+      ]
+    },
+    {
+      "type": "DOC",
+      "title": "解构重庆 | 人生河海",
+      "slug": "a_deconstructed_chongqing",
+      "url": null,
+      "docId": 163814995,
+      "uuid": "-cvq0kVAkRzb02XC",
+      "parentUuid": "eksR46LwtcK6-88F",
+      "depth": 3,
+      "path": [
+        "中国教程",
+        "寻友教程",
+        "重庆市 | 人生河海",
+        "解构重庆 | 人生河海"
+      ]
+    },
+    {
+      "type": "DOC",
+      "title": "街景里的海南 Hainan Is. in SV｜嘉禾",
+      "slug": "hainan_is_in_sv",
+      "url": null,
+      "docId": 145439724,
+      "uuid": "35361605:M0jMKeIBpa6_K40r",
+      "parentUuid": "35361605:i7jagjZKubRAPC30",
+      "depth": 2,
+      "path": [
+        "中国教程",
+        "寻友教程",
+        "街景里的海南 Hainan Is. in SV｜嘉禾"
+      ]
+    },
+    {
+      "type": "DOC",
+      "title": "甘孜藏族自治州丨维桢",
+      "slug": "ganzi",
+      "url": null,
+      "docId": 236902968,
+      "uuid": "TypyK0w4QSQmrI-Z",
+      "parentUuid": "35361605:i7jagjZKubRAPC30",
+      "depth": 2,
+      "path": [
+        "中国教程",
+        "寻友教程",
+        "甘孜藏族自治州丨维桢"
+      ]
+    },
+    {
+      "type": "DOC",
+      "title": "西藏自治区 | jasy",
+      "slug": "xizang",
+      "url": null,
+      "docId": 156579828,
+      "uuid": "twVxX5C9RO__EpE0",
+      "parentUuid": "35361605:i7jagjZKubRAPC30",
+      "depth": 2,
+      "path": [
+        "中国教程",
+        "寻友教程",
+        "西藏自治区 | jasy"
+      ]
+    },
+    {
+      "type": "DOC",
+      "title": "香港擴充｜IamPretend",
+      "slug": "hongkong_extension",
+      "url": null,
+      "docId": 182256678,
+      "uuid": "sRhVqux7ZIKBhbr7",
+      "parentUuid": "35361605:i7jagjZKubRAPC30",
+      "depth": 2,
+      "path": [
+        "中国教程",
+        "寻友教程",
+        "香港擴充｜IamPretend"
+      ]
+    },
+    {
+      "type": "TITLE",
+      "title": "其他",
+      "slug": null,
+      "url": null,
+      "docId": null,
+      "uuid": "Ikjb-WMGSOmduK7i",
+      "parentUuid": "u5LU_sXLRaoA4b4l",
+      "depth": 1,
+      "path": [
+        "中国教程",
+        "其他"
+      ]
+    },
+    {
+      "type": "DOC",
+      "title": "目击百度/腾讯街景车/人",
+      "slug": "iyvd8997a1iu3fau",
+      "url": null,
+      "docId": 278653333,
+      "uuid": "Diafxk1zEfL_PNjV",
+      "parentUuid": "Ikjb-WMGSOmduK7i",
+      "depth": 2,
+      "path": [
+        "中国教程",
+        "其他",
+        "目击百度/腾讯街景车/人"
+      ]
     }
   ],
   "pages": [
@@ -230,6 +689,15 @@
       "images": 132,
       "contentUpdatedAt": "2025-07-19T07:31:24.000Z",
       "sourceUrl": "https://www.yuque.com/chaofun/tuxun/hongkong_extension"
+    },
+    {
+      "title": "目击百度/腾讯街景车/人",
+      "slug": "iyvd8997a1iu3fau",
+      "section": "其他",
+      "wordCount": 10329,
+      "images": 1035,
+      "contentUpdatedAt": "2026-07-29T17:47:05.000Z",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/iyvd8997a1iu3fau"
     }
   ]
 }
