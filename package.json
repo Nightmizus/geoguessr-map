@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build-static-site.mjs",
+    "test:china-click": "node scripts/test-china-province-click.mjs",
     "generate:china-geo": "node scripts/generate-china-geo-data.mjs",
     "generate:china-pages": "node scripts/generate-china-page-data.mjs",
     "crawl:china-pages": "node scripts/crawl-china-tutorial-pages.mjs"

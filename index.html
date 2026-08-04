@@ -1643,13 +1643,7 @@ const LANGUAGE_GROUPS = [
     }
 
     function hasFeaturePage(feature) {
-      if ((feature.properties || {})._noPage) return false;
       return slugsForFeature(feature).length > 0;
-    }
-
-    function isChinaProvinceFeature(feature) {
-      const properties = feature.properties || {};
-      return properties.level === "province" && /^\d{6}$/.test(String(properties.adcode || ""));
     }
 
     function isRedFeature(feature) {
@@ -3056,7 +3050,6 @@ const LANGUAGE_GROUPS = [
             _codeOverride: "CHN",
             _featureIdOverride: `CHN:province:${adcode}`,
             _displayName: name,
-            _noPage: true,
           },
         };
       });
@@ -3152,10 +3145,11 @@ const LANGUAGE_GROUPS = [
           .attr("d", path);
       }
 
-      const renderFeatures = mapFeatures.filter(hasFeaturePage);
-      const clickableFeatures = scope === "china"
-        ? mapFeatures.filter(isChinaProvinceFeature)
-        : renderFeatures;
+      // China guides use the same page-availability and click path as world guides.
+      // Their thematic fills stay disabled because province tutorials do not use the
+      // world profile's country/language coloring.
+      const clickableFeatures = mapFeatures.filter(hasFeaturePage);
+      const renderFeatures = scope === "china" ? [] : clickableFeatures;
       const renderLayer = zoomLayer.append("g").attr("class", "map-render-layer");
       state.renderFillSelection = renderLayer.append("g")
         .attr("class", "render-fill-layer")
@@ -3192,9 +3186,7 @@ const LANGUAGE_GROUPS = [
         .attr("data-slugs", d => slugsForFeature(d).join(" "))
         .attr("d", path)
         .on("click", (event, feature) => {
-          if (event.defaultPrevented) return;
-          if (scope === "china") renderFeaturePage(feature);
-          else if (hasFeaturePage(feature)) renderFeaturePage(feature);
+          if (!event.defaultPrevented && hasFeaturePage(feature)) renderFeaturePage(feature);
         });
 
       state.borderPathSelection = zoomLayer.append("g")
