@@ -1144,6 +1144,7 @@
   </div>
   <div class="profile-transfer-status" id="profile-transfer-status" role="status" aria-live="polite"></div>
   <script src="assets/vendor/d3.v7.min.js"></script>
+  <script src="assets/cache-policy.js"></script>
   <script src="data/generated/plonkit_geo_data.js"></script>
   <script src="data/generated/plonkit_china_geo_data.js"></script>
   <script src="data/generated/plonkit_china_page_data.js"></script>
@@ -1162,6 +1163,7 @@
     const SELECTION_STORAGE_KEY = "plonkit-image-selections-v1";
     const PROFILE_STORAGE_KEY = "plonkit-profiles-v1";
     const FADED_FEATURE_STORAGE_KEY = "plonkit-faded-features-v1";
+    const DATA_VERSION = "__PLONKIT_DATA_VERSION__";
     const USER_STORAGE_KEYS = new Set([
       SELECTION_STORAGE_KEY,
       PROFILE_STORAGE_KEY,
@@ -1864,33 +1866,11 @@ const LANGUAGE_GROUPS = [
     }
 
     function normalizeLayoutCache(source) {
-      const normalized = {};
-      if (!source || typeof source !== "object") return normalized;
-      for (const [key, entry] of Object.entries(source)) {
-        if (!entry || typeof entry !== "object" || typeof entry.signature !== "string" || !Array.isArray(entry.photos)) continue;
-        normalized[key] = {
-          signature: entry.signature,
-          photos: entry.photos
-            .map(photo => ({
-              ...photo,
-              x: Number(photo.x),
-              y: Number(photo.y),
-              width: Number(photo.width),
-              height: Number(photo.height),
-            }))
-            .filter(photo => photo.src && Number.isFinite(photo.x) && Number.isFinite(photo.y) && Number.isFinite(photo.width) && Number.isFinite(photo.height)),
-        };
-      }
-      return normalized;
+      return window.PLONKIT_CACHE_POLICY.normalizeLayoutCache(source, DATA_VERSION);
     }
 
     function normalizeRenderCache(source) {
-      if (!source || typeof source !== "object") return null;
-      if (typeof source.signature !== "string" || typeof source.html !== "string") return null;
-      return {
-        signature: source.signature,
-        html: source.html,
-      };
+      return window.PLONKIT_CACHE_POLICY.normalizeRenderCache(source, DATA_VERSION);
     }
 
     function normalizeProfileStore(source, legacySelections = {}, legacyFadedFeatures = []) {
@@ -2715,6 +2695,7 @@ const LANGUAGE_GROUPS = [
     function renderSignatureForProfile(profile = activeProfile()) {
       return [
         `v${RENDER_CACHE_VERSION}`,
+        `data-${DATA_VERSION}`,
         `layout-v${LAYOUT_CACHE_VERSION}`,
         `scope-${profile.scope || "world"}`,
         stableSelectionsSignature(profile.selections || state.imageSelections),
@@ -2732,6 +2713,7 @@ const LANGUAGE_GROUPS = [
     function storeRenderHtml(html) {
       const profile = activeProfile();
       profile.renderCache = {
+        dataVersion: DATA_VERSION,
         signature: renderSignatureForProfile(profile),
         html,
       };
@@ -2750,6 +2732,7 @@ const LANGUAGE_GROUPS = [
       const profile = activeProfile();
       profile.layoutCache = profile.layoutCache || {};
       profile.layoutCache[layoutCacheKeyForFeature(feature)] = {
+        dataVersion: DATA_VERSION,
         signature: layoutSignatureForFeature(feature, images),
         photos: photos.map(photo => ({
           ...photo,
