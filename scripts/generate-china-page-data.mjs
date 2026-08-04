@@ -10,6 +10,16 @@ const outputPath = path.join(ROOT, "data", "generated", "plonkit_china_page_data
 const guides = JSON.parse(await fs.readFile(guidePath, "utf8"));
 const crawl = JSON.parse(await fs.readFile(crawlPath, "utf8"));
 const sourceBySlug = new Map(crawl.pages.map(page => [page.slug, page]));
+const originalSourceByAdcode = new Map([
+  ["120000", "tianjin"],
+  ["140000", "shanxi"],
+  ["150000", "neimenggu"],
+  ["220000", "jilin"],
+  ["420000", "hubei"],
+  ["450000", "guangxi"],
+  ["530000", "yunnan"],
+  ["650000", "xinjiang"],
+]);
 
 function escapeHtml(value) {
   return String(value || "")
@@ -56,7 +66,12 @@ const pages = guides.guides.map(guide => {
       contentUpdatedAt: page.yuque.contentUpdatedAt,
     };
   });
-  const content = guideContent(guide, sourcePages);
+  const originalSource = originalSourceByAdcode.get(guide.adcode);
+  const originalPage = originalSource ? sourceBySlug.get(originalSource) : null;
+  if (originalSource && !originalPage) {
+    throw new Error(`Unknown original source slug ${originalSource} for ${guide.name}`);
+  }
+  const content = originalPage?.content ?? guideContent(guide, sourcePages);
   const latestUpdate = sourcePages.map(page => page.contentUpdatedAt || "").sort().at(-1) || null;
   return {
     guideType: "china-province",
@@ -66,14 +81,14 @@ const pages = guides.guides.map(guide => {
     section: "中国教程 / 省级指南",
     sourceUrl: guides.source,
     sourcePages,
-    yuque: {
+    yuque: originalPage?.yuque ?? {
       wordCount: content.replace(/<[^>]+>/g, "").length,
       format: "lake",
       contentUpdatedAt: latestUpdate,
     },
     content,
-    text: content.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim(),
-    images: [],
+    text: originalPage?.text ?? content.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim(),
+    images: originalPage?.images ?? [],
     status: "ok",
   };
 });
