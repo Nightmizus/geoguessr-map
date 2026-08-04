@@ -655,6 +655,40 @@
       overflow-wrap: anywhere;
     }
 
+    .repost-notice {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 0 0 16px;
+      padding: 12px 14px;
+      border: 2px solid #ffb300;
+      border-left-width: 7px;
+      border-radius: 10px;
+      background: #fff3cd;
+      color: #3d2b00;
+      box-shadow: 0 8px 22px rgba(255, 179, 0, 0.2);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.55;
+    }
+
+    .repost-notice strong {
+      flex: 0 0 auto;
+      padding: 1px 7px;
+      border-radius: 5px;
+      background: #7a4300;
+      color: #fff;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+    }
+
+    .repost-notice a {
+      color: #8a2500;
+      font-weight: 800;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
     .article h1,
     .article h2,
     .article h3,
@@ -2350,6 +2384,18 @@ const LANGUAGE_GROUPS = [
       }).join("")}</div>`;
     }
 
+    function sourceUrlForPage(page) {
+      const sourceUrl = String(page?.sourceUrl || "");
+      return /^https:\/\/www\.yuque\.com\/chaofun\/tuxun(?:\/|$)/i.test(sourceUrl)
+        ? sourceUrl
+        : "https://www.yuque.com/chaofun/tuxun";
+    }
+
+    function renderRepostNotice(page) {
+      const sourceUrl = sourceUrlForPage(page);
+      return `<div class="repost-notice" role="note"><strong>转载声明</strong><span>本文章转载自 <a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(sourceUrl)}</a></span></div>`;
+    }
+
     function renderPage(slugs, activeSlug = slugs[0], feature = null) {
       const panel = document.querySelector("#doc-panel");
       const page = pageForSlug(activeSlug);
@@ -2383,7 +2429,7 @@ const LANGUAGE_GROUPS = [
           ` : ""}
           <p>勾选图片后会按当前页面内的勾选顺序标号，并显示到对应地图区域。要把结果发给朋友，请点击保存选择文件，并用下载得到的文件替换 <code>data/generated/plonkit_image_selections.js</code> 后再打包。</p>
         </div>`}
-        <article class="article">${lakeToHtml(page.content)}</article>
+        <article class="article">${renderRepostNotice(page)}${lakeToHtml(page.content)}</article>
       `;
       applyPoliticalTextPolicy(panel);
 

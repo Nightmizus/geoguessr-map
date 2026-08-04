@@ -1,10 +1,19 @@
 {
   "source": "https://www.yuque.com/chaofun/tuxun",
   "tocUpdatedAt": "2026-08-03T13:25:29.000Z",
-  "crawledAt": "2026-08-04T08:42:59.684Z",
-  "count": 13,
+  "crawledAt": "2026-08-04T09:05:52.300Z",
+  "count": 24,
   "failureCount": 0,
   "failures": [],
+  "externalLinks": [
+    {
+      "title": "腾讯街景覆盖指南｜孤月临渊 薛添",
+      "url": "https://docs.qq.com/aio/DR1BQY0tUQWpudHdh",
+      "uuid": "e8TH9zoM0OU5ADlI",
+      "parentUuid": "35361605:i7jagjZKubRAPC30",
+      "section": "寻友教程"
+    }
+  ],
   "pages": [
     {
       "title": "图寻中国入门笔记",
@@ -122,6 +131,105 @@
       "images": 134,
       "contentUpdatedAt": "2025-04-25T17:14:50.000Z",
       "sourceUrl": "https://www.yuque.com/chaofun/tuxun/xinjiang"
+    },
+    {
+      "title": "图寻河北教程1.0｜石英刚玉",
+      "slug": "hebei",
+      "section": "寻友教程",
+      "wordCount": 2684,
+      "images": 68,
+      "contentUpdatedAt": "2023-11-02T12:08:35.000Z",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/hebei"
+    },
+    {
+      "title": "上海市 v1.14 | 斯瓦西里 & 斧头帮",
+      "slug": "shanghai",
+      "section": "寻友教程",
+      "wordCount": 22350,
+      "images": 412,
+      "contentUpdatedAt": "2026-07-01T06:00:58.000Z",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/shanghai"
+    },
+    {
+      "title": "上海崇明岛 v5.14 | 他定绿雷",
+      "slug": "chongming",
+      "section": "寻友教程",
+      "wordCount": 2829,
+      "images": 59,
+      "contentUpdatedAt": "2024-02-09T09:44:59.000Z",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/chongming"
+    },
+    {
+      "title": "福建省｜威海八景",
+      "slug": "fujian",
+      "section": "寻友教程",
+      "wordCount": 7935,
+      "images": 154,
+      "contentUpdatedAt": "2025-07-06T06:45:58.000Z",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/fujian"
+    },
+    {
+      "title": "湖南道路黄色边线分布｜KoiShi514",
+      "slug": "hunan_sidelines",
+      "section": "寻友教程",
+      "wordCount": 883,
+      "images": 4,
+      "contentUpdatedAt": "2023-12-12T13:16:26.000Z",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/hunan_sidelines"
+    },
+    {
+      "title": "重庆市 | 人生河海",
+      "slug": "chongqing",
+      "section": "寻友教程",
+      "wordCount": 12853,
+      "images": 119,
+      "contentUpdatedAt": "2026-07-03T04:48:36.000Z",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/chongqing"
+    },
+    {
+      "title": "解构重庆 | 人生河海",
+      "slug": "a_deconstructed_chongqing",
+      "section": "寻友教程",
+      "wordCount": 11177,
+      "images": 93,
+      "contentUpdatedAt": "2024-10-02T08:55:14.000Z",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/a_deconstructed_chongqing"
+    },
+    {
+      "title": "街景里的海南 Hainan Is. in SV｜嘉禾",
+      "slug": "hainan_is_in_sv",
+      "section": "寻友教程",
+      "wordCount": 3771,
+      "images": 135,
+      "contentUpdatedAt": "2024-07-30T03:04:58.000Z",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/hainan_is_in_sv"
+    },
+    {
+      "title": "甘孜藏族自治州丨维桢",
+      "slug": "ganzi",
+      "section": "寻友教程",
+      "wordCount": 4900,
+      "images": 98,
+      "contentUpdatedAt": "2025-09-15T10:15:26.000Z",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/ganzi"
+    },
+    {
+      "title": "西藏自治区 | jasy",
+      "slug": "xizang",
+      "section": "寻友教程",
+      "wordCount": 5308,
+      "images": 118,
+      "contentUpdatedAt": "2025-07-03T11:23:18.000Z",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/xizang"
+    },
+    {
+      "title": "香港擴充｜IamPretend",
+      "slug": "hongkong_extension",
+      "section": "寻友教程",
+      "wordCount": 4953,
+      "images": 132,
+      "contentUpdatedAt": "2025-07-19T07:31:24.000Z",
+      "sourceUrl": "https://www.yuque.com/chaofun/tuxun/hongkong_extension"
     }
   ]
 }

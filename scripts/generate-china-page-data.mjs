@@ -10,7 +10,8 @@ const outputPath = path.join(ROOT, "data", "generated", "plonkit_china_page_data
 const guides = JSON.parse(await fs.readFile(guidePath, "utf8"));
 const crawl = JSON.parse(await fs.readFile(crawlPath, "utf8"));
 const sourceBySlug = new Map(crawl.pages.map(page => [page.slug, page]));
-const originalSourceByAdcode = new Map([
+// Curated articles always win when both curated and community tutorials exist.
+const featuredSourceByAdcode = new Map([
   ["120000", "tianjin"],
   ["140000", "shanxi"],
   ["150000", "neimenggu"],
@@ -19,6 +20,17 @@ const originalSourceByAdcode = new Map([
   ["450000", "guangxi"],
   ["530000", "yunnan"],
   ["650000", "xinjiang"],
+]);
+const friendSourcesByAdcode = new Map([
+  ["130000", ["hebei"]],
+  ["310000", ["shanghai", "chongming"]],
+  ["350000", ["fujian"]],
+  ["430000", ["hunan_sidelines"]],
+  ["460000", ["hainan_is_in_sv"]],
+  ["500000", ["chongqing", "a_deconstructed_chongqing"]],
+  ["510000", ["ganzi"]],
+  ["540000", ["xizang"]],
+  ["810000", ["hongkong_extension"]],
 ]);
 
 function escapeHtml(value) {
@@ -54,7 +66,7 @@ function guideContent(guide, sourcePages) {
   ].join("");
 }
 
-const pages = guides.guides.map(guide => {
+const provincePages = guides.guides.map(guide => {
   const sourcePages = guide.sources.map(slug => {
     const page = sourceBySlug.get(slug);
     if (!page) throw new Error(`Unknown source slug ${slug} for ${guide.name}`);
@@ -66,7 +78,9 @@ const pages = guides.guides.map(guide => {
       contentUpdatedAt: page.yuque.contentUpdatedAt,
     };
   });
-  const originalSource = originalSourceByAdcode.get(guide.adcode);
+  const featuredSource = featuredSourceByAdcode.get(guide.adcode);
+  const friendSource = friendSourcesByAdcode.get(guide.adcode)?.[0];
+  const originalSource = featuredSource || friendSource;
   const originalPage = originalSource ? sourceBySlug.get(originalSource) : null;
   if (originalSource && !originalPage) {
     throw new Error(`Unknown original source slug ${originalSource} for ${guide.name}`);
@@ -78,8 +92,10 @@ const pages = guides.guides.map(guide => {
     adcode: guide.adcode,
     title: guide.name,
     slug: `china-province-${guide.adcode}`,
-    section: "中国教程 / 省级指南",
-    sourceUrl: guides.source,
+    section: originalPage ? `中国教程 / ${originalPage.section}` : "中国教程 / 省级指南",
+    sourceUrl: originalPage?.sourceUrl ?? guides.source,
+    sourceKind: featuredSource ? "精选篇目" : friendSource ? "寻友教程" : "整理版",
+    originalSourceSlug: originalPage?.slug ?? null,
     sourcePages,
     yuque: originalPage?.yuque ?? {
       wordCount: content.replace(/<[^>]+>/g, "").length,
@@ -93,12 +109,47 @@ const pages = guides.guides.map(guide => {
   };
 });
 
+// A province can have more than one community article (for example Shanghai plus
+// Chongming). Keep the broad province article first and expose the remaining exact
+// originals as tabs on the same province. A curated article suppresses all community
+// tabs for that province, preserving the requested curated-over-community priority.
+const additionalFriendPages = guides.guides.flatMap(guide => {
+  if (featuredSourceByAdcode.has(guide.adcode)) return [];
+  return (friendSourcesByAdcode.get(guide.adcode) || []).slice(1).map(slug => {
+    const sourcePage = sourceBySlug.get(slug);
+    if (!sourcePage) throw new Error(`Unknown additional friend source slug ${slug} for ${guide.name}`);
+    return {
+      ...sourcePage,
+      guideType: "china-province",
+      adcode: guide.adcode,
+      title: sourcePage.title,
+      section: `中国教程 / ${sourcePage.section}`,
+      sourceKind: "寻友教程",
+      originalSourceSlug: sourcePage.slug,
+      sourcePages: [{
+        slug: sourcePage.slug,
+        title: sourcePage.title,
+        section: sourcePage.section,
+        sourceUrl: sourcePage.sourceUrl,
+        contentUpdatedAt: sourcePage.yuque.contentUpdatedAt,
+      }],
+    };
+  });
+});
+
+const pages = [...provincePages, ...additionalFriendPages];
+const adcodePages = Object.fromEntries(guides.guides.map(guide => [
+  guide.adcode,
+  pages.filter(page => page.adcode === guide.adcode).map(page => page.slug),
+]));
+
 const output = {
   source: guides.source,
   basedOnCrawlAt: crawl.crawledAt,
   tocUpdatedAt: crawl.tocUpdatedAt,
   count: pages.length,
-  adcodePages: Object.fromEntries(pages.map(page => [page.adcode, [page.slug]])),
+  provinceCount: guides.guides.length,
+  adcodePages,
   pages,
 };
 
